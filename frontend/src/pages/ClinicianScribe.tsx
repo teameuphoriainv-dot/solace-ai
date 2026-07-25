@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, Mic, Square, Loader2, Sparkles, AlertTriangle, Activity, FileText, ClipboardCheck, Send, Hash, Check, X as XIcon, Upload, User, Pause, Play, Radio, RefreshCw, Quote } from "lucide-react";
 import {
   scribeFromTranscript, ddxV2, calcAutoExtract, codingSuggest, drugCheck,
@@ -446,7 +447,7 @@ export default function ClinicianScribe() {
     } finally { setBusy(null); }
   };
 
-  const tabs: { key: Tab; label: string; icon: any }[] = [
+  const tabs: { key: Tab; label: string; icon: LucideIcon }[] = [
     { key: "transcript", label: "Capture", icon: Mic },
     { key: "session", label: "Ambient session", icon: Radio },
     { key: "note", label: "Note", icon: FileText },

@@ -556,9 +556,9 @@ function ActionFields({
 
 
 // flatten {a: {b: 1}} → ["a.b"]; used to show {{var}} hints
-function flatten(obj: any, prefix = ""): Record<string, any> {
-  const out: Record<string, any> = {};
-  for (const [k, v] of Object.entries(obj || {})) {
+function flatten(obj: unknown, prefix = ""): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries((obj ?? {}) as Record<string, unknown>)) {
     const path = prefix ? `${prefix}.${k}` : k;
     if (v && typeof v === "object" && !Array.isArray(v)) {
       Object.assign(out, flatten(v, path));
