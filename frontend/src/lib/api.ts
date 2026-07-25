@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearSession, hasStoredSession, notifySessionExpired } from "./session";
 import type {
   ClinicianNote,
   InsuranceFields,
@@ -46,6 +47,31 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Endpoints where a 401 IS the answer, not a symptom. Sign-in and magic-link
+// verification legitimately return 401 for a wrong PIN or a stale link, and the
+// caller renders "Incorrect name or PIN" / "This link has expired". Clearing the
+// session or bouncing to login on those would break the sign-in screen itself.
+const AUTH_CHALLENGE_PATH = /\/auth\/(login|magic\/(request|verify))(\?|$)/;
+
+// Global 401 handling. Before this, only ClinicianDashboard reacted to an expired
+// token (via its polling error string) and every other clinician page surfaced a
+// raw error. Now one place clears the session and tells the shell to show login.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    const url: string = error?.config?.url ?? "";
+    // Only meaningful if the request went out as a signed-in clinician. An
+    // anonymous call hitting a protected route has no session to expire.
+    if (status === 401 && hasStoredSession() && !AUTH_CHALLENGE_PATH.test(url)) {
+      clearSession();
+      notifySessionExpired();
+    }
+    // Always re-reject: callers keep their own catch blocks and error UI.
+    return Promise.reject(error);
+  },
+);
 
 export async function postTranscribe(hospitalId: string, form: FormData): Promise<TranscribeResponse> {
   const { data } = await api.post<TranscribeResponse>(`/api/${hospitalId}/transcribe`, form, {

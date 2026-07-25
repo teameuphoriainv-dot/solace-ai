@@ -20,7 +20,9 @@ APP_ID = "d2gsbjipp9quan"
 
 CLOUDFRONT_API = "https://djfjrel7b1ebi.cloudfront.net"
 APIGW_DIRECT = "https://7ew5f2x01d.execute-api.us-east-1.amazonaws.com"
-MEDIA_S3 = "https://solace-media-704229156617.s3.amazonaws.com"
+# Derived rather than hardcoded — this repo is public.
+ACCOUNT_ID = boto3.client("sts").get_caller_identity()["Account"]
+MEDIA_S3 = f"https://solace-media-{ACCOUNT_ID}.s3.amazonaws.com"
 
 # YAML payload for Amplify customHeaders (Amplify Hosting uses YAML, not JSON)
 HEADERS_YAML = f"""customHeaders:

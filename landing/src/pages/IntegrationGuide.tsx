@@ -8,6 +8,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { getIntegration } from '../lib/integrations';
+import { APP_URL } from '../lib/appUrl';
 import {
   Reveal,
   Kicker,
@@ -396,7 +397,7 @@ export default function IntegrationGuide() {
             Book a Demo
           </Link>
           <a
-            href="https://solaceaidemo.vercel.app"
+            href={APP_URL}
             target="_blank"
             rel="noreferrer"
             className={PILL_LIGHT}

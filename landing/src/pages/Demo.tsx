@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { himsFade, himsMove } from '../lib/hims';
 import { submitLead, mailtoLead } from '../lib/lead';
+import { APP_URL } from '../lib/appUrl';
 
 /*
  * Demo, the booking page, rebuilt in the light house style of the Product
@@ -169,7 +170,7 @@ export default function Demo() {
       >
         or{' '}
         <a
-          href="https://solaceaidemo.vercel.app"
+          href={APP_URL}
           target="_blank"
           rel="noreferrer"
           className="font-medium text-ink underline underline-offset-4 decoration-ink/30 transition-colors duration-200 hover:decoration-ink"

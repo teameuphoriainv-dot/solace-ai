@@ -7,6 +7,14 @@ ROOT="$(cd "$HERE/.." && pwd)"
 BUILD="$ROOT/build/lambda"
 ZIP="$ROOT/build/solace-lambda.zip"
 
+# Derived, not hardcoded — this repo is public. Override MODELS_BUCKET directly to
+# skip the STS call. Same default shape as scripts/upload_models.sh.
+AWS_REGION="${AWS_REGION:-us-east-1}"
+if [ -z "${MODELS_BUCKET:-}" ]; then
+  _acct="$(aws sts get-caller-identity --query Account --output text 2>/dev/null || true)"
+  MODELS_BUCKET="${_acct:+solace-lambda-deploy-${_acct}}"
+fi
+
 echo "→ Cleaning $BUILD"
 rm -rf "$BUILD" "$ZIP"
 mkdir -p "$BUILD"
@@ -43,7 +51,7 @@ LIBGOMP_SRC="$ROOT/build/.cache/libgomp.so.1"
 mkdir -p "$(dirname "$LIBGOMP_SRC")"
 if [ ! -f "$LIBGOMP_SRC" ]; then
   # Prefer our own S3 mirror (stable), fall back to Debian snapshot
-  if aws s3 cp "s3://solace-lambda-deploy-704229156617/libs/libgomp.so.1" "$LIBGOMP_SRC" --quiet 2>/dev/null; then
+  if [ -n "${MODELS_BUCKET:-}" ] && aws s3 cp "s3://${MODELS_BUCKET}/libs/libgomp.so.1" "$LIBGOMP_SRC" --region "$AWS_REGION" --quiet 2>/dev/null; then
     echo "  fetched from S3 mirror"
   else
     echo "  S3 mirror unavailable — falling back to Debian snapshot"

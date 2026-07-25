@@ -75,7 +75,7 @@ aws lambda update-function-configuration \
   --region us-east-1 \
   --environment "Variables={\
     SOLACE_MODE=aws,\
-    HEALTHSCRIBE_ROLE_ARN=arn:aws:iam::704229156617:role/solace-healthscribe-data-access,\
+    HEALTHSCRIBE_ROLE_ARN=arn:aws:iam::<AWS_ACCOUNT_ID>:role/solace-healthscribe-data-access,\
     SOLACE_EPIC_CLIENT_ID=<paste-the-client-id-here>\
   }"
 ```

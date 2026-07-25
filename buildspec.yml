@@ -1,26 +1,50 @@
-﻿version: 0.2
+version: 0.2
+
+# HEADS UP — this file is not currently what deploys.
+# The CodeBuild project `solace-api-deploy` carries its own INLINE buildspec and
+# its source is github.com/Dhruvjain35/solace-ai at the default branch. Edits
+# here have no effect until the project is repointed at this repo with
+# `buildspec: buildspec.yml`. See docs/AUDIT_2026-07-25.md.
+
 env:
   variables:
-    MODELS_BUCKET: "solace-lambda-deploy-704229156617"
     MODELS_PREFIX: "models"
+    ECR_REPO: "solace-api"
+    LAMBDA_FN: "solace-api"
+
 phases:
   pre_build:
     commands:
-      - echo Logging in to ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 704229156617.dkr.ecr.us-east-1.amazonaws.com
+      # Account ID and region are derived rather than written down: this repo is
+      # public. MODELS_BUCKET can still be overridden by a project env var.
+      - AWS_REGION="${AWS_DEFAULT_REGION:-us-east-1}"
+      - AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+      - REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+      - MODELS_BUCKET="${MODELS_BUCKET:-solace-lambda-deploy-${AWS_ACCOUNT_ID}}"
+      # CodeBuild does not carry shell variables across phases, so persist them
+      # and re-source in each later phase.
+      - |
+        cat > /tmp/build.env <<EOF
+        export AWS_REGION="$AWS_REGION"
+        export AWS_ACCOUNT_ID="$AWS_ACCOUNT_ID"
+        export REGISTRY="$REGISTRY"
+        export MODELS_BUCKET="$MODELS_BUCKET"
+        EOF
+      - echo "Logging in to ECR $REGISTRY ..."
+      - aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
       # --- Bake trained ML artifacts into the image so triage_ml._load() finds them locally ---
       # Best-effort: a missing file logs a warning but never fails the build. The loader
       # gates the whole ensemble on artifacts.pkl + lgbm folds; xgb/cat are optional.
       - echo "Fetching ML artifacts from s3://$MODELS_BUCKET/$MODELS_PREFIX ..."
       - mkdir -p backend/models
       # artifacts.pkl is stored uncompressed and MUST be present for any trained mode
-      - aws s3 cp "s3://$MODELS_BUCKET/$MODELS_PREFIX/artifacts.pkl" backend/models/artifacts.pkl || echo "WARN artifacts.pkl missing -> ensemble stays disabled (clinical_simulation)"
+      - aws s3 cp "s3://$MODELS_BUCKET/$MODELS_PREFIX/artifacts.pkl" backend/models/artifacts.pkl --region "$AWS_REGION" || echo "WARN artifacts.pkl missing -> ensemble stays disabled (clinical_simulation)"
       # Per-fold model files are gzipped in S3 (.txt.gz); the loader reads ungzipped .txt
       - |
         for type in lgbm xgb cat; do
           for i in 0 1 2 3 4; do
             f="${type}_fold${i}.txt"
-            if aws s3 cp "s3://$MODELS_BUCKET/$MODELS_PREFIX/${f}.gz" "backend/models/${f}.gz" 2>/dev/null; then
+            if aws s3 cp "s3://$MODELS_BUCKET/$MODELS_PREFIX/${f}.gz" "backend/models/${f}.gz" --region "$AWS_REGION" 2>/dev/null; then
               gunzip -f "backend/models/${f}.gz" && echo "  baked $f"
             else
               echo "  skip $f (not in S3)"
@@ -30,14 +54,22 @@ phases:
       - echo "Artifacts staged:" && ls -lh backend/models/ || true
   build:
     commands:
-      - echo Building Docker image...
-      - docker build -f Dockerfile.lambda -t solace-api:latest .
-      - docker tag solace-api:latest 704229156617.dkr.ecr.us-east-1.amazonaws.com/solace-api:latest
+      - . /tmp/build.env
+      # --platform pins arm64 to match the Lambda function's architecture. The
+      # CodeBuild environment is already ARM_CONTAINER, so this is a no-op there;
+      # it matters when the same file is run on an x86 host, where an unpinned
+      # build silently produces an image Lambda cannot start.
+      - echo "Building Docker image for arm64..."
+      - docker build --platform=linux/arm64 -f Dockerfile.lambda -t "$ECR_REPO:latest" .
+      - docker tag "$ECR_REPO:latest" "$REGISTRY/$ECR_REPO:latest"
   post_build:
     commands:
-      - echo Pushing to ECR...
-      - docker push 704229156617.dkr.ecr.us-east-1.amazonaws.com/solace-api:latest
-      - DIGEST=$(aws ecr describe-images --repository-name solace-api --image-ids imageTag=latest --query 'imageDetails[0].imageDigest' --output text)
-      - aws lambda update-function-code --function-name solace-api --image-uri 704229156617.dkr.ecr.us-east-1.amazonaws.com/solace-api@$DIGEST
-      - aws lambda wait function-updated --function-name solace-api
+      - . /tmp/build.env
+      - echo "Pushing to ECR..."
+      - docker push "$REGISTRY/$ECR_REPO:latest"
+      # Deploy by digest, not tag: `latest` can move between the push and the
+      # update, and Lambda pins the digest anyway.
+      - DIGEST=$(aws ecr describe-images --repository-name "$ECR_REPO" --image-ids imageTag=latest --query 'imageDetails[0].imageDigest' --output text --region "$AWS_REGION")
+      - aws lambda update-function-code --function-name "$LAMBDA_FN" --image-uri "$REGISTRY/$ECR_REPO@$DIGEST" --region "$AWS_REGION"
+      - aws lambda wait function-updated --function-name "$LAMBDA_FN" --region "$AWS_REGION"
       - echo "DEPLOYED!"

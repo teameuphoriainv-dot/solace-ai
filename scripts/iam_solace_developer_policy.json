@@ -6,8 +6,8 @@
       "Effect": "Allow",
       "Action": "dynamodb:*",
       "Resource": [
-        "arn:aws:dynamodb:us-east-1:704229156617:table/solace-*",
-        "arn:aws:dynamodb:us-east-1:704229156617:table/solace-*/index/*"
+        "arn:aws:dynamodb:us-east-1:${AWS_ACCOUNT_ID}:table/solace-*",
+        "arn:aws:dynamodb:us-east-1:${AWS_ACCOUNT_ID}:table/solace-*/index/*"
       ]
     },
     {
@@ -30,8 +30,8 @@
       "Effect": "Allow",
       "Action": "lambda:*",
       "Resource": [
-        "arn:aws:lambda:us-east-1:704229156617:function:solace-*",
-        "arn:aws:lambda:us-east-1:704229156617:function:solace-*:*"
+        "arn:aws:lambda:us-east-1:${AWS_ACCOUNT_ID}:function:solace-*",
+        "arn:aws:lambda:us-east-1:${AWS_ACCOUNT_ID}:function:solace-*:*"
       ]
     },
     {
@@ -44,7 +44,7 @@
       "Sid": "ECRSolaceRepo",
       "Effect": "Allow",
       "Action": ["ecr:*"],
-      "Resource": "arn:aws:ecr:us-east-1:704229156617:repository/solace-*"
+      "Resource": "arn:aws:ecr:us-east-1:${AWS_ACCOUNT_ID}:repository/solace-*"
     },
     {
       "Sid": "ECRAuthToken",
@@ -94,7 +94,7 @@
       "Sid": "KMSSolaceKey",
       "Effect": "Allow",
       "Action": "kms:*",
-      "Resource": "arn:aws:kms:us-east-1:704229156617:key/66c32010-5752-4b1d-8efe-bc317a44cb23"
+      "Resource": "arn:aws:kms:us-east-1:${AWS_ACCOUNT_ID}:key/66c32010-5752-4b1d-8efe-bc317a44cb23"
     },
     {
       "Sid": "KMSList",
@@ -107,7 +107,7 @@
       "Effect": "Allow",
       "Action": "secretsmanager:*",
       "Resource": [
-        "arn:aws:secretsmanager:us-east-1:704229156617:secret:solace/*"
+        "arn:aws:secretsmanager:us-east-1:${AWS_ACCOUNT_ID}:secret:solace/*"
       ]
     },
     {
@@ -115,14 +115,14 @@
       "Effect": "Allow",
       "Action": "events:*",
       "Resource": [
-        "arn:aws:events:us-east-1:704229156617:rule/solace-*"
+        "arn:aws:events:us-east-1:${AWS_ACCOUNT_ID}:rule/solace-*"
       ]
     },
     {
       "Sid": "SNSSolace",
       "Effect": "Allow",
       "Action": "sns:*",
-      "Resource": "arn:aws:sns:us-east-1:704229156617:solace-*"
+      "Resource": "arn:aws:sns:us-east-1:${AWS_ACCOUNT_ID}:solace-*"
     },
     {
       "Sid": "CloudWatchLogs",
@@ -138,8 +138,8 @@
         "logs:CreateLogGroup"
       ],
       "Resource": [
-        "arn:aws:logs:us-east-1:704229156617:log-group:/aws/lambda/solace-*",
-        "arn:aws:logs:us-east-1:704229156617:log-group:/aws/lambda/solace-*:*"
+        "arn:aws:logs:us-east-1:${AWS_ACCOUNT_ID}:log-group:/aws/lambda/solace-*",
+        "arn:aws:logs:us-east-1:${AWS_ACCOUNT_ID}:log-group:/aws/lambda/solace-*:*"
       ]
     },
     {
@@ -172,7 +172,7 @@
         "iam:PassRole"
       ],
       "Resource": [
-        "arn:aws:iam::704229156617:role/solace-*"
+        "arn:aws:iam::${AWS_ACCOUNT_ID}:role/solace-*"
       ]
     },
     {

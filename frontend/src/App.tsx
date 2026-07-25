@@ -1,6 +1,7 @@
-import { Suspense, lazy } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Suspense, lazy, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { onSessionExpired } from "./lib/session";
 import PatientIntake from "./pages/PatientIntake";
 import PatientResult from "./pages/PatientResult";
 import ClinicianDashboard from "./pages/ClinicianDashboard";
@@ -77,9 +78,40 @@ function hospitalRoutes(prefix: string) {
   ];
 }
 
+/**
+ * Routes to the sign-in screen when the api layer reports an expired session.
+ *
+ * Lives inside <Routes>' Router context so it can navigate. Clinician sign-in is
+ * hosted by ClinicianDashboard at `.../:hospitalId/clinician`, so the login route
+ * for any clinician sub-page is that page's path truncated at `/clinician` —
+ * which works under both the bare `/:hospitalId` and `/h/:hospitalId` prefixes.
+ */
+function SessionExpiryRedirect() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    return onSessionExpired((reason) => {
+      const marker = "/clinician";
+      const at = pathname.indexOf(marker);
+      // A 401 on a patient-facing page has no clinician login to fall back to,
+      // and the page's own error UI is the right surface. Leave it alone.
+      if (at === -1) return;
+      const loginPath = pathname.slice(0, at + marker.length);
+      // Already on the sign-in host: its own subscriber shows the message, so a
+      // redundant navigation would only remount and discard local state.
+      if (loginPath === pathname) return;
+      navigate(loginPath, { replace: true, state: { authReason: reason } });
+    });
+  }, [navigate, pathname]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
+      <SessionExpiryRedirect />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Landing />} />

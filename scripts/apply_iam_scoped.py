@@ -36,7 +36,11 @@ iam = boto3.client("iam")
 
 def upsert_policy(name: str, doc_file: Path) -> str:
     """Create-or-create-new-version of a customer-managed policy."""
-    body = json.loads(doc_file.read_text())
+    # Policy documents ship with a ${AWS_ACCOUNT_ID} placeholder instead of a
+    # literal account number — this repo is public, and IAM ARNs cannot be
+    # parameterized inside a static document. Substituted here from the STS
+    # identity that is applying the policy.
+    body = json.loads(doc_file.read_text().replace("${AWS_ACCOUNT_ID}", ACCOUNT))
     arn = f"arn:aws:iam::{ACCOUNT}:policy/{name}"
     try:
         iam.get_policy(PolicyArn=arn)

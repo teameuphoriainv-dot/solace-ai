@@ -68,6 +68,50 @@ export function bumpActivity(): void {
   localStorage.setItem(STORAGE_KEY + ".lastActivity", String(Date.now()));
 }
 
+/**
+ * True when a token is on disk, regardless of whether it is still valid.
+ *
+ * The 401 interceptor needs "was this request made as a signed-in clinician?",
+ * which loadSession() cannot answer — it clears and returns null for an expired
+ * token, exactly the case we care about.
+ */
+export function hasStoredSession(): boolean {
+  return _read(STORAGE_KEY) !== null;
+}
+
+/**
+ * Session-expiry fan-out.
+ *
+ * A 401 can surface from any page, but only the clinician shell knows how to
+ * present a login form. The api layer clears the session and calls
+ * notifySessionExpired(); the shell subscribes and routes. The listeners live
+ * here rather than in the api layer so subscribing does not pull in axios.
+ */
+export type SessionExpiredListener = (reason: string) => void;
+
+export const SESSION_EXPIRED_MESSAGE = "Session expired — please sign in again.";
+
+const _expiredListeners = new Set<SessionExpiredListener>();
+
+export function onSessionExpired(fn: SessionExpiredListener): () => void {
+  _expiredListeners.add(fn);
+  return () => {
+    _expiredListeners.delete(fn);
+  };
+}
+
+export function notifySessionExpired(reason: string = SESSION_EXPIRED_MESSAGE): void {
+  // Copy first: a listener that unsubscribes itself must not mutate the set
+  // mid-iteration. A throwing listener must not stop the others from running.
+  for (const fn of [..._expiredListeners]) {
+    try {
+      fn(reason);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 export function isIdleExpired(): boolean {
   const last = Number(_read(STORAGE_KEY + ".lastActivity") || 0);
   if (!last) return false;

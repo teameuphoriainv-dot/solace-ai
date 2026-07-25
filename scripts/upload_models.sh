@@ -19,9 +19,15 @@
 # loader's S3 fetch path (models/<name>.txt.gz).
 set -euo pipefail
 
-BUCKET="${MODELS_BUCKET:-solace-lambda-deploy-704229156617}"
 PREFIX="${MODELS_PREFIX:-models}"
 REGION="${AWS_REGION:-us-east-1}"
+# Account derived from the caller's identity rather than hardcoded — public repo.
+# Set MODELS_BUCKET to skip the STS lookup entirely.
+if [ -z "${MODELS_BUCKET:-}" ]; then
+  _acct="$(aws sts get-caller-identity --query Account --output text)"
+  MODELS_BUCKET="solace-lambda-deploy-${_acct}"
+fi
+BUCKET="$MODELS_BUCKET"
 SRC="${1:?usage: upload_models.sh <local_artifacts_dir>}"
 
 echo "Uploading artifacts from '$SRC' -> s3://$BUCKET/$PREFIX/ (region $REGION)"

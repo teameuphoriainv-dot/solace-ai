@@ -10,6 +10,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Activity, MessagesSquare } from 'lucide-react';
 import { APP_SCREENS, himsFade, himsMove } from '../lib/hims';
+import { APP_URL } from '../lib/appUrl';
 import useIsWide from '../lib/useIsWide';
 import BigStatement from '../components/product/BigStatement';
 import PhoneRig from '../components/product/PhoneRig';
@@ -699,7 +700,7 @@ export default function Clinicians() {
             Book a Demo
           </Link>
           <a
-            href="https://solaceaidemo.vercel.app"
+            href={APP_URL}
             target="_blank"
             rel="noreferrer"
             className={PILL_LIGHT}

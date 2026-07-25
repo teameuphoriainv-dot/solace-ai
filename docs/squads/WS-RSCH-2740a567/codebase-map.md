@@ -94,7 +94,7 @@ Other service clusters: triage (`triage_ml.py` LightGBM ensemble + SHAP + confor
 - LightGBM 5-fold ensemble (+ optional XGB/Cat folds) + SHAP + conformal calibration.
 - Loaded ONLY via `triage_ml._load()` decorated `@lru_cache(maxsize=1)` (PERF-001, ARCH-004; `triage_ml.py:57-90`).
 - Warmup handler pre-loads + dry-predicts + primes conformal calibration synchronously off the request path (`main.py:199-239`).
-- Artifacts baked into the Lambda image at build from `s3://solace-lambda-deploy-704229156617/models/` (`buildspec.yml:14-30`).
+- Artifacts baked into the Lambda image at build from `s3://solace-lambda-deploy-<AWS_ACCOUNT_ID>/models/` (`buildspec.yml:14-30`).
 - ML deps isolated in `backend/requirements-ml.txt` (DEPS-002); `requirements-lambda.txt` carries scipy+numpy for SHAP (DEPS-004).
 
 ---

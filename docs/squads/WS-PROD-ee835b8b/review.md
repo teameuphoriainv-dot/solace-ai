@@ -92,7 +92,7 @@ if the front-end host set is stable.
 ### [LOW] Hardcoded account ID + CMK key UUID in IaC (SEC-009-adjacent, advisory)
 
 `scripts/iam_solace_developer_policy.json` and `scripts/deploy_container.py:28` embed the
-account `704229156617` and CMK key UUID `66c32010-...`. This is acceptable for account-
+account `<AWS_ACCOUNT_ID>` and CMK key UUID `66c32010-...`. This is acceptable for account-
 specific IaC and is NOT a SEC-009 violation (SEC-009 targets f-string interpolation of
 **user input** into DynamoDB keys — none found; all writes use parameterized
 `ExpressionAttributeValues`). Preferred pattern is alias resolution, which `setup_aws.py`

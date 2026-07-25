@@ -14,7 +14,12 @@ xgboost==2.1.1
 catboost==1.2.7
 scikit-learn==1.5.2
 pandas==2.2.3
-numpy==2.1.2
+# Pinned <2.0 because catboost 1.2.7 requires numpy<2.0 — numpy 2.x here makes
+# this file unresolvable and the image build fails outright (ResolutionImpossible).
+# This is also the version that produced backend/models/artifacts.pkl: the pickle
+# references the numpy 1.x `numpy.core.multiarray` namespace, so there is no
+# train/serve pickle mismatch to fix. Bump catboost first if numpy 2.x is wanted.
+numpy==1.26.4
 scipy==1.13.1
 PyJWT==2.10.1
 bcrypt==4.2.0

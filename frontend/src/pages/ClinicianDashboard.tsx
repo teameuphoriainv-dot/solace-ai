@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { motion } from "framer-motion";
 import { X, ShieldCheck, Activity, Clock3, Bell, Workflow as WorkflowIcon, Mic, FileText, Inbox, BookOpen, Network, AlertCircle, Mail } from "lucide-react";
@@ -24,6 +24,7 @@ import {
   clearSession,
   isIdleExpired,
   loadSession,
+  onSessionExpired,
   saveSession,
   type Session,
 } from "../lib/session";
@@ -33,6 +34,7 @@ const DEMO_CLINICIANS = ["Dr. Chen", "Dr. Patel", "Dr. Kim"];
 export default function ClinicianDashboard() {
   const { hospitalId = "demo" } = useParams<{ hospitalId: string }>();
   const navigate = useNavigate();
+  const { state: locationState } = useLocation();
   // Clicking a patient opens the full Patient Workspace (tabbed tool suite).
   const openWorkspace = (id: string) =>
     navigate(`/${hospitalId}/clinician/patient/${id}`);
@@ -114,14 +116,25 @@ export default function ClinicianDashboard() {
     }
   }, [patients]);
 
-  // Any 401 in polling = token expired or revoked → kick to login
+  // Token expired or revoked → drop to the login form. The api layer's 401
+  // interceptor already cleared storage and is the single source of truth for
+  // "this session is dead", so this only has to reset local state. It replaces
+  // the old error-string sniffing, which could not see 401s raised by any page
+  // other than this one.
   useEffect(() => {
-    if (error && /401|unauthorized|expired|incorrect/i.test(error)) {
-      clearSession();
+    return onSessionExpired((reason) => {
       setSession(null);
-      setPinError("Session expired — please sign in again.");
-    }
-  }, [error]);
+      setPinError(reason);
+    });
+  }, []);
+
+  // Arriving here from a clinician sub-page that hit a 401: SessionExpiryRedirect
+  // passes the reason through router state, since our subscriber above was not
+  // mounted when the 401 fired.
+  useEffect(() => {
+    const reason = (locationState as { authReason?: string } | null)?.authReason;
+    if (reason) setPinError(reason);
+  }, [locationState]);
 
   async function submitLogin() {
     if (pinChecking || pinInput.length < 4) return;

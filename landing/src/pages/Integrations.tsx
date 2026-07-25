@@ -2,6 +2,7 @@ import { useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, FlaskConical } from 'lucide-react';
 import { INTEGRATIONS, type Integration } from '../lib/integrations';
+import { APP_URL } from '../lib/appUrl';
 import {
   Reveal,
   Kicker,
@@ -158,7 +159,7 @@ export default function Integrations() {
               </p>
             </div>
             <a
-              href="https://solaceaidemo.vercel.app"
+              href={APP_URL}
               target="_blank"
               rel="noreferrer"
               className="inline-flex shrink-0 items-center gap-2 rounded-pill bg-ink px-7 py-3.5 text-sm font-medium text-white transition-transform duration-[600ms] ease-hims-expo hover:scale-[1.03]"

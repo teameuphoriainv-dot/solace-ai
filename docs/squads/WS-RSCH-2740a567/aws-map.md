@@ -1,14 +1,14 @@
 # AWS Map — current wiring + what the Workspace feature needs
 
 > Research squad WS-RSCH-2740a567. Derived from code ONLY. **No AWS command was executed.** PROD squad: all provisioning is IaC/dry-run, gated on Sriyan's approval (SQUAD_BRIEF guardrail #3).
-> Account `704229156617`, region `us-east-1`.
+> Account `<AWS_ACCOUNT_ID>`, region `us-east-1`.
 
 ## 1. Compute — Lambda (container image) via Mangum
 
 - FastAPI wrapped by `Mangum(app, lifespan="off")`; `handler(event, context)` is the Lambda entry (`backend/main.py:171-240`).
 - Container image (not zip) — `Dockerfile.lambda`: base `public.ecr.aws/lambda/python:3.12` (AL2023, arm64) (DEPS-003), `libgomp` via dnf for LightGBM, runs as non-root UID 993, CMD `main.handler` (`Dockerfile.lambda:3-34`).
-- Function name **`solace-api`**; ECR repo `704229156617.dkr.ecr.us-east-1.amazonaws.com/solace-api` (`buildspec.yml:10,35,41`).
-- Build/deploy via **CodeBuild** (`buildspec.yml`): ECR login → bake ML artifacts from `s3://solace-lambda-deploy-704229156617/models/` → `docker build` → push → `aws lambda update-function-code` → `wait function-updated` (`buildspec.yml:9-43`).
+- Function name **`solace-api`**; ECR repo `<AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/solace-api` (`buildspec.yml:10,35,41`).
+- Build/deploy via **CodeBuild** (`buildspec.yml`): ECR login → bake ML artifacts from `s3://solace-lambda-deploy-<AWS_ACCOUNT_ID>/models/` → `docker build` → push → `aws lambda update-function-code` → `wait function-updated` (`buildspec.yml:9-43`).
 - **Warmup**: `handler` answers `event.warmup` / `source==aws.events` pings by pre-loading ML + dry-predict (PERF-002, `main.py:199-239`) — implies an EventBridge scheduled warmer (`solace-warmer` referenced in scripts).
 - **Async self-invoke**: `storage.invoke_lambda_async` fires `InvocationType='Event'` back into the same function for deferred intake artifacts (`db/storage.py:151-167`, `main.py:185-197`) — requires `lambda:InvokeFunction` self-permission (`solace-self-invoke` in scripts).
 
@@ -49,9 +49,9 @@ Created idempotently by `scripts/setup_aws.py` and feature-specific setup script
 
 ## 5. Storage — S3
 
-- `solace-media-704229156617` — patient media (audio/photos), pre-signed URLs in AWS mode; also the 6-year JSONL archive target for audit/overrides/labels (`db/storage.py:331-355,425-450`; `setup_security.py:114-129`).
-- `solace-lambda-deploy-704229156617` — ML artifacts (`models/` prefix), baked into the image at build (`buildspec.yml:4-5,14-30`).
-- `solace-cloudtrail-704229156617` — CloudTrail log bucket (`setup_security.py:20`).
+- `solace-media-<AWS_ACCOUNT_ID>` — patient media (audio/photos), pre-signed URLs in AWS mode; also the 6-year JSONL archive target for audit/overrides/labels (`db/storage.py:331-355,425-450`; `setup_security.py:114-129`).
+- `solace-lambda-deploy-<AWS_ACCOUNT_ID>` — ML artifacts (`models/` prefix), baked into the image at build (`buildspec.yml:4-5,14-30`).
+- `solace-cloudtrail-<AWS_ACCOUNT_ID>` — CloudTrail log bucket (`setup_security.py:20`).
 
 ## 6. Edge / TLS (COMP-004)
 

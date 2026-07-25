@@ -1,7 +1,10 @@
 # ML deps for the real Triageist ensemble. Heavy install (~5 min first time on macOS).
 # Install AFTER requirements.txt, only needed when pickle files are in backend/models/.
 
-numpy==2.1.2
+# Must stay <2.0 while catboost is pinned at 1.2.7 (it requires numpy<2.0);
+# otherwise pip cannot resolve this file at all. Keep in lockstep with
+# requirements-lambda.txt so training and serving share one numpy ABI.
+numpy==1.26.4
 pandas==2.2.3
 scikit-learn==1.5.2
 lightgbm==4.5.0
