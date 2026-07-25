@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { himsFade, himsMove } from '../lib/hims';
+import { GET_STARTED_URL } from '../lib/appUrl';
 import BigStatement from '../components/product/BigStatement';
 
 /*
@@ -25,6 +26,8 @@ type Tier = {
   who: string;
   rows: string[];
   cta: string;
+  ctaHref?: string;
+  ctaTo?: string;
   popular?: boolean;
   tone: 'paper' | 'ink' | 'green';
 };
@@ -43,6 +46,7 @@ const TIERS: Tier[] = [
       'the clinical calculators, built in',
     ],
     cta: 'Start free',
+    ctaHref: GET_STARTED_URL,
     tone: 'paper',
   },
   {
@@ -57,6 +61,7 @@ const TIERS: Tier[] = [
       'patient intake in 20 languages',
     ],
     cta: 'Book a Demo',
+    ctaTo: '/demo',
     popular: true,
     tone: 'ink',
   },
@@ -73,6 +78,7 @@ const TIERS: Tier[] = [
       'insurance approvals, drafted and tracked',
     ],
     cta: 'Talk to us',
+    ctaTo: '/contact',
     tone: 'green',
   },
 ];
@@ -185,12 +191,21 @@ function TierCard({
       </div>
 
       <div className="mt-auto pt-8">
-        <Link
-          to="/demo"
-          className={`inline-flex w-full items-center justify-center rounded-pill px-7 py-3.5 text-sm font-medium transition-transform duration-[600ms] ease-hims-expo hover:scale-[1.03] ${tone.cta}`}
-        >
-          {tier.cta}
-        </Link>
+        {tier.ctaHref ? (
+          <a
+            href={tier.ctaHref}
+            className={`inline-flex w-full items-center justify-center rounded-pill px-7 py-3.5 text-sm font-medium transition-transform duration-[600ms] ease-hims-expo hover:scale-[1.03] ${tone.cta}`}
+          >
+            {tier.cta}
+          </a>
+        ) : (
+          <Link
+            to={tier.ctaTo ?? '/demo'}
+            className={`inline-flex w-full items-center justify-center rounded-pill px-7 py-3.5 text-sm font-medium transition-transform duration-[600ms] ease-hims-expo hover:scale-[1.03] ${tone.cta}`}
+          >
+            {tier.cta}
+          </Link>
+        )}
       </div>
     </Reveal>
   );

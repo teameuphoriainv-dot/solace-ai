@@ -10,6 +10,7 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import ExpandingLogo from './ui/ExpandingLogo';
 import { transitions } from '../lib/motion';
+import { GET_STARTED_URL } from '../lib/appUrl';
 
 // The four shipping products. The first three carry a trademark; Atlas, the
 // clinician copilot, is the workspace they all live inside. Each points at the
@@ -236,14 +237,21 @@ export default function Nav() {
 
         <Link
           to="/demo"
+          className={`hidden rounded-pill px-4 py-2 text-sm transition-colors md:inline-flex ${linkTone}`}
+        >
+          Book a Demo
+        </Link>
+
+        <a
+          href={GET_STARTED_URL}
           className={`hidden rounded-pill px-5 py-2 text-sm font-medium transition md:inline-flex ${
             light
               ? 'bg-white text-solace-green-900 hover:bg-white/90'
               : 'bg-gradient-to-br from-solace-green-700 to-solace-mint text-white'
           }`}
         >
-          Book a Demo
-        </Link>
+          Get Started
+        </a>
 
         <button
           className="flex h-12 w-12 items-center justify-center md:hidden"
@@ -314,9 +322,12 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
-          <Link to="/demo" onClick={closeAllMobile} className="btn-primary mt-2 w-full">
+          <Link to="/demo" onClick={closeAllMobile} className="block py-3 text-sm text-muted">
             Book a Demo
           </Link>
+          <a href={GET_STARTED_URL} onClick={closeAllMobile} className="btn-primary mt-2 w-full">
+            Get Started
+          </a>
         </div>
       )}
     </motion.header>
