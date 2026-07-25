@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { t } from "../lib/i18n";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -24,31 +25,18 @@ const POLL_MS = 15_000;
 const COMFORT_POLL_MS = 3_000;
 const COMFORT_POLL_MAX_ATTEMPTS = 15; // ~45s ceiling, then we stop trying.
 
-// Plain-language "what this means" for each ESI level. Written to reassure a
-// stressed patient: it explains the priority number without medical jargon and
-// without ever implying their wait is unsafe.
-const ESI_MEANING: Record<number, { headline: string; body: string }> = {
-  1: {
-    headline: "You need care right now",
-    body: "Our team has been alerted and is coming to you. Please stay where you are.",
-  },
-  2: {
-    headline: "You'll be seen very soon",
-    body: "Your symptoms need prompt attention. You're near the front of the line — please stay close.",
-  },
-  3: {
-    headline: "You'll be seen as soon as a clinician is free",
-    body: "Your symptoms are being taken seriously. More urgent cases may go first, but you have not been forgotten.",
-  },
-  4: {
-    headline: "Your wait may be a little longer today",
-    body: "Your symptoms appear stable. We'll bring you in as soon as we can — let the front desk know if anything changes.",
-  },
-  5: {
-    headline: "Your symptoms appear stable",
-    body: "You can be seen here, or your care team may suggest a clinic or telehealth visit instead. Either way, you'll get an answer today.",
-  },
-};
+// Plain-language "what this means" for each ESI level, in the patient's own
+// language. Written to reassure a stressed patient: it explains the priority
+// number without medical jargon and without ever implying their wait is unsafe.
+// USAB-008: these used to be a hardcoded English map, so a patient who checked
+// in in Spanish still got English here.
+function esiMeaning(level: number, lang: string): { headline: string; body: string } | null {
+  if (level < 1 || level > 5) return null;
+  return {
+    headline: t(`result_esi${level}_headline` as Parameters<typeof t>[0], lang),
+    body: t(`result_esi${level}_body` as Parameters<typeof t>[0], lang),
+  };
+}
 
 // Reconstruct the assessment from the public patient view when the
 // sessionStorage seed is gone (refresh / restored tab / another device). The
@@ -184,6 +172,11 @@ export default function PatientResult() {
     );
   }
 
+  // The language the patient checked in with. Everything below renders through
+  // t(), which falls back to English for any key a dictionary is missing.
+  const lang = result.language || "en";
+  const meaning = esiMeaning(result.esi_level, lang);
+
   return (
     <div className="min-h-[100dvh] flex flex-col bg-surface">
       <div className="flex-1 px-5 pb-32 max-w-lg w-full mx-auto flex flex-col gap-8">
@@ -213,16 +206,16 @@ export default function PatientResult() {
             <ESIBadge esiLevel={result.esi_level} size="lg" />
           </div>
 
-          {ESI_MEANING[result.esi_level] && (
+          {meaning && (
             <div className="ml-1 rounded-xl bg-surface-lowest shadow-soft p-4 flex flex-col gap-1">
               <div className="text-[11px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                 What this means
               </div>
               <div className="text-[15px] font-bold tracking-editorial leading-snug text-ink">
-                {ESI_MEANING[result.esi_level].headline}
+                {meaning.headline}
               </div>
               <p className="text-[14px] leading-relaxed text-ink/85">
-                {ESI_MEANING[result.esi_level].body}
+                {meaning.body}
               </p>
             </div>
           )}
@@ -235,7 +228,7 @@ export default function PatientResult() {
 
         {careRec && <CareRecommendationCard rec={careRec} hospitalId={hospitalId} />}
 
-        <SmsSelfServe hospitalId={hospitalId} patientId={patientId} />
+        <SmsSelfServe hospitalId={hospitalId} patientId={patientId} lang={lang} />
 
         {education ? (
           <motion.section
@@ -259,7 +252,7 @@ export default function PatientResult() {
             {education.things_to_do_at_home?.length > 0 && (
               <div>
                 <div className="text-[11px] uppercase tracking-[0.14em] text-text-muted font-semibold mt-1 mb-1">
-                  At home
+                  {t("result_at_home", lang)}
                 </div>
                 <ul className="text-[15px] leading-relaxed list-disc ml-5 flex flex-col gap-1">
                   {education.things_to_do_at_home.map((t, i) => (
@@ -270,7 +263,7 @@ export default function PatientResult() {
             )}
             <div>
               <div className="text-[11px] uppercase tracking-[0.14em] text-text-muted font-semibold mt-1 mb-1">
-                Come back if
+                {t("result_come_back_if", lang)}
               </div>
               <p className="text-[15px] leading-relaxed">{education.when_to_come_back}</p>
             </div>
@@ -282,18 +275,18 @@ export default function PatientResult() {
           <section className="flex flex-col gap-3">
             <div className="flex items-center gap-2 text-text-muted">
               <Leaf size={14} strokeWidth={1.5} />
-              <div className="text-[11px] uppercase tracking-[0.14em] font-semibold">While you wait</div>
+              <div className="text-[11px] uppercase tracking-[0.14em] font-semibold">{t("result_while_you_wait", lang)}</div>
             </div>
             {waitRange && (
               <div className="rounded-lg bg-surface-lowest px-4 py-3 shadow-soft">
                 <div className="text-[10px] uppercase tracking-[0.14em] text-text-muted font-semibold">
-                  Estimated wait to clinician
+                  {t("result_estimated_wait", lang)}
                 </div>
                 <div className="text-xl font-bold tracking-editorial text-primary mt-0.5">
                   {waitRange}
                 </div>
                 <div className="text-[11px] text-text-muted mt-0.5">
-                  Updates every 15s based on current queue. Your acuity band can move you up.
+                  {t("result_wait_updates", lang)}
                 </div>
               </div>
             )}
@@ -304,7 +297,7 @@ export default function PatientResult() {
                 aria-busy="true"
               >
                 <Loader2 size={16} className="animate-spin text-primary" aria-hidden="true" />
-                <span className="text-[14px]">Preparing your guidance…</span>
+                <span className="text-[14px]">{t("result_preparing_guidance", lang)}</span>
               </div>
             ) : (
               <ComfortProtocol actions={result.comfort_protocol} />
@@ -318,8 +311,7 @@ export default function PatientResult() {
           className="text-[11px] text-text-muted leading-relaxed pt-2"
           style={{ paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))" }}
         >
-          Triage aid only. Clinicians verify every decision. If your condition feels immediately
-          life-threatening, go to the front desk now.
+          {t("result_footer_disclaimer", lang)}
         </footer>
       </div>
 
@@ -330,7 +322,7 @@ export default function PatientResult() {
           aria-busy="true"
         >
           <Loader2 size={14} className="animate-spin text-primary" aria-hidden="true" />
-          Preparing your audio guidance…
+          {t("result_preparing_audio", lang)}
         </div>
       ) : (
         <AudioPlayer audioUrl={result.audio_url} />
@@ -422,9 +414,11 @@ function CareRecommendationCard({
 function SmsSelfServe({
   hospitalId,
   patientId,
+  lang,
 }: {
   hospitalId: string;
   patientId: string;
+  lang: string;
 }) {
   const [open, setOpen] = useState(false);
   const [phone, setPhone] = useState("");
@@ -439,14 +433,14 @@ function SmsSelfServe({
         onClick={() => setOpen(true)}
         className="inline-flex items-center justify-center gap-1.5 h-11 rounded-md text-sm font-semibold text-primary bg-primary-fixed/40 hover:bg-primary-fixed transition-colors"
       >
-        <MessageSquare size={14} /> Text me my care instructions
+        <MessageSquare size={14} /> {t("result_sms_cta", lang)}
       </button>
     );
   }
   if (done) {
     return (
       <div className="inline-flex items-center justify-center gap-1.5 h-11 rounded-md text-sm font-semibold text-success bg-success/10">
-        <Check size={14} /> Sent — check your messages
+        <Check size={14} /> {t("result_sms_sent", lang)}
       </div>
     );
   }
@@ -454,7 +448,7 @@ function SmsSelfServe({
   return (
     <div className="flex flex-col gap-2 bg-surface-lowest rounded-lg p-3 shadow-soft">
       <div className="text-[11px] uppercase tracking-wider text-text-muted font-semibold">
-        Text my care instructions
+        {t("result_sms_title", lang)}
       </div>
       <div className="flex gap-2">
         <input
@@ -463,7 +457,7 @@ function SmsSelfServe({
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="(512) 555-0177"
-          aria-label="Phone number to text your care instructions to"
+          aria-label={t("result_sms_aria", lang)}
           className="flex-1 h-11 px-3 rounded-md bg-surface-low ring-1 ring-line focus:ring-primary focus:ring-2 text-base outline-none"
           autoFocus
         />
@@ -475,10 +469,10 @@ function SmsSelfServe({
             try {
               const r = await sendCareInstructionsSelfServe(hospitalId, patientId, phone);
               if (r.success) setDone(true);
-              else setError(r.reason === "not_configured" ? "SMS isn't enabled for this hospital yet." : "Couldn't send. Try again.");
+              else setError(t(r.reason === "not_configured" ? "result_sms_not_configured" : "result_sms_failed", lang));
             } catch {
               // USAB-001: don't echo the raw server detail back to the patient.
-              setError("Couldn't send. Please try again.");
+              setError(t("result_sms_failed", lang));
             } finally {
               setBusy(false);
             }
@@ -487,7 +481,7 @@ function SmsSelfServe({
           className="h-11 px-4 rounded-md bg-primary text-white font-semibold text-sm disabled:opacity-50 inline-flex items-center gap-1.5"
         >
           {busy ? <Loader2 size={14} className="animate-spin" /> : <MessageSquare size={14} />}
-          Send
+          {t("result_sms_send", lang)}
         </button>
       </div>
       {error && <div className="text-xs text-error">{error}</div>}
@@ -496,7 +490,7 @@ function SmsSelfServe({
         onClick={() => setOpen(false)}
         className="text-[11px] text-text-muted underline self-start"
       >
-        Cancel
+        {t("result_sms_cancel", lang)}
       </button>
     </div>
   );
