@@ -81,3 +81,4 @@ Thumbs.db
 backend/.secrets/
 .secrets/
 frontend/vite.config.js
+.vercel

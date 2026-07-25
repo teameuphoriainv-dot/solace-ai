@@ -1,13 +1,41 @@
 # Solace
 
+**AI-native patient intake and clinical triage for emergency departments.**
+
+[![Watch the 2-min Solace demo on YouTube](https://img.shields.io/badge/Watch_the_2--min_demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=IamvthYhYMg)
+
+### ▶️ See it live
+
+| | |
+|---|---|
+| 🏥 **Product app — judges start here** | **[solaceaidemo.vercel.app/showcase](https://solaceaidemo.vercel.app/showcase)** — auto-signs in, split-screen patient + clinician view |
+| 📹 **2-min walkthrough** | **[▶️ Watch the demo on YouTube](https://www.youtube.com/watch?v=IamvthYhYMg)** |
+| 🌐 **Marketing site** | **[mysolaceclinic.com](https://mysolaceclinic.com)** |
+| 🔌 **Live API health** | [`/health`](https://7ew5f2x01d.execute-api.us-east-1.amazonaws.com/health) → `{"status":"ok","mode":"aws","triage":"trained_ensemble"}` — the real 4-model ML ensemble is running in production, not a stub |
+| 🗄️ **Live Vercel → DynamoDB** | [`mysolaceclinic.com/api/stats`](https://mysolaceclinic.com/api/stats) — a Vercel serverless function that reads our production Amazon DynamoDB tables live on each request. Returns `"source":"dynamodb"` with real counts across the multi-table model. **Click it — this is the Vercel + AWS Database integration, verifiable in one request.** |
+
+> Manual clinician sign-in (only if you skip `/showcase`): **Dr. Chen · PIN 224466**.
+
+> **For judges — populating the live clinician queue.** The clinician queue reads the `solace-patients` table, whose intake records self-expire on a DynamoDB TTL, so it may be empty when you arrive. To see it populated, either open **[/showcase](https://solaceaidemo.vercel.app/showcase)** (auto-signs in, split-screen patient + clinician), or run a 30-second intake at **[/demo](https://solaceaidemo.vercel.app/demo)** (pick a language, describe symptoms) and the patient appears in the live queue at **[/demo/clinician](https://solaceaidemo.vercel.app/demo/clinician)** (PIN 224466). The other tables ([`/api/stats`](https://mysolaceclinic.com/api/stats): clinicians, hospitals, EHR records) are always populated.
+
+### Screenshots
+
+| Clinician terminal — provisional ESI + AI pre-brief | Live patient queue |
+|---|---|
+| ![Clinician terminal](landing/public/assets/shots/terminal.png) | ![Live queue](landing/public/assets/shots/queue.png) |
+
+| EHR auto-match | Multilingual voice intake | AI care plan |
+|---|---|---|
+| ![EHR pull](landing/public/assets/shots/ehr-clean.png) | ![Voice intake](landing/public/assets/shots/voice.png) | ![Care plan](landing/public/assets/shots/plan.png) |
+
+---
+
 > **Repo layout** — three independent pieces:
 > | Folder | What | Where it runs |
 > |---|---|---|
-> | `landing/` | Marketing site ([live](https://solacehealth-eight.vercel.app)) | Vercel, auto-deploys from `main` (see `landing/README.md`) |
+> | `landing/` | Marketing site ([live](https://mysolaceclinic.com)) | Vercel, auto-deploys from `main` (see `landing/README.md`) |
 > | `frontend/` | The product app (patient intake + Atlas clinician terminal) | solaceaidemo.vercel.app |
 > | `backend/` | FastAPI on AWS Lambda | AWS |
-
-**AI-native patient intake and clinical triage for emergency departments.**
 
 Solace eliminates the dead time between a patient walking through the ED door and a clinician knowing what they need. A patient scans a QR code, speaks their symptoms in any language, and optionally photographs their injury or insurance card. Within seconds they hear a warm voice explain their triage level and what to expect while they wait. On the other side of the department, the clinician already has a full AI-generated pre-brief — provisional ESI level, SHAP attribution, clinical scribe draft, EHR pull — before the patient is roomed.
 
@@ -54,7 +82,7 @@ Patients who can't access the QR intake can call the hospital's Twilio number. S
 | Capability | Detail |
 |---|---|
 | **Multilingual voice intake** | Whisper STT + Polly TTS in 20+ languages — patient speaks, Solace responds |
-| **Two-stage triage** | Claude handles narrative ESI on intake; LightGBM 5-fold ensemble refines with bedside vitals |
+| **Two-stage triage** | Claude handles narrative ESI on intake; a 4-model stacked ensemble (LightGBM + XGBoost + CatBoost + MLP) refines with bedside vitals |
 | **SHAP explanations** | Per-patient feature attributions from `pred_contrib=True` — clinicians see *why* the model scored what it did |
 | **Conformal prediction** | Split-conformal 90%-coverage prediction sets on every refined ESI — the model tells you when it's uncertain |
 | **EHR auto-match** | Matches patient by name + insurance member ID; merges allergies, meds, conditions, prior visits into clinician view before rooming |
@@ -82,9 +110,9 @@ Patient phone ─► QR /patient ──► Vite + React SPA
                               (container, arm64, Python 3.12)
                    ┌──────────────┬──────────────┬───────────────┐
                    ▼              ▼              ▼               ▼
-             AWS Transcribe   AWS Bedrock    AWS Polly      LightGBM
-             (STT, BAA)       (Claude 4.5,   (TTS, BAA)     5-fold ensemble
-                              BAA)                          + SHAP
+             AWS Transcribe   AWS Bedrock    AWS Polly      Stacked ML
+             (STT, BAA)       (Claude 4.5,   (TTS, BAA)     (LGBM+XGB+CAT
+                              BAA)                          +MLP) + SHAP
                                                             + conformal
                    └──────────────┴──────────────┴───────────────┘
                                         │
@@ -111,7 +139,7 @@ All AI inference routes through AWS-managed services covered under the **AWS Bus
 | AI — STT | AWS Transcribe (primary) / OpenAI Whisper (fallback) |
 | AI — TTS | AWS Polly Neural (primary) / ElevenLabs (fallback) |
 | AI — vision | Claude Vision via Bedrock (injury photos, insurance OCR) |
-| ML | LightGBM 5-fold ensemble, SHAP, split-conformal calibration |
+| ML | 4-model stacked ensemble (LightGBM + XGBoost + CatBoost + MLP), 5-fold CV, logistic-regression meta-learner, ordinal threshold optimization, split-conformal calibration, SHAP via `pred_contrib` |
 | Auth | JWT HS256 + bcrypt + SMART-on-FHIR PKCE |
 | Phone | Twilio Voice + inbound voice agent |
 
@@ -251,9 +279,13 @@ All three default to AWS BAA-covered services in production. Set to the direct A
 
 ### Triage model
 
-The LightGBM ensemble requires model files in `backend/models/` (`lgbm_fold{0..4}.txt` + `artifacts.pkl`, ~340 MB total). Without them the backend falls back to a clinical heuristic simulation — the health endpoint reports `"triage": "clinical_simulation"` vs `"trained_ensemble"`.
+The acuity model is a **4-model stacked ensemble** — LightGBM + XGBoost + CatBoost + MLP, each trained with 5-fold stratified CV, stacked through a logistic-regression meta-learner, with ordinal threshold optimization (differential evolution + Nelder-Mead) and **split-conformal calibration** (90% coverage, with a separate noise-perturbed q-hat for robustness). Per-patient explanations come from LightGBM `pred_contrib` (SHAP). Feature engineering includes shock index, qSOFA/SIRS composites, keyword features (`kw_stroke`, `kw_seizure`, `kw_mi`, `kw_sepsis`), arrival-hour cyclic encoding, and vitals normalization — kept in sync between training (`scripts/train_triage_model.py`) and inference (`backend/services/triage_ml.py`).
 
-The ensemble was trained on the Kaggle Triageist dataset with 5-fold stratified CV, class-balanced sample weights, and split-conformal calibration on noise-perturbed vitals for 90% coverage. Feature engineering includes shock index, keyword features (`kw_stroke`, `kw_seizure`, `kw_mi`, `kw_sepsis`), arrival-hour cyclic encoding, and vitals normalization.
+**The trained ensemble is live in production.** Hitting the deployed [`/health`](https://7ew5f2x01d.execute-api.us-east-1.amazonaws.com/health) returns `"triage": "trained_ensemble"` — the real models are loaded and serving. The artifacts (`lgbm_fold{0..4}.txt` + `artifacts.pkl`, ~340 MB) are hosted in S3 (`SOLACE_MODELS_BUCKET`) rather than committed to git due to size. To reproduce locally, obtain the Kaggle Triageist dataset and run `scripts/train_triage_model.py`; without artifacts the backend falls back to a deterministic clinical-heuristic simulation and `/health` reports `"clinical_simulation"`.
+
+> **Demo vs production AI path.** The public demo deployment runs the direct Anthropic API on Claude Haiku (fast + low-cost) with full PHI redaction via the content guard. The HIPAA-by-construction path described in `SECURITY.md` (AWS Bedrock + Claude Sonnet under the AWS BAA) is one environment flag away (`CLAUDE_PROVIDER=bedrock`) and is what a real covered-entity deployment would use.
+
+> **Honesty note on accuracy.** Reported model metrics are a *synthetic-data ceiling* — the ensemble is trained on the Kaggle Triageist dataset (~80k **synthetic** ED encounters), not real clinical records, and is **not clinically validated**. On real free-text the ML can over-default to the modal class (ESI 3); this is mitigated by a deterministic safety floor (`backend/services/triage_rules.py`) that can only *raise* acuity, never lower it. See `docs/clinical-performance-brief.md` for the full breakdown.
 
 ---
 
