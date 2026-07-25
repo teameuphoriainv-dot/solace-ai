@@ -1,5 +1,5 @@
 /**
- * Solace hackathon demo — ~83 s @ 30 fps = 2490 frames.
+ * Solace hackathon demo - ~83 s @ 30 fps = 2490 frames.
  *
  * Scenes (24-frame cross-fades via SceneWrap):
  *   0    -  270   Title                     (9 s)
@@ -112,7 +112,7 @@ const Caption: React.FC<{
   );
 };
 
-// Slow-drifting ambient background layer. No scale, just gentle x/y drift —
+// Slow-drifting ambient background layer. No scale, just gentle x/y drift -
 // that way we never pump the whole frame.
 const AmbientOrbs: React.FC<{ tint?: string; opacity?: number }> = ({ tint = PRIMARY_FIXED, opacity = 0.35 }) => {
   const frame = useCurrentFrame();
@@ -228,7 +228,7 @@ const TitleCard: React.FC = () => {
           Solace
         </div>
 
-        {/* Tagline — staggered word fade */}
+        {/* Tagline - staggered word fade */}
         <div style={{
           marginTop: 22, fontSize: 34, fontWeight: 400,
           letterSpacing: "-0.01em", color: "rgba(255,255,255,0.85)",
@@ -266,7 +266,7 @@ const TitleCard: React.FC = () => {
 //   160  -  320   Medical form
 //   320  -  520   Insurance scan
 //   520  -  700   Recording
-//   700  -  920   Pipeline (extra dwell — models showcase)
+//   700  -  920   Pipeline (extra dwell - models showcase)
 //   920  - 1080   Result
 const PatientIntakeScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -300,8 +300,8 @@ const PatientIntakeScene: React.FC = () => {
           </PhoneFrame>
         </div>
         <Caption from={20} duration={130}>Patient scans the QR. No install.</Caption>
-        <Caption from={180} duration={130}>Adaptive form — branches per answer.</Caption>
-        <Caption from={340} duration={170}>Insurance card — Claude Vision auto-fills.</Caption>
+        <Caption from={180} duration={130}>Adaptive form - branches per answer.</Caption>
+        <Caption from={340} duration={170}>Insurance card - Claude Vision auto-fills.</Caption>
         <Caption from={540} duration={150}>Speak your symptoms. Whisper transcribes.</Caption>
         <Caption from={720} duration={190}>Six AI calls in parallel. Result in seconds.</Caption>
         <Caption from={940} duration={130}>ESI + plan + wait time in under 10 seconds.</Caption>
@@ -448,7 +448,7 @@ const PhoneMedicalForm: React.FC<{ localFrame: number }> = ({ localFrame }) => {
             <div style={{ fontSize: 12, marginBottom: 6 }}>When was your last asthma exacerbation?</div>
             <div style={{ display: "flex", gap: 6 }}>
               <Chip>{"< 1 month"}</Chip>
-              <Chip>{"1–6 months"}</Chip>
+              <Chip>{"1-6 months"}</Chip>
               <Chip selected>{"> 1 year"}</Chip>
             </div>
           </div>
@@ -458,10 +458,10 @@ const PhoneMedicalForm: React.FC<{ localFrame: number }> = ({ localFrame }) => {
   );
 };
 
-// Insurance card capture + auto-fill (200 frames — 6.7 s).
+// Insurance card capture + auto-fill (200 frames - 6.7 s).
 //   0-60    Viewfinder approach, card zooms in
 //   60-90   Capture flash
-//   80-200  Extracted fields — unhurried stagger, then dwell
+//   80-200  Extracted fields - unhurried stagger, then dwell
 const PhoneInsuranceScan: React.FC<{ localFrame: number }> = ({ localFrame }) => {
   const inFrame = Math.max(0, Math.min(1, localFrame / 55));
   const flash = localFrame >= 62 && localFrame <= 80 ? Math.max(0, 1 - Math.abs(localFrame - 68) / 10) : 0;
@@ -547,7 +547,7 @@ const PhoneInsuranceScan: React.FC<{ localFrame: number }> = ({ localFrame }) =>
         </div>
       )}
 
-      {/* Capture flash — softer, wider fade so it doesn't pop */}
+      {/* Capture flash - softer, wider fade so it doesn't pop */}
       {flash > 0 && (
         <div style={{
           position: "absolute", inset: 0, background: "white",
@@ -654,7 +654,7 @@ const PhoneRecording: React.FC<{ localFrame: number }> = ({ localFrame }) => {
   );
 };
 
-// Pipeline (220 frames — models showcase, unhurried cascade + dwell).
+// Pipeline (220 frames - models showcase, unhurried cascade + dwell).
 const PhonePipeline: React.FC<{ localFrame: number }> = ({ localFrame }) => {
   const rows = [
     { label: "Whisper", sub: "Transcribing audio", start: 4 },
@@ -743,7 +743,7 @@ const PhoneResult: React.FC<{ localFrame: number }> = ({ localFrame }) => {
           <div style={{ fontSize: 9.5, color: TEXT_MUTED, letterSpacing: "0.14em", textTransform: "uppercase" }}>
             Estimated wait
           </div>
-          <div style={{ fontSize: 18, fontWeight: 800, color: PRIMARY, letterSpacing: "-0.02em" }}>10–20 min</div>
+          <div style={{ fontSize: 18, fontWeight: 800, color: PRIMARY, letterSpacing: "-0.02em" }}>10-20 min</div>
         </div>
         {[
           ["Stay still", "Sit or lie down. Avoid walking."],
@@ -831,8 +831,8 @@ const ClinicianDashboardScene: React.FC = () => {
             )}
           </div>
         </LaptopFrame>
-        <Caption from={18} duration={140}>New arrival. Pre-brief, scribe, SHAP — before rooming.</Caption>
-        <Caption from={210} duration={180}>EHR auto-matches — asthma hx, family cardiac risk, prior visits.</Caption>
+        <Caption from={18} duration={140}>New arrival. Pre-brief, scribe, SHAP - before rooming.</Caption>
+        <Caption from={210} duration={180}>EHR auto-matches - asthma hx, family cardiac risk, prior visits.</Caption>
         <Caption from={410} duration={170}>Clinician walks in already informed.</Caption>
       </AbsoluteFill>
     </SceneWrap>
@@ -983,10 +983,10 @@ const DesktopDetailPane: React.FC<{ localFrame: number }> = ({ localFrame }) => 
       <div style={{ height: 1, background: "rgba(74,85,87,0.08)", margin: "8px 0 12px" }} />
       {[
         ["Allergies", "NKDA"],
-        ["Medications", "Albuterol HFA inhaler — PRN"],
+        ["Medications", "Albuterol HFA inhaler - PRN"],
         ["Conditions", "Mild intermittent asthma (childhood)"],
         ["Family history", "Father: HTN · Mother: T2DM · M. grandfather: MI age 62"],
-        ["Primary care", "Dr. Anjali Patel — Austin Family Medicine"],
+        ["Primary care", "Dr. Anjali Patel - Austin Family Medicine"],
       ].map(([k, v], i) => (
         <div key={k} style={{
           display: "grid", gridTemplateColumns: "140px 1fr", gap: 10, padding: "3px 0", fontSize: 11,
@@ -1069,7 +1069,7 @@ const VitalsRefineScene: React.FC = () => {
                     color: p >= 1 ? (v.critical ? ESI_COLORS[2] : PRIMARY) : TEXT_MUTED,
                     letterSpacing: "-0.02em", marginTop: 2,
                   }}>
-                    {p > 0 ? v.value : "—"}
+                    {p > 0 ? v.value : "-"}
                     <span style={{ fontSize: 11, fontWeight: 500, color: TEXT_MUTED, marginLeft: 4 }}>
                       {p > 0 && v.unit}
                     </span>
@@ -1132,7 +1132,7 @@ const VitalsRefineScene: React.FC = () => {
             </div>
           )}
         </div>
-        <Caption from={8} duration={110}>Vitals enter — shock index + hypoxia flag critical.</Caption>
+        <Caption from={8} duration={110}>Vitals enter - shock index + hypoxia flag critical.</Caption>
         <Caption from={130} duration={190}>LightGBM refines the ESI with real SHAP + conformal coverage.</Caption>
       </AbsoluteFill>
     </SceneWrap>

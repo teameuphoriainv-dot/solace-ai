@@ -132,7 +132,7 @@ export default function EhrScreen() {
                 >
                   19yo M c/o acute-onset chest tightness and sharp back pain
                   following basketball practice 1 hour ago, now worsening, with
-                  associated dyspnea; denies trauma; reports pain 7–10/10. Hx
+                  associated dyspnea; denies trauma; reports pain 7-10/10. Hx
                   asthma on steroids; allergies: peanuts (moderate), sulfa
                   (anaphylaxis).
                 </p>

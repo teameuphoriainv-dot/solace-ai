@@ -91,7 +91,7 @@ export function PhiScrub() {
         <div className="mt-4 divide-y divide-black/5">
           <Field k="Subject" v="[slot S1]" tone="coded" />
           <Field k="MRN" v="removed" tone="removed" />
-          <Field k="Age band" v="50–59" tone="coded" />
+          <Field k="Age band" v="50-59" tone="coded" />
           <Field k="Phone" v="removed" tone="removed" />
           <Field k="Problem" v="I20.9 · Angina" tone="coded" />
           <Field k="Vitals" v="LOINC 8867-4 · 118" tone="coded" />

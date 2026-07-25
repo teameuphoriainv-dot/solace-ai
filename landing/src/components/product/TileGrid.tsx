@@ -182,7 +182,7 @@ export default function TileGrid() {
 
           <Tile index={1} reduce={reduce} className="h-[200px] bg-ink">
             <div className="flex h-full flex-col justify-between p-6">
-              {/* Acuity ladder: ESI 1–5, this patient's level lit. */}
+              {/* Acuity ladder: ESI 1-5, this patient's level lit. */}
               <div className="flex items-center gap-1.5" aria-hidden="true">
                 {[1, 2, 3, 4, 5].map((lvl) => (
                   <span
@@ -273,7 +273,7 @@ export default function TileGrid() {
           <Tile index={5} reduce={reduce} className="h-[280px] bg-ink">
             <div className="flex h-full flex-col justify-center p-6 text-white">
               <p className="font-sofia text-[40px] font-medium leading-none tracking-[-0.02em]">
-                35–45 min
+                35-45 min
               </p>
               <p className="mt-2.5 text-sm text-white/70">
                 your real wait time, updated every 15 seconds
@@ -281,7 +281,7 @@ export default function TileGrid() {
             </div>
           </Tile>
 
-          {/* AI follow-ups, 2–3 questions picked from the transcript. */}
+          {/* AI follow-ups, 2-3 questions picked from the transcript. */}
           <Tile index={6} reduce={reduce} className="h-[470px]">
             <div
               aria-hidden="true"
@@ -312,9 +312,9 @@ export default function TileGrid() {
                     How severe is the pain?
                   </p>
                   <div className="mt-2.5 flex flex-wrap gap-2">
-                    <span className={PILL_IDLE}>1–3</span>
-                    <span className={PILL_IDLE}>4–6</span>
-                    <span className={PILL_PICKED}>7–10</span>
+                    <span className={PILL_IDLE}>1-3</span>
+                    <span className={PILL_IDLE}>4-6</span>
+                    <span className={PILL_PICKED}>7-10</span>
                   </div>
                 </div>
               </div>

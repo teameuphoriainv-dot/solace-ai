@@ -4,6 +4,7 @@ in-memory dict in local mode. Lifetime is one phone call (or one simulator sessi
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import logging
 import time
@@ -30,11 +31,22 @@ def _now_iso() -> str:
 
 
 def hash_phone(phone: str) -> str:
-    """Last-4 + sha256 hash, so call rows don't store raw PII numbers in plaintext."""
+    """Last-4 + HMAC-SHA256 hash, so call rows never store raw PII numbers.
+
+    An unsalted SHA-256 over the ~10^10 US phone space is trivially reversible by
+    brute force, so we HMAC with the CMK-encrypted auth secret (the same salt
+    lib.services.sms uses) and fall back to unsalted SHA-256 only in local dev
+    where the secret is unavailable.
+    """
     if not phone:
         return ""
     last4 = phone[-4:] if len(phone) >= 4 else phone
-    h = hashlib.sha256(phone.encode()).hexdigest()[:16]
+    try:
+        from lib.intake_nonce import _hmac_key  # noqa: PLC0415 — shared salt, avoid import cycle
+
+        h = hmac.new(_hmac_key(), phone.encode(), hashlib.sha256).hexdigest()[:16]
+    except Exception:  # noqa: BLE001 — degrade gracefully, still no plaintext
+        h = hashlib.sha256(phone.encode()).hexdigest()[:16]
     return f"{last4}:{h}"
 
 

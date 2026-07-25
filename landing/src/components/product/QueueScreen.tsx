@@ -27,7 +27,7 @@ const STATS = [
 ] as const;
 
 // ESI badge colors per Atlas: gold 3, burnt-amber 2 ("burnt-amber pushes
-// acuity up"), muted slate 4–5.
+// acuity up"), muted slate 4-5.
 const ESI_TONE: Record<number, string> = {
   2: '#b05436',
   3: '#b8924a',
@@ -264,7 +264,7 @@ export default function QueueScreen() {
                 >
                   19yo M c/o acute-onset chest tightness and sharp back pain
                   following basketball practice 1 hour ago, now worsening, with
-                  associated dyspnea; denies trauma; reports pain 7–10/10. Hx
+                  associated dyspnea; denies trauma; reports pain 7-10/10. Hx
                   asthma on steroids; allergies: peanuts (moderate), sulfa
                   (anaphylaxis). Photo: none.
                 </p>

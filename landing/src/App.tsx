@@ -13,6 +13,7 @@ import Hipaa from './pages/Hipaa';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 export default function App() {
   return (
     <BrowserRouter>
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/blog" element={<Navigate to="/how-it-works" replace />} />
           <Route path="/demo" element={<Demo />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

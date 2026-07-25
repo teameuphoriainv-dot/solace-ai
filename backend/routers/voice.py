@@ -287,7 +287,7 @@ def simulator_turn(body: SimulatorTurnBody, request: Request = None) -> dict:
         session.append_tool(
             body.call_id,
             name=turn["tool"],
-            tool_input=turn.get("tool_result", {}) if isinstance(turn.get("tool_result"), dict) else {},
+            tool_input=turn.get("tool_result", {}).get("input", {}) if isinstance(turn.get("tool_result"), dict) else {},
             result_summary=turn.get("say", "")[:200],
         )
         session.update(body.call_id, {"intent": turn["tool"]})

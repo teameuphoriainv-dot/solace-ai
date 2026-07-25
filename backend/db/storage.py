@@ -134,7 +134,7 @@ def list_patients_for_hospital(hospital_id: str, status: str | None = None) -> l
         rows = [p for p in _patients.values() if p.get("hospital_id") == hospital_id]
     if status and status != "all":
         rows = [p for p in rows if p.get("status") == status]
-    rows.sort(key=lambda p: (int(p.get("esi_level", 5)), p.get("created_at", "")))
+    rows.sort(key=lambda p: (int(p.get("esi_level") or 5), p.get("created_at", "")))
     return rows
 
 
@@ -188,17 +188,44 @@ def _ddb_put_patient(patient: dict[str, Any]) -> None:
 
 
 def _ddb_update_patient(patient_id: str, updates: dict[str, Any]) -> dict[str, Any] | None:
-    cleaned = _to_ddb(updates)
-    expr = "SET " + ", ".join(f"#{i}=:{i}" for i in range(len(cleaned)))
-    names = {f"#{i}": k for i, k in enumerate(cleaned.keys())}
-    values = {f":{i}": v for i, v in enumerate(cleaned.values())}
-    resp = _boto_table(settings.dynamodb_table_patients).update_item(
-        Key={"patient_id": patient_id},
-        UpdateExpression=expr,
-        ExpressionAttributeNames=names,
-        ExpressionAttributeValues=values,
-        ReturnValues="ALL_NEW",
-    )
+    # A None value means "clear this attribute". _to_ddb drops None, so SET alone
+    # can never remove a field in AWS mode (local mode clears via dict.update).
+    # Split into a SET clause for real values and a REMOVE clause for the Nones so
+    # the two modes agree — the pain-flag re-arm depends on clearing acknowledged_*.
+    set_items = _to_ddb({k: v for k, v in updates.items() if v is not None})
+    remove_keys = [k for k, v in updates.items() if v is None]
+    if not set_items and not remove_keys:
+        return get_patient(patient_id)
+
+    names: dict[str, str] = {}
+    values: dict[str, Any] = {}
+    clauses: list[str] = []
+    idx = 0
+    if set_items:
+        assigns = []
+        for k, v in set_items.items():
+            names[f"#{idx}"] = k
+            values[f":{idx}"] = v
+            assigns.append(f"#{idx}=:{idx}")
+            idx += 1
+        clauses.append("SET " + ", ".join(assigns))
+    if remove_keys:
+        removes = []
+        for k in remove_keys:
+            names[f"#{idx}"] = k
+            removes.append(f"#{idx}")
+            idx += 1
+        clauses.append("REMOVE " + ", ".join(removes))
+
+    kwargs: dict[str, Any] = {
+        "Key": {"patient_id": patient_id},
+        "UpdateExpression": " ".join(clauses),
+        "ExpressionAttributeNames": names,
+        "ReturnValues": "ALL_NEW",
+    }
+    if values:
+        kwargs["ExpressionAttributeValues"] = values
+    resp = _boto_table(settings.dynamodb_table_patients).update_item(**kwargs)
     return _from_ddb(resp.get("Attributes"))
 
 

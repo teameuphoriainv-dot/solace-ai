@@ -23,7 +23,7 @@ import CanvasIntake from './CanvasIntake';
  *
  * SCREEN_QUAD: full-glass corners as fractions of the 1728×2304 image,
  * TL, TR, BR, BL. Measured from the photo's pixels (/tmp/pw/measure-glass.js
- * scans each edge for the bezel→glass luminance step), then tucked 4–5px
+ * scans each edge for the bezel→glass luminance step), then tucked 4-5px
  * under the dark bezel so no edge ever undershoots into the photo's white
  * screen at any rendered scale. Don't recalibrate from screenshots. Measure.
  */

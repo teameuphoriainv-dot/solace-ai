@@ -10,7 +10,7 @@ import { ComfortProtocol } from "../components/patient/ComfortProtocol";
 import { ESIBadge } from "../components/patient/ESIBadge";
 import { PainEscalateButton } from "../components/patient/PainEscalateButton";
 import { getPublicPatient, sendCareInstructionsSelfServe } from "../lib/api";
-import type { IntakeResponse, PatientEducation } from "../types";
+import type { IntakeResponse, PatientEducation, PublicPatient } from "../types";
 
 const POLL_MS = 15_000;
 
@@ -49,6 +49,24 @@ const ESI_MEANING: Record<number, { headline: string; body: string }> = {
     body: "You can be seen here, or your care team may suggest a clinic or telehealth visit instead. Either way, you'll get an answer today.",
   },
 };
+
+// Reconstruct the assessment from the public patient view when the
+// sessionStorage seed is gone (refresh / restored tab / another device). The
+// public endpoint exposes exactly the patient-safe fields the result screen
+// renders; confidence_band is not among them and is not shown here.
+function buildResultFromPublic(p: PublicPatient): IntakeResponse {
+  return {
+    patient_id: p.patient_id,
+    esi_level: (p.esi_level ?? 3) as IntakeResponse["esi_level"],
+    esi_label: p.esi_label ?? "",
+    patient_explanation: p.patient_explanation ?? "",
+    comfort_protocol: p.comfort_protocol ?? [],
+    audio_url: p.audio_url ?? null,
+    confidence_band: null,
+    language: p.language ?? "en",
+    care_recommendation: p.care_recommendation,
+  };
+}
 
 export default function PatientResult() {
   const { hospitalId = "demo", patientId = "" } = useParams<{ hospitalId: string; patientId: string }>();
@@ -92,6 +110,12 @@ export default function PatientResult() {
       try {
         const p = await getPublicPatient(hospitalId, patientId);
         if (cancelled) return;
+        // Rebuild the assessment from the server if we never had (or lost) the
+        // sessionStorage seed — a refresh, a restored mobile tab, or the link
+        // opened on another device. Without this the screen spins forever.
+        if (p.esi_level) {
+          setResult((prev) => prev ?? buildResultFromPublic(p));
+        }
         const ready = (p.comfort_protocol && p.comfort_protocol.length > 0) || p.comfort_ready;
         const failed = p.artifacts_status === "failed";
         if (ready || failed) {
@@ -136,7 +160,7 @@ export default function PatientResult() {
           setEducationPublishedAt(p.patient_education_published_at);
         }
         if (p.wait_estimate_range) setWaitRange(p.wait_estimate_range);
-        if (p.care_recommendation && !careRec) setCareRec(p.care_recommendation);
+        if (p.care_recommendation) setCareRec((prev) => prev ?? p.care_recommendation!);
       } catch {
         // swallow — we'll try again next tick
       } finally {

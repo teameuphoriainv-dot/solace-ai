@@ -163,28 +163,37 @@ def record_failed_attempt(clinician_id: str) -> None:
         now = int(time.time())
         tbl = _table("solace-clinicians")
 
-        # Atomic increment of failed_attempts counter
-        resp = tbl.update_item(
+        # Read the prior counter first so we can honor the sliding window. If the
+        # last failure is older than LOCKOUT_WINDOW_SECONDS, this failure starts a
+        # fresh window (count = 1) instead of adding to a stale tally — otherwise a
+        # monotonic counter would eventually lock out a clinician who never made 5
+        # mistakes inside any 15-minute window (the documented policy).
+        prior = tbl.get_item(
             Key={"clinician_id": clinician_id},
-            UpdateExpression=(
-                "SET failed_attempts = if_not_exists(failed_attempts, :zero) + :one, "
-                "last_failed_at = :now"
-            ),
-            ExpressionAttributeValues={
-                ":zero": 0,
-                ":one": 1,
-                ":now": now,
-            },
-            ReturnValues="ALL_NEW",
-        )
+            ProjectionExpression="failed_attempts, last_failed_at",
+        ).get("Item", {})
+        prior_last = int(prior.get("last_failed_at", 0) or 0)
+        window_expired = prior_last and (now - prior_last) > LOCKOUT_WINDOW_SECONDS
+
+        if window_expired:
+            resp = tbl.update_item(
+                Key={"clinician_id": clinician_id},
+                UpdateExpression="SET failed_attempts = :one, last_failed_at = :now",
+                ExpressionAttributeValues={":one": 1, ":now": now},
+                ReturnValues="ALL_NEW",
+            )
+        else:
+            resp = tbl.update_item(
+                Key={"clinician_id": clinician_id},
+                UpdateExpression=(
+                    "SET failed_attempts = if_not_exists(failed_attempts, :zero) + :one, "
+                    "last_failed_at = :now"
+                ),
+                ExpressionAttributeValues={":zero": 0, ":one": 1, ":now": now},
+                ReturnValues="ALL_NEW",
+            )
         attrs = resp.get("Attributes", {})
         attempts = int(attrs.get("failed_attempts", 0))
-        last_failed = int(attrs.get("last_failed_at", 0))
-
-        # Check if window has expired — reset if so
-        if last_failed and (now - last_failed) > LOCKOUT_WINDOW_SECONDS and attempts <= 1:
-            # Counter was reset by the increment above, which is fine
-            pass
 
         if attempts >= MAX_FAILED_ATTEMPTS:
             # Lock the account

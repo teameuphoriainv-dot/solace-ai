@@ -48,9 +48,22 @@ export default function VoiceAgent() {
     };
   }, [callId]);
 
+  // Stop any TTS playback on unmount so voice audio doesn't bleed over the next
+  // screen after the user navigates away mid-utterance.
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   function playAudio(url: string | null | undefined) {
     if (!url || !autoplay) return;
     if (!audioRef.current) audioRef.current = new Audio();
+    else audioRef.current.pause();
     audioRef.current.src = url;
     audioRef.current.play().catch(() => {
       // Browsers block autoplay until first user gesture — that's fine here,
