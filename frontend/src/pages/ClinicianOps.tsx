@@ -10,6 +10,10 @@ import {
   nurseTriageProtocols, nurseTriageEvaluate, tefcaQuery, telehealthSession,
   hl7MdmRender, portalThreads, portalThread, portalRespond, portalInbound,
 } from "../lib/api";
+import type {
+  PortalThreadSummary, PortalMessage, SepsisBundleElement, SepsisBundleResult,
+  TelehealthProvider,
+} from "../lib/api";
 import {
   sdohScreen, sdohReferralsBatch, careGapsSidebar, noShowEquityAudit,
   noShowReminderPlan, resultsDetectAbnormal, resultsReview, resultClosureOpen,
@@ -165,9 +169,9 @@ export default function ClinicianOps() {
 }
 
 function PortalPane({ hospitalId }: { hospitalId: string }) {
-  const [threads, setThreads] = useState<any[]>([]);
+  const [threads, setThreads] = useState<PortalThreadSummary[]>([]);
   const [active, setActive] = useState<string | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<PortalMessage[]>([]);
   const [reply, setReply] = useState("");
   const [busy, setBusy] = useState(false);
   const [seedPatient, setSeedPatient] = useState("p001");
@@ -354,7 +358,7 @@ function SepsisPane({ hospitalId }: { hospitalId: string }) {
     fluids_dose_ml_per_kg: 30,
     persistent_hypotension_after_fluids: false,
   });
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<SepsisBundleResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -404,7 +408,7 @@ function SepsisPane({ hospitalId }: { hospitalId: string }) {
           </div>
           <div className="text-xs mt-1 text-text-muted">Deadline: {out.deadline_iso}</div>
           <div className="mt-3 divide-y divide-line">
-            {(out.elements || []).map((e: any, i: number) => (
+            {(out.elements || []).map((e: SepsisBundleElement, i: number) => (
               <div key={i} className="flex justify-between items-center gap-3 py-1.5 text-sm">
                 <span className="flex items-center gap-2 text-ink">
                   {e.completed ? (
@@ -621,7 +625,7 @@ function TelehealthPane({ hospitalId }: { hospitalId: string }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <label className="flex flex-col gap-1">
             <FieldLabel>Provider</FieldLabel>
-            <select value={provider} onChange={(e) => setProvider(e.target.value as any)} className={inputClass}>
+            <select value={provider} onChange={(e) => setProvider(e.target.value as TelehealthProvider)} className={inputClass}>
               <option value="doxy">Doxy.me</option>
               <option value="zoom">Zoom</option>
               <option value="teams">Microsoft Teams</option>

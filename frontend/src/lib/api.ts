@@ -4,6 +4,8 @@ import type {
   ClinicianNote,
   InsuranceFields,
   IntakeResponse,
+  JsonObject,
+  MedicalInfo,
   PatientDetail,
   PatientEducation,
   PatientSummary,
@@ -799,7 +801,7 @@ export type DdxResult = {
 
 export async function ddxV2(
   hospitalId: string,
-  body: { transcript: string; chief_complaint?: string; specialty?: string; medical_info?: any; vitals?: any }
+  body: { transcript: string; chief_complaint?: string; specialty?: string; medical_info?: MedicalInfo; vitals?: Vitals }
 ): Promise<DdxResult> {
   const { data } = await api.post<DdxResult>(`/api/${hospitalId}/ddx/v2`, body);
   return data;
@@ -812,10 +814,10 @@ export async function listCalculators(hospitalId: string): Promise<{ key: string
 
 export async function calcAutoExtract(hospitalId: string, transcript: string, chief_complaint = "") {
   const { data } = await api.post(`/api/${hospitalId}/cds/auto-extract`, { transcript, chief_complaint });
-  return data as { calculators: { key: string; name: string; result: any; unknown: string[] }[] };
+  return data as { calculators: { key: string; name: string; result: unknown; unknown: string[] }[] };
 }
 
-export async function calculate(hospitalId: string, key: string, inputs: any) {
+export async function calculate(hospitalId: string, key: string, inputs: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/cds/calculate`, { key, inputs });
   return data;
 }
@@ -825,7 +827,7 @@ export async function listScreeners(hospitalId: string) {
   return data.screeners as { key: string; name: string; items: string[]; scale: string }[];
 }
 
-export async function scoreScreener(hospitalId: string, key: string, body: { items?: number[]; answers?: any; sex?: string }) {
+export async function scoreScreener(hospitalId: string, key: string, body: { items?: number[]; answers?: JsonObject; sex?: string }) {
   const { data } = await api.post(`/api/${hospitalId}/screeners/score`, { key, ...body });
   return data;
 }
@@ -841,7 +843,7 @@ export async function listLetterTemplates(hospitalId: string) {
   return data.templates as { key: string; name: string; audience: string; slots: string[] }[];
 }
 
-export async function autofillLetter(hospitalId: string, template_key: string, chart_context: any) {
+export async function autofillLetter(hospitalId: string, template_key: string, chart_context: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/letters/auto-fill`, { template_key, chart_context });
   return data as { slots: Record<string, string>; rendered: string };
 }
@@ -857,7 +859,7 @@ export async function letterPdfUrl(hospitalId: string, template_key: string, slo
 }
 
 // Inbox draft + result triage
-export async function inboxDraft(hospitalId: string, inbound_message: string, patient_chart: any = {}, hospital_name = "our clinic") {
+export async function inboxDraft(hospitalId: string, inbound_message: string, patient_chart: JsonObject = {}, hospital_name = "our clinic") {
   const { data } = await api.post(`/api/${hospitalId}/inbox/draft`, { inbound_message, patient_chart, hospital_name });
   return data;
 }
@@ -874,7 +876,7 @@ export async function refillTriage(hospitalId: string, body: { medication_canoni
 }
 
 // PA packets
-export async function paPacket(hospitalId: string, body: any) {
+export async function paPacket(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/pa/packet`, body);
   return data;
 }
@@ -886,7 +888,7 @@ export async function drugCheck(hospitalId: string, meds: string[], allergies: s
 }
 
 // Discharge plan
-export async function buildDischarge(hospitalId: string, body: any) {
+export async function buildDischarge(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/discharge/build`, body);
   return data;
 }
@@ -903,24 +905,24 @@ export async function eligibilityCheck(hospitalId: string, body: { payer_name: s
   return data;
 }
 
-export async function noShowPredict(hospitalId: string, body: any) {
+export async function noShowPredict(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/no-show/predict`, body);
   return data;
 }
 
-export async function careGapsAdHoc(hospitalId: string, patient: any) {
+export async function careGapsAdHoc(hospitalId: string, patient: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/care-gaps/evaluate`, { patient });
-  return data.gaps as any[];
+  return data.gaps as JsonObject[];
 }
 
-export async function sdohPrapare(hospitalId: string, answers: any) {
+export async function sdohPrapare(hospitalId: string, answers: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/sdoh/prapare`, { answers });
   return data;
 }
 
 export async function ehrLocalResources(hospitalId: string) {
   const { data } = await api.get(`/api/${hospitalId}/ehr-write/local`);
-  return data.resources as any[];
+  return data.resources as JsonObject[];
 }
 
 // AI override audit
@@ -955,32 +957,79 @@ export async function evidenceAnswer(hospitalId: string, question: string, k = 6
   };
 }
 
-export async function sepsisEws(hospitalId: string, vitals: any) {
-  const { data } = await api.post(`/api/${hospitalId}/ews/sepsis`, vitals);
-  return data as { score: number; band: string; action: string; contributions: { feature: string; points: number; why: string }[] };
-}
+export type EwsContribution = { feature: string; points: number; why: string; source?: string };
 
-export async function deteriorationIndex(hospitalId: string, body: any) {
-  const { data } = await api.post(`/api/${hospitalId}/ews/deterioration`, body);
-  return data as { score: number; band: string; action: string; contributions: { feature: string; points: number; why: string }[] };
-}
+/** Shared head of both early-warning responses (backend/services/early_warning.py). */
+export type EwsResult = {
+  score: number;
+  band: string;
+  action: string;
+  contributions: EwsContribution[];
+};
 
-export async function hccEvaluate(hospitalId: string, body: { conditions: any[]; prior_notes?: string[]; current_year?: number }) {
-  const { data } = await api.post(`/api/${hospitalId}/hcc/evaluate`, body);
+/**
+ * Sepsis EWS also carries the provenance blurb the UI renders under the score.
+ * The endpoint returns more besides (qsofa, sirs, sofa_organ_proxies,
+ * map_estimate, risk_interval, provenance); add them as screens consume them.
+ */
+export type SepsisEwsResult = EwsResult & { calibration_note: string };
+
+export async function sepsisEws(hospitalId: string, vitals: JsonObject): Promise<SepsisEwsResult> {
+  const { data } = await api.post<SepsisEwsResult>(`/api/${hospitalId}/ews/sepsis`, vitals);
   return data;
 }
 
-export async function handoffIpass(hospitalId: string, chart_context: any) {
+export async function deteriorationIndex(hospitalId: string, body: JsonObject): Promise<EwsResult> {
+  const { data } = await api.post<EwsResult>(`/api/${hospitalId}/ews/deterioration`, body);
+  return data;
+}
+
+export type HccDocumented = {
+  hcc_code: string;
+  description: string;
+  raf: number;
+  last_documented_year: number;
+  needs_recapture: boolean;
+};
+
+export type HccSuspected = {
+  icd10: string;
+  display: string;
+  evidence_quote: string;
+};
+
+/**
+ * The subset of /hcc/evaluate that the UI reads. The endpoint also returns
+ * suppressed_hccs, needs_recapture, recapture_worklist and raf_at_risk (see
+ * backend/services/hcc_capture.py); add them here as screens start using them.
+ */
+export type HccEvaluateResult = {
+  current_year: number;
+  raf_total: number;
+  documented_hccs: HccDocumented[];
+  suspected_undocumented: HccSuspected[];
+  meat_checklist: string[];
+};
+
+export async function hccEvaluate(
+  hospitalId: string,
+  body: { conditions: JsonObject[]; prior_notes?: string[]; current_year?: number },
+): Promise<HccEvaluateResult> {
+  const { data } = await api.post<HccEvaluateResult>(`/api/${hospitalId}/hcc/evaluate`, body);
+  return data;
+}
+
+export async function handoffIpass(hospitalId: string, chart_context: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/handoff/ipass`, { chart_context });
   return data;
 }
 
-export async function handoffSbar(hospitalId: string, chart_context: any, consult_specialty = "cardiology", reason = "") {
+export async function handoffSbar(hospitalId: string, chart_context: JsonObject, consult_specialty = "cardiology", reason = "") {
   const { data } = await api.post(`/api/${hospitalId}/handoff/sbar`, { chart_context, consult_specialty, reason });
   return data;
 }
 
-export async function scribeRedact(hospitalId: string, segments: any[]) {
+export async function scribeRedact(hospitalId: string, segments: JsonObject[]) {
   const { data } = await api.post(`/api/${hospitalId}/scribe/redact`, { segments });
   return data;
 }
@@ -995,9 +1044,31 @@ export async function resultLoopClose(hospitalId: string, tracking_id: string, a
   return data;
 }
 
-export async function resultLoopOverdue(hospitalId: string) {
-  const { data } = await api.get(`/api/${hospitalId}/result-loop/overdue`);
-  return data.items as any[];
+/**
+ * One open result-loop entry, plus the derived days_overdue the worklist adds.
+ * Mirrors backend/services/redaction.py (track entry + overdue_worklist).
+ */
+export type ResultLoopOverdueItem = {
+  tracking_id: string;
+  hospital_id: string;
+  patient_id: string;
+  clinician_id: string;
+  test_name: string;
+  value: string;
+  severity: string;
+  opened_at: string;
+  sla_days: number;
+  closed_at: string | null;
+  closed_by: string | null;
+  close_action: string | null;
+  days_overdue: number;
+};
+
+export async function resultLoopOverdue(hospitalId: string): Promise<ResultLoopOverdueItem[]> {
+  const { data } = await api.get<{ items: ResultLoopOverdueItem[] }>(
+    `/api/${hospitalId}/result-loop/overdue`,
+  );
+  return data.items;
 }
 
 // ============================================================================
@@ -1005,12 +1076,12 @@ export async function resultLoopOverdue(hospitalId: string) {
 // nurse triage, TEFCA, telehealth, style learning, MedicationStatement
 // ============================================================================
 
-export async function hl7MdmRender(hospitalId: string, body: any) {
+export async function hl7MdmRender(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/hl7/mdm/render`, body);
   return data;
 }
 
-export async function encounterStitch(hospitalId: string, notes: any[]) {
+export async function encounterStitch(hospitalId: string, notes: JsonObject[]) {
   const { data } = await api.post(`/api/${hospitalId}/encounter/stitch`, { notes });
   return data;
 }
@@ -1027,12 +1098,38 @@ export async function faxIntake(hospitalId: string, file: File) {
   return data;
 }
 
-export async function sepsisBundleEvaluate(hospitalId: string, body: any) {
-  const { data } = await api.post(`/api/${hospitalId}/sepsis/bundle/evaluate`, body);
+/** One SEP-1 bundle element (backend/services/sepsis_bundle.py). */
+export type SepsisBundleElement = {
+  id: string;
+  name: string;
+  completed: boolean;
+  /** Absent on elements that are always required. */
+  required?: boolean;
+  /** Minutes from sepsis recognition, or null when the step has no timestamp. */
+  minutes: number | null;
+  dose?: number | null;
+};
+
+export type SepsisBundleResult = {
+  sepsis_recognition_iso: string;
+  deadline_iso: string;
+  elements: SepsisBundleElement[];
+  compliance_rate: number;
+  all_complete: boolean;
+};
+
+export async function sepsisBundleEvaluate(
+  hospitalId: string,
+  body: JsonObject,
+): Promise<SepsisBundleResult> {
+  const { data } = await api.post<SepsisBundleResult>(
+    `/api/${hospitalId}/sepsis/bundle/evaluate`,
+    body,
+  );
   return data;
 }
 
-export async function cohortKickoff(hospitalId: string, body: any) {
+export async function cohortKickoff(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/cohort/export/kickoff`, body);
   return data;
 }
@@ -1042,7 +1139,7 @@ export async function cohortPoll(hospitalId: string, content_location: string) {
   return data;
 }
 
-export async function cohortQuery(hospitalId: string, body: any) {
+export async function cohortQuery(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/cohort/query`, body);
   return data;
 }
@@ -1074,14 +1171,59 @@ export async function portalInbound(hospitalId: string, patient_id: string, body
   return data;
 }
 
-export async function portalThreads(hospitalId: string, only_unread = false) {
-  const { data } = await api.get(`/api/${hospitalId}/portal/threads`, { params: { only_unread } });
-  return data.threads as any[];
+/** Thread summary row (backend/services/portal_messages.py list_threads). */
+export type PortalThreadSummary = {
+  thread_key: string;
+  hospital_id: string;
+  patient_id: string;
+  message_count: number;
+  unread_count: number;
+  last_message_at: string | null;
+};
+
+/**
+ * One portal message. Inbound and outbound share a head; the AI-draft and read
+ * fields only ever populate on inbound, so they are optional here.
+ */
+export type PortalMessage = {
+  id: string;
+  thread_key: string;
+  hospital_id: string;
+  patient_id: string;
+  direction: "inbound" | "outbound";
+  sender_name: string;
+  body: string;
+  tags: string[];
+  created_at: string;
+  routing?: string;
+  ai_draft?: string | null;
+  ai_draft_status?: "pending" | "accepted" | "edited" | "rejected" | null;
+  read_by_clinician_at?: string | null;
+  read_by_patient_at?: string | null;
+  outbound_reply?: string | null;
+  outbound_at?: string | null;
+  in_reply_to?: string;
+};
+
+export async function portalThreads(
+  hospitalId: string,
+  only_unread = false,
+): Promise<PortalThreadSummary[]> {
+  const { data } = await api.get<{ threads: PortalThreadSummary[] }>(
+    `/api/${hospitalId}/portal/threads`,
+    { params: { only_unread } },
+  );
+  return data.threads;
 }
 
-export async function portalThread(hospitalId: string, thread_key: string) {
-  const { data } = await api.get(`/api/${hospitalId}/portal/thread/${encodeURIComponent(thread_key)}`);
-  return data.messages as any[];
+export async function portalThread(
+  hospitalId: string,
+  thread_key: string,
+): Promise<PortalMessage[]> {
+  const { data } = await api.get<{ messages: PortalMessage[] }>(
+    `/api/${hospitalId}/portal/thread/${encodeURIComponent(thread_key)}`,
+  );
+  return data.messages;
 }
 
 export async function portalRespond(hospitalId: string, message_id: string, body: string, ai_draft_status = "edited") {
@@ -1094,7 +1236,7 @@ export async function nurseTriageProtocols(hospitalId: string) {
   return data.protocols as string[];
 }
 
-export async function nurseTriageEvaluate(hospitalId: string, protocol_key: string, answers: any) {
+export async function nurseTriageEvaluate(hospitalId: string, protocol_key: string, answers: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/nurse-triage/evaluate`, { protocol_key, answers });
   return data;
 }
@@ -1104,7 +1246,9 @@ export async function tefcaQuery(hospitalId: string, patient_name: string, patie
   return data;
 }
 
-export async function telehealthSession(hospitalId: string, body: any) {
+export type TelehealthProvider = "doxy" | "zoom" | "teams" | "doximity";
+
+export async function telehealthSession(hospitalId: string, body: JsonObject) {
   const { data } = await api.post(`/api/${hospitalId}/telehealth/session`, body);
   return data;
 }

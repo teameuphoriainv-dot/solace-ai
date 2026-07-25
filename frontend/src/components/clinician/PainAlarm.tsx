@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, ArrowRight, BellOff, Loader2, VolumeX, Volume2 } from "lucide-react";
 import { acknowledgePainFlag } from "../../lib/api";
-import type { PatientSummary } from "../../types";
+import type { AudioContextWindow, PatientSummary } from "../../types";
 
 type Props = {
   hospitalId: string;
@@ -40,6 +40,9 @@ export function PainAlarm({ hospitalId, patients, onOpenPatient, onAfterAck }: P
   const ctxRef = useRef<AudioContext | null>(null);
   const oscRef = useRef<OscillatorNode | null>(null);
   const gainRef = useRef<GainNode | null>(null);
+  // Own ref for the pulse timer. This used to be parked on the GainNode behind
+  // an `as any` cast, which hid it from the type system for no benefit.
+  const beepIntervalRef = useRef<number | null>(null);
   const userPrimedRef = useRef<boolean>(false);
 
   // Mark the audio context as primed after any user gesture — autoplay rules
@@ -77,7 +80,7 @@ export function PainAlarm({ hospitalId, patients, onOpenPatient, onAfterAck }: P
   function startBeep() {
     if (oscRef.current) return; // already running
     try {
-      const ctx = ctxRef.current ?? new (window.AudioContext || (window as any).webkitAudioContext)();
+      const ctx = ctxRef.current ?? new (window.AudioContext ?? (window as AudioContextWindow).webkitAudioContext!)();
       ctxRef.current = ctx;
       if (ctx.state === "suspended") ctx.resume().catch(() => {});
       const osc = ctx.createOscillator();
@@ -103,8 +106,7 @@ export function PainAlarm({ hospitalId, patients, onOpenPatient, onAfterAck }: P
           ctxRef.current.currentTime + 0.04
         );
       }, 320);
-      // Park the interval handle on the gain node so stopBeep can clear it.
-      (gain as any)._beepInterval = intervalId;
+      beepIntervalRef.current = intervalId;
     } catch (e) {
       console.warn("alarm beep failed to start", e);
     }
@@ -112,9 +114,9 @@ export function PainAlarm({ hospitalId, patients, onOpenPatient, onAfterAck }: P
 
   function stopBeep() {
     try {
-      if (gainRef.current) {
-        const id = (gainRef.current as any)._beepInterval;
-        if (id) window.clearInterval(id);
+      if (beepIntervalRef.current !== null) {
+        window.clearInterval(beepIntervalRef.current);
+        beepIntervalRef.current = null;
       }
       if (oscRef.current) {
         oscRef.current.stop();

@@ -221,7 +221,7 @@ export default function ClinicianTools() {
 
 function EvidencePane({ hospitalId }: { hospitalId: string }) {
   const [q, setQ] = useState("Best initial workup for chest pain in adults?");
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<Awaited<ReturnType<typeof evidenceAnswer>> | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const run = async () => {
@@ -282,7 +282,7 @@ function EvidencePane({ hospitalId }: { hospitalId: string }) {
           </Panel>
           <Panel title="Evidence snippets">
             <div className="divide-y divide-line">
-              {out.snippets.map((s: any) => (
+              {out.snippets.map((s) => (
                 <div key={s.index} className="py-2.5 first:pt-0 last:pb-0">
                   <div className="font-semibold text-sm text-ink">
                     <span className="text-primary font-mono">[{s.index}]</span> {s.title}
@@ -311,7 +311,7 @@ function EvidencePane({ hospitalId }: { hospitalId: string }) {
 
 function EwsPane({ hospitalId }: { hospitalId: string }) {
   const [v, setV] = useState({ hr: 124, rr: 26, temp_c: 39.2, sbp: 92, mental_status: "confused", spo2: 92, on_oxygen: true, wbc: 18, lactate: 3.2, suspected_infection: true });
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<Awaited<ReturnType<typeof sepsisEws>> | null>(null);
   const [busy, setBusy] = useState(false);
   const [d] = useState({
     vitals_now: { hr: 130, rr: 26, sbp: 88, spo2: 91, temp_c: 39.2 },
@@ -320,7 +320,7 @@ function EwsPane({ hospitalId }: { hospitalId: string }) {
     gcs_drop_at_least_2: false,
     new_arrhythmia: false,
   });
-  const [dout, setDout] = useState<any | null>(null);
+  const [dout, setDout] = useState<Awaited<ReturnType<typeof deteriorationIndex>> | null>(null);
   const [dbusy, setDbusy] = useState(false);
 
   const run = async () => {
@@ -349,7 +349,7 @@ function EwsPane({ hospitalId }: { hospitalId: string }) {
               <FieldLabel>{k}</FieldLabel>
               <input
                 type="number"
-                value={(v as any)[k] ?? ""}
+                value={v[k] ?? ""}
                 onChange={(e) => setV({ ...v, [k]: Number(e.target.value) })}
                 className={inputClass}
               />
@@ -396,7 +396,7 @@ function EwsPane({ hospitalId }: { hospitalId: string }) {
           </div>
           <div className="text-sm mt-1 text-ink">{out.action}</div>
           <div className="mt-3 space-y-0.5 text-xs text-text-muted">
-            {out.contributions.map((c: any, i: number) => (
+            {out.contributions.map((c, i) => (
               <div key={i}>
                 <span className="font-mono text-ink">+{c.points}</span> {c.feature}: {c.why}
               </div>
@@ -423,7 +423,7 @@ function EwsPane({ hospitalId }: { hospitalId: string }) {
             </div>
             <div className="text-sm text-ink">{dout.action}</div>
             <div className="text-xs mt-2 space-y-0.5 text-text-muted">
-              {dout.contributions.map((c: any, i: number) => (
+              {dout.contributions.map((c, i) => (
                 <div key={i}>
                   <span className="font-mono text-ink">+{c.points}</span> {c.feature}: {c.why}
                 </div>
@@ -443,7 +443,7 @@ function HccPane({ hospitalId }: { hospitalId: string }) {
     { icd10: "N18.4", display: "CKD stage 3b", last_documented_year: 2023 },
   ], null, 2));
   const [notes, setNotes] = useState("Patient with longstanding tobacco use, persistent dyspnea on exertion. Notes indicate intermittent atrial fibrillation. Per old records, type 2 diabetes with peripheral neuropathy.");
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<Awaited<ReturnType<typeof hccEvaluate>> | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -482,7 +482,7 @@ function HccPane({ hospitalId }: { hospitalId: string }) {
                 Documented HCCs ({out.documented_hccs.length})
               </div>
               <div className="divide-y divide-line">
-                {out.documented_hccs.map((h: any, i: number) => (
+                {out.documented_hccs.map((h, i) => (
                   <div key={i} className="text-sm py-1.5 first:pt-0 text-ink">
                     {h.hcc_code} · {h.description} · RAF {h.raf} · last {h.last_documented_year}
                     {h.needs_recapture && (
@@ -500,7 +500,7 @@ function HccPane({ hospitalId }: { hospitalId: string }) {
                   Suspected undocumented (from prior notes)
                 </div>
                 <div className="divide-y divide-line">
-                  {out.suspected_undocumented.map((s: any, i: number) => (
+                  {out.suspected_undocumented.map((s, i) => (
                     <div key={i} className="text-sm py-1.5 first:pt-0 text-ink">
                       <span className="font-semibold">{s.icd10}</span> · {s.display}
                       <div className="text-xs italic text-text-muted mt-0.5">"{s.evidence_quote}"</div>
@@ -611,7 +611,7 @@ function HandoffPane({ hospitalId }: { hospitalId: string }) {
 }
 
 function LoopsPane({ hospitalId }: { hospitalId: string }) {
-  const [items, setItems] = useState<any[] | null>(null);
+  const [items, setItems] = useState<Awaited<ReturnType<typeof resultLoopOverdue>> | null>(null);
   const [busy, setBusy] = useState(false);
   const refresh = async () => {
     setBusy(true);

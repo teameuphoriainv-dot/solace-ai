@@ -13,7 +13,12 @@ import {
   type ScribeSessionStatus, type ScribeStructuredNote, type ScribeSessionSection,
   type LinkedEvidence,
 } from "../lib/api-scribe";
-import type { PatientDetail } from "../types";
+import type {
+  PatientDetail,
+  SpeechRec,
+  SpeechRecognitionEvent,
+  SpeechWindow,
+} from "../types";
 
 type Tab = "transcript" | "session" | "note" | "ddx" | "calculators" | "coding" | "discharge";
 
@@ -59,7 +64,7 @@ export default function ClinicianScribe() {
   const [regenSection, setRegenSection] = useState<string | null>(null);
   const [activeEvidence, setActiveEvidence] = useState<LinkedEvidence | null>(null);
   // Web Speech recognizer + chunk-flush plumbing for the live session.
-  const sessionRecRef = useRef<any>(null);
+  const sessionRecRef = useRef<SpeechRec | null>(null);
   const sessionStreamRef = useRef<MediaStream | null>(null);
   const pendingChunkRef = useRef<string>("");
   const flushTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -95,7 +100,7 @@ export default function ClinicianScribe() {
   // a ref so the textarea reflects the live transcript without re-renders per
   // interim chunk. The MediaRecorder remains as the deterministic fallback —
   // when Web Speech captures text, we skip the server /transcribe call.
-  const speechRecRef = useRef<any>(null);
+  const speechRecRef = useRef<SpeechRec | null>(null);
   const speechFinalsRef = useRef<string>("");
   const usedWebSpeechRef = useRef<boolean>(false);
   // Snapshot of the transcript before the current recording session began.
@@ -148,14 +153,15 @@ export default function ClinicianScribe() {
       usedWebSpeechRef.current = false;
       speechFinalsRef.current = "";
       preRecordingRef.current = transcript;
-      const SpeechCtor: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const w = window as SpeechWindow;
+      const SpeechCtor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
       if (SpeechCtor) {
         try {
           const sr = new SpeechCtor();
           sr.continuous = true;
           sr.interimResults = true;
           sr.lang = "en-US";
-          sr.onresult = (e: any) => {
+          sr.onresult = (e: SpeechRecognitionEvent) => {
             usedWebSpeechRef.current = true;
             let interim = "";
             for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -214,14 +220,15 @@ export default function ClinicianScribe() {
   // pending-chunk buffer. The MediaRecorder path is intentionally not used here —
   // the session API ingests text chunks, not audio.
   const attachSessionRecognizer = () => {
-    const SpeechCtor: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const w = window as SpeechWindow;
+      const SpeechCtor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
     if (!SpeechCtor) return;
     try {
       const sr = new SpeechCtor();
       sr.continuous = true;
       sr.interimResults = true;
       sr.lang = "en-US";
-      sr.onresult = (e: any) => {
+      sr.onresult = (e: SpeechRecognitionEvent) => {
         for (let i = e.resultIndex; i < e.results.length; i++) {
           const seg = e.results[i];
           if (seg.isFinal) pendingChunkRef.current += (seg[0]?.transcript || "") + " ";

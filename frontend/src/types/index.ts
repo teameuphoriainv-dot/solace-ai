@@ -1,3 +1,71 @@
+/**
+ * Open-ended JSON payload for the Wave 1-4 clinical tool endpoints (QUAL-007).
+ *
+ * These wrappers forward caller-shaped chart context straight through to the
+ * backend, which hands it to an LLM tool, so the field set is deliberately not
+ * fixed. `unknown` values keep the payload flexible while still forcing a narrow
+ * or an explicit cast at the point of use, which `any` silently skipped. Matches
+ * the `Record<string, unknown>` idiom already used in PriorAuthTab and
+ * CopilotArtifacts.
+ */
+export type JsonObject = Record<string, unknown>;
+
+/**
+ * Minimal type surface for the Web Speech API (QUAL-007).
+ *
+ * Not in lib.dom.d.ts on every TS version, and still vendor-prefixed on WebKit,
+ * so we declare exactly what the scribe and recorder touch. Shared here rather
+ * than redeclared per call site, which is how the `any` spread in the first place.
+ */
+export type SpeechRecognitionAlternative = {
+  transcript: string;
+  confidence: number;
+};
+
+export type SpeechRecognitionResult = {
+  readonly length: number;
+  readonly isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternative;
+};
+
+export type SpeechRecognitionEvent = {
+  readonly resultIndex: number;
+  readonly results: {
+    readonly length: number;
+    [index: number]: SpeechRecognitionResult;
+  };
+};
+
+export type SpeechRecognitionErrorEvent = {
+  readonly error: string;
+  readonly message?: string;
+};
+
+export type SpeechRec = {
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+  onresult: (e: SpeechRecognitionEvent) => void;
+  onerror: (e: SpeechRecognitionErrorEvent) => void;
+  onend: () => void;
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+};
+
+/** Window as seen by browsers that expose Web Speech, prefixed or not. */
+export type SpeechWindow = Window &
+  typeof globalThis & {
+    SpeechRecognition?: new () => SpeechRec;
+    webkitSpeechRecognition?: new () => SpeechRec;
+  };
+
+/** Safari still only exposes the prefixed AudioContext constructor. */
+export type AudioContextWindow = Window &
+  typeof globalThis & {
+    webkitAudioContext?: typeof AudioContext;
+  };
+
 export type ComfortAction = {
   title: string;
   instruction: string;

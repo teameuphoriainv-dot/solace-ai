@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { SpeechRec, SpeechRecognitionEvent, SpeechWindow } from "../types";
 
 export type UseAudioRecorder = {
   isRecording: boolean;
@@ -32,24 +33,12 @@ const SPEECH_LANG_MAP: Record<string, string> = {
   ht: "fr-FR", fa: "fa-IR", gu: "gu-IN",
 };
 
-// Minimal type surface for the Web Speech API. The browser types aren't in
-// lib.dom.d.ts on every TS version; declare just what we touch.
-type SpeechRec = {
-  start: () => void;
-  stop: () => void;
-  abort: () => void;
-  onresult: (e: any) => void;
-  onerror: (e: any) => void;
-  onend: () => void;
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-};
-
+// Web Speech API surface lives in ../types so the scribe page shares one
+// declaration instead of re-deriving it with `any`.
 function getSpeechCtor(): (new () => SpeechRec) | null {
   if (typeof window === "undefined") return null;
-  const w = window as any;
-  return (w.SpeechRecognition || w.webkitSpeechRecognition || null) as any;
+  const w = window as SpeechWindow;
+  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
 export function useAudioRecorder(): UseAudioRecorder {
@@ -125,7 +114,7 @@ export function useAudioRecorder(): UseAudioRecorder {
           rec.continuous = true;
           rec.interimResults = true;
           rec.lang = SPEECH_LANG_MAP[(langHint || "").toLowerCase()] || "en-US";
-          rec.onresult = (e: any) => {
+          rec.onresult = (e: SpeechRecognitionEvent) => {
             let interim = "";
             for (let i = e.resultIndex; i < e.results.length; i++) {
               const segment = e.results[i];
