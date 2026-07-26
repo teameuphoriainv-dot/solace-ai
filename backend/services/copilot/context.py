@@ -69,7 +69,20 @@ def build_chart(hospital_id: str, patient_id: str) -> dict[str, Any]:
         "name": patient.get("name") or info.get("name") or "",
         "age": info.get("age") or patient.get("patient_age"),
         "sex": info.get("sex") or info.get("gender") or "",
-        "chief_complaint": patient.get("chief_complaint") or patient.get("complaint") or "",
+        # Intake never persists chief_complaint: triage derives it from the
+        # transcript at compute time (services/triage.py) and throws it away. So
+        # without this fallback the chart's complaint is always empty, and every
+        # patient reads as chief_complaint_category="other" to the agent. That
+        # is how a textbook ACS presentation came back as "no acute concerning
+        # issues". The transcript stays engine-side exactly like the other raw
+        # fields here: only the coded category derived from it is ever exposed
+        # to the model (see catalog.py), which the PHI leak gate enforces.
+        "chief_complaint": (
+            patient.get("chief_complaint")
+            or patient.get("complaint")
+            or patient.get("transcript")
+            or ""
+        ),
         "conditions": as_list(info.get("conditions") or info.get("medical_conditions") or info.get("history")),
         "medications": as_list(info.get("medications") or info.get("meds")),
         "allergies": as_list(info.get("allergies")),

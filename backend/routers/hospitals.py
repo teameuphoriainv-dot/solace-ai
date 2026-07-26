@@ -165,7 +165,11 @@ def provision_hospital(body: ProvisionHospitalBody | None = None, request: Reque
             extra={"hospital_id": slug, "delivered": send_result.get("delivered")},
         )
 
-    base_url = _base_url(request) if request else ""
+    # Shareable workspace URLs must point at the FRONTEND, not the API. These
+    # agree in production (same CloudFront origin) but diverge whenever the API
+    # is on its own host, which is exactly the local and split-origin setups.
+    # Falling back to the request origin keeps the previous behaviour.
+    base_url = _frontend_base(request) or (_base_url(request) if request else "")
     resp = {
         "hospital_id": slug,
         "slug": slug,
@@ -178,6 +182,6 @@ def provision_hospital(body: ProvisionHospitalBody | None = None, request: Reque
         "patient_url": f"{base_url}/h/{slug}" if base_url else f"/h/{slug}",
     }
     # Dev/sandbox only: surface the admin's sign-in link so the flow is followable.
-    if admin_invited and settings.email_dev_echo:
+    if admin_invited and email_service.dev_echo_enabled():
         resp["admin_dev_link"] = f"{_frontend_base(request)}/h/{slug}/auth/verify?token={raw}"
     return resp

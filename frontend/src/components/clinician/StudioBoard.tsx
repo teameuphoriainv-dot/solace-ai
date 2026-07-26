@@ -327,7 +327,7 @@ export function StudioBoard({
               >
                 <CardErrorBoundary key={`${id}-${activeId ?? "none"}`} label={f.label}>
                   {f.kind === "queue" ? (
-                    <QueueCardBody patients={patients} loading={loading} activeId={activeId} onSelect={tagPatient} />
+                    <QueueCardBody hospitalId={hospitalId} patients={patients} loading={loading} activeId={activeId} onSelect={tagPatient} />
                   ) : activeId && Comp ? (
                     <Suspense fallback={<CardSpinner />}>
                       <Comp />
@@ -438,19 +438,20 @@ function FeatureCard({
 }
 
 function QueueCardBody({
+  hospitalId,
   patients,
   loading,
   activeId,
   onSelect,
 }: {
+  hospitalId: string;
   patients: PatientSummary[];
   loading: boolean;
   activeId: string | null;
   onSelect: (p: PatientSummary) => void;
 }) {
   if (loading && !patients.length) return <CardSpinner />;
-  if (!patients.length)
-    return <div className="text-sm text-text-muted py-6 text-center">No patients in the queue.</div>;
+  if (!patients.length) return <QueueEmpty hospitalId={hospitalId} />;
   return (
     <ul className="flex flex-col gap-1.5">
       {patients.map((p) => {
@@ -476,6 +477,77 @@ function QueueCardBody({
         );
       })}
     </ul>
+  );
+}
+
+/**
+ * First-run state for the queue.
+ *
+ * A newly provisioned workspace starts genuinely empty, and seeding it with
+ * synthetic patients is not an option: reset-demo deliberately refuses to touch
+ * anything but the demo workspace, so sample charts must never appear in a real
+ * one. Instead of a dead-end "No patients in the queue.", give the clinician the
+ * two things that actually move the funnel forward: the intake link to hand out,
+ * and a way to walk it themselves so the board (and Atlas) come alive.
+ */
+function QueueEmpty({ hospitalId }: { hospitalId: string }) {
+  const [copied, setCopied] = useState(false);
+  // Provisioned workspaces live under /h/<slug>; the legacy demo route does not.
+  const prefix = window.location.pathname.startsWith("/h/") ? "/h" : "";
+  const path = `${prefix}/${hospitalId}`;
+  const intakeUrl = `${window.location.origin}${path}`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(intakeUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard blocked: the link is on screen to copy by hand */
+    }
+  };
+
+  return (
+    <div className="py-6 flex flex-col gap-4">
+      <div className="text-center">
+        <Users2 size={22} className="mx-auto text-text-muted" aria-hidden />
+        <div className="mt-2 text-sm font-semibold text-ink">No one is waiting yet</div>
+        <p className="mx-auto mt-1 max-w-xs text-sm text-text-muted leading-relaxed">
+          Patients appear here the moment they check in. Share your intake link, or
+          walk through it yourself to see the full triage.
+        </p>
+      </div>
+
+      <div className="rounded-lg bg-surface-low p-3">
+        <div className="text-[10px] uppercase tracking-wider text-text-muted font-semibold">
+          Your patient intake link
+        </div>
+        <div className="mt-1 font-mono text-xs text-ink break-all">{intakeUrl}</div>
+        <div className="mt-2.5 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={copy}
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-surface-lowest text-xs font-semibold text-ink shadow-soft hover:shadow-card transition-shadow"
+          >
+            <Link2 size={13} aria-hidden />
+            {copied ? "Copied" : "Copy link"}
+          </button>
+          <a
+            href={path}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-xs font-semibold text-white hover:brightness-110 transition-all"
+          >
+            <Sparkles size={13} aria-hidden />
+            Open intake
+          </a>
+        </div>
+      </div>
+
+      <p className="text-center text-xs text-text-muted leading-relaxed">
+        Atlas reads the chart as soon as the first patient is triaged.
+      </p>
+    </div>
   );
 }
 

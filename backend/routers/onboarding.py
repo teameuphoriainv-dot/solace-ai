@@ -55,7 +55,7 @@ def _send_invite(hospital_id: str, email: str, name: str, role: str, request: Re
     result = email_service.send_magic_link(
         to=email, link=link, hospital_name=hospital.get("name", hospital_id), purpose="invite",
     )
-    if settings.email_dev_echo:
+    if email_service.dev_echo_enabled():
         result["dev_link"] = link
     return result
 

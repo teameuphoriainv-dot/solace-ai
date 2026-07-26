@@ -32,6 +32,21 @@ def _active_provider() -> str:
     return settings.email_provider
 
 
+def dev_echo_enabled() -> bool:
+    """Whether a sign-in link may be surfaced in the API response body.
+
+    True when explicitly configured, and also whenever the active provider is
+    "console": in that mode the mail only ever reaches a log file, so echoing
+    the link is the one way the sign-in flow can be completed. Console is forced
+    in local mode and is never the production provider, so this cannot leak a
+    login link from a real deployment.
+
+    Without this, provisioning a workspace locally dead-ends: the workspace is
+    created, the "check your email" screen renders, and no link ever arrives.
+    """
+    return settings.email_dev_echo or _active_provider() == "console"
+
+
 def send_email(*, to: str, subject: str, html: str, text: str) -> dict:
     """Send one transactional email. Returns {"provider", "delivered", ...}.
 
@@ -110,7 +125,7 @@ def send_magic_link(
     )
 
     result = send_email(to=to, subject=subject, html=html, text=text)
-    if settings.email_dev_echo:
+    if dev_echo_enabled():
         # Local/sandbox only — lets tests and the dev UI follow the link without
         # a real inbox. Gated off in production by config.
         result["dev_link"] = link
