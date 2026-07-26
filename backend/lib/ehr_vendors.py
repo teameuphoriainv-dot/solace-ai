@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from urllib.parse import urlsplit
 
 
 @dataclass(frozen=True)
@@ -43,6 +44,9 @@ class EHRVendor:
     # SMART v2 (`.cruds`) spelling of the same minimum-necessary set. Empty tuple
     # means "use v1" — callers should prefer v2 when present, fall back to v1.
     scopes_v2: tuple[str, ...] = ()
+    # Where an admin registers an app to obtain the client_id. Surfaced by the
+    # integrations screen so "needs credentials" comes with a next step.
+    register_url: str = ""
 
     def to_public_dict(self) -> dict:
         return {
@@ -50,6 +54,41 @@ class EHRVendor:
             "label": self.label,
             "color": self.color,
             "sandbox": self.sandbox,
+        }
+
+    @property
+    def client_id_env(self) -> str:
+        """Name of the env var that supplies this vendor's client_id.
+
+        The NAME only. Never the value, and never a secret.
+        """
+        return f"SOLACE_{self.id.upper()}_CLIENT_ID"
+
+    def to_catalog_dict(self) -> dict:
+        """Public catalog entry, including vendors that are not yet usable.
+
+        `list_public` deliberately hides vendors without a client_id, because a
+        sign-in button for one would fail at the vendor's authorize endpoint.
+        That is right for buttons and wrong for the integrations screen: it made
+        a product with Epic, Oracle and Athena adapters look like it supported a
+        single sandbox. This carries the whole supported catalog plus an honest
+        per-vendor status, so the screen can show what exists and what it takes
+        to turn each one on.
+
+        Contains no credentials: `configured` is a boolean and `client_id_env`
+        is the name of the variable to set, not its value.
+        """
+        return {
+            **self.to_public_dict(),
+            "configured": bool(self.client_id),
+            "status": "ready" if self.client_id else "needs_credentials",
+            "client_id_env": self.client_id_env,
+            # Host only. Enough to tell a sandbox endpoint from a production one
+            # without publishing full tenant URLs.
+            "fhir_host": urlsplit(self.fhir_base_url).netloc,
+            "smart_version": "v2" if self.scopes_v2 else "v1",
+            "register_url": self.register_url,
+            "pkce_required": self.pkce_required,
         }
 
     def scope_string(self, *, smart_version: str = "v2") -> str:
@@ -151,6 +190,7 @@ VENDORS: dict[str, EHRVendor] = {
         scopes=_DEFAULT_SCOPES,
         scopes_v2=_DEFAULT_SCOPES_V2,
         sandbox=True,
+        register_url="https://launch.smarthealthit.org",
     ),
     "epic": EHRVendor(
         id="epic",
@@ -163,6 +203,7 @@ VENDORS: dict[str, EHRVendor] = {
         scopes=_DEFAULT_SCOPES,
         scopes_v2=_DEFAULT_SCOPES_V2,
         sandbox=_env("SOLACE_EPIC_SANDBOX", "true").lower() == "true",
+        register_url="https://fhir.epic.com/Developer/Apps",
     ),
     "cerner": EHRVendor(
         id="cerner",
@@ -175,6 +216,7 @@ VENDORS: dict[str, EHRVendor] = {
         scopes=_DEFAULT_SCOPES,
         scopes_v2=_DEFAULT_SCOPES_V2,
         sandbox=_env("SOLACE_CERNER_SANDBOX", "true").lower() == "true",
+        register_url="https://code.cerner.com",
     ),
     "athena": EHRVendor(
         id="athena",
@@ -196,6 +238,7 @@ VENDORS: dict[str, EHRVendor] = {
         scopes=_DEFAULT_SCOPES,
         scopes_v2=_DEFAULT_SCOPES_V2,
         sandbox=_env("SOLACE_ATHENA_SANDBOX", "true").lower() == "true",
+        register_url="https://developer.athenahealth.com",
     ),
 }
 
@@ -252,6 +295,17 @@ def from_workspace_config(cfg: dict) -> EHRVendor:
         scopes_v2=scopes_v2,
         sandbox=bool(cfg.get("sandbox", base.sandbox if base else True)),
     )
+
+
+def list_catalog() -> list[dict]:
+    """Every supported vendor, with status. Usable ones first, then sandboxes.
+
+    Unlike `list_public` this hides nothing: the integrations screen needs to
+    show the full adapter surface, including vendors that still need credentials.
+    """
+    entries = [v.to_catalog_dict() for v in VENDORS.values()]
+    entries.sort(key=lambda e: (not e["configured"], e["sandbox"], e["label"]))
+    return entries
 
 
 def list_public() -> list[dict]:

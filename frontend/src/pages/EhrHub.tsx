@@ -9,7 +9,7 @@ import {
   Plus,
   RefreshCw,
 } from "lucide-react";
-import { listEHRVendors, type EHRVendorOption } from "../lib/api";
+import { listEHRVendorCatalog, type EHRVendorCatalogEntry } from "../lib/api";
 import {
   buildEhrLaunchUrl,
   listEhrConfigs,
@@ -85,7 +85,7 @@ export default function EhrHub() {
   const location = useLocation();
   const prefix = location.pathname.startsWith("/h/") ? "/h" : "";
 
-  const [vendors, setVendors] = useState<Fetch<EHRVendorOption[]>>({
+  const [vendors, setVendors] = useState<Fetch<EHRVendorCatalogEntry[]>>({
     data: null, loading: true, error: null,
   });
   const [workspaces, setWorkspaces] = useState<Fetch<Workspace[]>>({
@@ -105,7 +105,7 @@ export default function EhrHub() {
   const loadVendors = useCallback(async () => {
     setVendors((s) => ({ ...s, loading: true, error: null }));
     try {
-      setVendors({ data: await listEHRVendors(), loading: false, error: null });
+      setVendors({ data: await listEHRVendorCatalog(), loading: false, error: null });
     } catch (e: unknown) {
       setVendors({ data: null, loading: false, error: readError(e) });
     }
@@ -151,10 +151,13 @@ export default function EhrHub() {
     return map;
   }, [configList]);
 
-  const vendorStatus = (v: EHRVendorOption): VendorStatus => {
+  const vendorStatus = (v: EHRVendorCatalogEntry): VendorStatus => {
     if (connectedVendor === v.id) return "connected";
-    if (v.sandbox) return "sandbox";
+    // Checked before the sandbox badge: an unconfigured connector cannot be
+    // launched at all, which is the more useful thing to say about it.
+    if (!v.configured) return "needs-credentials";
     if ((bindingsByVendor[v.id] || 0) > 0) return "configured";
+    if (v.sandbox) return "sandbox";
     return "not-configured";
   };
 
@@ -210,8 +213,8 @@ export default function EhrHub() {
             </div>
           ) : vendorList.length === 0 && !vendors.error ? (
             <div className="bg-surface-lowest rounded-lg ring-1 ring-line p-4 text-sm text-text-muted">
-              No EHR vendors are enabled for this deployment. Vendors appear here once a
-              SMART client id is configured server-side.
+              The vendor catalog could not be loaded. Retry, or check that the API is
+              reachable.
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

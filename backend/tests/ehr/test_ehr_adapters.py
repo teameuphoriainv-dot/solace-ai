@@ -283,6 +283,46 @@ class TestEHRVendorRegistry:
         assert "client_id" not in public
         assert "token_url" not in public
 
+    def test_catalog_dict_reports_status_without_leaking_credentials(self):
+        """The catalog powers the integrations screen, so it must describe a
+        vendor's readiness without ever carrying the credential itself."""
+        ehr_vendors = pytest.importorskip("lib.ehr_vendors")
+        common = dict(
+            label="Epic", color="#CB2E2E",
+            fhir_base_url="https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/",
+            authorize_url="https://fhir.epic.com/oauth2/authorize",
+            token_url="https://fhir.epic.com/oauth2/token",
+            scopes=("openid",), sandbox=True,
+            register_url="https://fhir.epic.com/Developer/Apps",
+        )
+        unset = ehr_vendors.EHRVendor(id="epic", client_id="", **common).to_catalog_dict()
+        assert unset["configured"] is False
+        assert unset["status"] == "needs_credentials"
+        # The NAME of the variable to set, never a value.
+        assert unset["client_id_env"] == "SOLACE_EPIC_CLIENT_ID"
+        assert unset["register_url"] == "https://fhir.epic.com/Developer/Apps"
+        # Host only, so full tenant URLs are not published.
+        assert unset["fhir_host"] == "fhir.epic.com"
+        assert "client_id" not in unset
+        assert "token_url" not in unset
+        assert "authorize_url" not in unset
+
+        ready = ehr_vendors.EHRVendor(id="epic", client_id="abc123", **common).to_catalog_dict()
+        assert ready["configured"] is True
+        assert ready["status"] == "ready"
+        # The actual client id must not appear anywhere in the payload.
+        assert "abc123" not in str(ready)
+
+    def test_catalog_lists_every_vendor_while_public_hides_unusable_ones(self):
+        """list_public gates the sign-in buttons; list_catalog must not, or the
+        integrations screen understates which adapters exist."""
+        ehr_vendors = pytest.importorskip("lib.ehr_vendors")
+        catalog_ids = {v["id"] for v in ehr_vendors.list_catalog()}
+        assert catalog_ids == set(ehr_vendors.VENDORS)
+        assert {"epic", "cerner", "athena", "smart"} <= catalog_ids
+        # Everything public is also in the catalog, never the other way round.
+        assert {v["id"] for v in ehr_vendors.list_public()} <= catalog_ids
+
 
 # ==========================================================================
 # ehr_gateway — vendor dispatch facade (importorskip-guarded)

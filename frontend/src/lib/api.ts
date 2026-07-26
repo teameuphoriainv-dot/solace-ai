@@ -322,6 +322,35 @@ export async function listEHRVendors(): Promise<EHRVendorOption[]> {
   return data.vendors || [];
 }
 
+/**
+ * A vendor in the full supported catalog, including ones not yet usable.
+ *
+ * `/vendors` powers the sign-in buttons and hides anything without a client_id,
+ * because clicking it would fail at the vendor's authorize endpoint. The
+ * integrations screen wants the opposite view: the whole adapter surface plus
+ * what it takes to enable each one. No credentials are carried here, only
+ * whether one is present and the NAME of the variable that supplies it.
+ */
+export type EHRVendorCatalogEntry = EHRVendorOption & {
+  configured: boolean;
+  status: "ready" | "needs_credentials";
+  /** Env var name to set, e.g. "SOLACE_EPIC_CLIENT_ID". Never the value. */
+  client_id_env: string;
+  /** Host only, so a sandbox endpoint is distinguishable from production. */
+  fhir_host: string;
+  smart_version: "v1" | "v2";
+  /** Vendor developer portal where an admin registers to obtain a client id. */
+  register_url: string;
+  pkce_required: boolean;
+};
+
+export async function listEHRVendorCatalog(): Promise<EHRVendorCatalogEntry[]> {
+  const { data } = await api.get<{ vendors: EHRVendorCatalogEntry[] }>(
+    "/api/auth/ehr/vendors/catalog",
+  );
+  return data.vendors || [];
+}
+
 // Builds the OAuth launch URL — frontend redirects the browser here, which 302s to
 // the vendor's authorize endpoint. Mock provider auto-approves; real vendors show
 // their hosted login screen.

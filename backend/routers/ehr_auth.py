@@ -69,6 +69,18 @@ def list_vendors() -> dict:
     return {"vendors": ehr_vendors.list_public()}
 
 
+@router.get("/vendors/catalog")
+def list_vendor_catalog() -> dict:
+    """Every supported vendor with its connection status.
+
+    `/vendors` powers the sign-in buttons and so hides anything unusable. The
+    integrations screen needs the opposite: the full adapter surface, including
+    vendors still waiting on credentials, plus where to go to get them. Carries
+    no secrets (see EHRVendor.to_catalog_dict).
+    """
+    return {"vendors": ehr_vendors.list_catalog()}
+
+
 # ----------------------------------------------------------------------------------
 # Launch — clinician clicks "Sign in with Epic" → 302 to the vendor authorize URL
 # ----------------------------------------------------------------------------------
