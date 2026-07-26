@@ -42,7 +42,7 @@ export default function WorkflowsAdmin() {
   const [selected, setSelected] = useState<Workflow | null>(null);
   const [draft, setDraft] = useState<Workflow | null>(null);
   const [saving, setSaving] = useState(false);
-  const [testResult, setTestResult] = useState<any>(null);
+  const [testResult, setTestResult] = useState<Awaited<ReturnType<typeof testWorkflow>> | null>(null);
 
   // Auth gate
   useEffect(() => {
@@ -159,7 +159,7 @@ export default function WorkflowsAdmin() {
     setSaving(true);
     try {
       const r = await testWorkflow(hospitalId, {
-        workflow: { ...draft, hospital_id: hospitalId } as any,
+        workflow: { ...draft, hospital_id: hospitalId },
       });
       setTestResult(r);
     } catch (e: any) {
@@ -466,7 +466,7 @@ export default function WorkflowsAdmin() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    {testResult.results.map((r: any, i: number) => (
+                    {testResult.results.map((r, i) => (
                       <div
                         key={i}
                         className={`flex items-start gap-2 p-2 rounded-md text-xs ${

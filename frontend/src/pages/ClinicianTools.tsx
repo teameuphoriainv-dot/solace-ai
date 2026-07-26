@@ -16,6 +16,7 @@ import {
   Scale,
 } from "lucide-react";
 import { evidenceAnswer, sepsisEws, deteriorationIndex, hccEvaluate, handoffIpass, handoffSbar, resultLoopOverdue } from "../lib/api";
+import type { HandoffIpassResult, HandoffSbarResult } from "../lib/api";
 import {
   ehrVendorStatus,
   ehrWriteBack,
@@ -538,8 +539,8 @@ function HandoffPane({ hospitalId }: { hospitalId: string }) {
     pending_results: ["repeat lactate at 02:00", "blood culture day 2"],
     abx: "ceftriaxone day 2 of 5",
   }, null, 2));
-  const [iout, setIout] = useState<any | null>(null);
-  const [sout, setSout] = useState<any | null>(null);
+  const [iout, setIout] = useState<HandoffIpassResult | null>(null);
+  const [sout, setSout] = useState<HandoffSbarResult | null>(null);
   const [ibusy, setIbusy] = useState(false);
   const [sbusy, setSbusy] = useState(false);
   const [specialty, setSpecialty] = useState("nephrology");

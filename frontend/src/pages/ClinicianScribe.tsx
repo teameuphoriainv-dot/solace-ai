@@ -15,6 +15,9 @@ import {
   type LinkedEvidence,
 } from "../lib/api-scribe";
 import type {
+  CalculatorSuggestion, CodingSuggestResult, DischargePlanResult, DrugCheckResult,
+} from "../lib/api";
+import type {
   PatientDetail,
   SpeechRec,
   SpeechRecognitionEvent,
@@ -37,10 +40,10 @@ export default function ClinicianScribe() {
   const [busy, setBusy] = useState<string | null>(null);
   const [scribe, setScribe] = useState<ScribeOutput | null>(null);
   const [ddx, setDdx] = useState<DdxResult | null>(null);
-  const [calcs, setCalcs] = useState<any[] | null>(null);
-  const [coding, setCoding] = useState<any | null>(null);
-  const [discharge, setDischarge] = useState<any | null>(null);
-  const [drugAlerts, setDrugAlerts] = useState<any | null>(null);
+  const [calcs, setCalcs] = useState<CalculatorSuggestion[] | null>(null);
+  const [coding, setCoding] = useState<CodingSuggestResult | null>(null);
+  const [discharge, setDischarge] = useState<DischargePlanResult | null>(null);
+  const [drugAlerts, setDrugAlerts] = useState<DrugCheckResult | null>(null);
   const [meds, setMeds] = useState("");
   const [allergies, setAllergies] = useState("");
   const [language, setLanguage] = useState("en");
@@ -424,7 +427,7 @@ export default function ClinicianScribe() {
     const patientRef = patientId ? `Patient/${patientId}` : "Patient/encounter";
     const conditions = (coding?.icd10 || [])
       .slice(0, 5)
-      .map((d: any) => ({ icd10: d.code, display: d.name }));
+      .map((d) => ({ icd10: d.code, display: d.name }));
     const allergyList = allergies
       .split(",")
       .map((x) => x.trim())
@@ -589,10 +592,10 @@ export default function ClinicianScribe() {
               <div className="text-xs uppercase tracking-wide text-amber-900 font-medium mb-2 flex items-center gap-1">
                 <AlertTriangle className="w-3 h-3" /> Drug alerts
               </div>
-              {drugAlerts.drug_drug.map((a: any, i: number) => (
+              {drugAlerts.drug_drug.map((a, i) => (
                 <div key={i} className="text-sm text-amber-900 mb-1">{a.a} + {a.b} — <span className="font-medium">{a.severity}</span>: {a.reason}</div>
               ))}
-              {drugAlerts.drug_allergy.map((a: any, i: number) => (
+              {drugAlerts.drug_allergy.map((a, i) => (
                 <div key={`al-${i}`} className="text-sm text-rose-900 mb-1">Allergy match: {a.med}</div>
               ))}
             </div>
@@ -940,16 +943,16 @@ export default function ClinicianScribe() {
                 </div>
               </div>
               <div className="text-xs uppercase tracking-wide text-slate-500 mt-3 mb-1">ICD-10 candidates</div>
-              {(coding.icd10 || []).map((d: any, i: number) => (
+              {(coding.icd10 || []).map((d, i) => (
                 <div key={i} className="text-sm flex justify-between border-b border-slate-100 py-1">
                   <span>{d.code} — {d.name}</span>
                   <span className="text-xs text-slate-500">{d.support}</span>
                 </div>
               ))}
-              {(coding.cpt_procedures || []).length > 0 && (
+              {coding.cpt_procedures && coding.cpt_procedures.length > 0 && (
                 <>
                   <div className="text-xs uppercase tracking-wide text-slate-500 mt-3 mb-1">CPT procedures</div>
-                  {coding.cpt_procedures.map((d: any, i: number) => (
+                  {coding.cpt_procedures.map((d, i) => (
                     <div key={i} className="text-sm flex justify-between border-b border-slate-100 py-1">
                       <span>{d.code} — {d.name}</span>
                       <span className="text-xs text-slate-500">{d.support}</span>
@@ -957,8 +960,8 @@ export default function ClinicianScribe() {
                   ))}
                 </>
               )}
-              {(coding.modifiers || []).length > 0 && (
-                <div className="text-xs text-amber-800 mt-2">Modifiers to consider: {coding.modifiers.map((m: any) => `${m.modifier} (${m.reason})`).join(" | ")}</div>
+              {coding.modifiers && coding.modifiers.length > 0 && (
+                <div className="text-xs text-amber-800 mt-2">Modifiers to consider: {coding.modifiers.map((m) => `${m.modifier} (${m.reason})`).join(" | ")}</div>
               )}
             </div>
           )}
@@ -976,10 +979,10 @@ export default function ClinicianScribe() {
                   <div className="text-xs text-slate-500">Language: {discharge.language}</div>
                   {discharge.summary?.headline && <div><span className="font-semibold">Headline:</span> {discharge.summary.headline}</div>}
                   {discharge.summary?.what_we_are_doing && <div><span className="font-semibold">Plan:</span> {discharge.summary.what_we_are_doing}</div>}
-                  {discharge.red_flags?.length > 0 && (
+                  {discharge.red_flags && discharge.red_flags.length > 0 && (
                     <div className="bg-rose-50 border border-rose-200 rounded p-2">
                       <div className="text-xs font-semibold text-rose-900 mb-1">Return precautions</div>
-                      {discharge.red_flags.map((r: string, i: number) => <div key={i} className="text-xs text-rose-900">- {r}</div>)}
+                      {discharge.red_flags.map((r, i) => <div key={i} className="text-xs text-rose-900">- {r}</div>)}
                     </div>
                   )}
                   {discharge.sms_body && (
@@ -1018,7 +1021,7 @@ function humanizeError(raw: string): string {
 }
 
 /** Render a CDS calculator's result dict as labeled rows instead of raw JSON. */
-function CalculatorResult({ result }: { result: any }) {
+function CalculatorResult({ result }: { result: CalculatorSuggestion["result"] }) {
   if (result === null || result === undefined) {
     return <div className="text-xs text-slate-500 mt-1">No result available.</div>;
   }
@@ -1176,7 +1179,7 @@ function SessionNoteSection({
   );
 }
 
-function renderCalcValue(v: any): string {
+function renderCalcValue(v: unknown): string {
   if (Array.isArray(v)) return v.join(", ") || "—";
   if (typeof v === "boolean") return v ? "Yes" : "No";
   if (typeof v === "object" && v !== null) {

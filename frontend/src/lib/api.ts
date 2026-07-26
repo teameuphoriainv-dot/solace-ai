@@ -812,9 +812,28 @@ export async function listCalculators(hospitalId: string): Promise<{ key: string
   return data.calculators;
 }
 
-export async function calcAutoExtract(hospitalId: string, transcript: string, chief_complaint = "") {
-  const { data } = await api.post(`/api/${hospitalId}/cds/auto-extract`, { transcript, chief_complaint });
-  return data as { calculators: { key: string; name: string; result: unknown; unknown: string[] }[] };
+/**
+ * One auto-extracted clinical calculator. `result` is the calculator's own
+ * output shape, which differs per calculator, so it stays unknown and is
+ * rendered defensively. `unknown` lists the inputs the extractor could not find.
+ */
+export type CalculatorSuggestion = {
+  key: string;
+  name: string;
+  result: unknown;
+  unknown: string[];
+};
+
+export async function calcAutoExtract(
+  hospitalId: string,
+  transcript: string,
+  chief_complaint = "",
+): Promise<{ calculators: CalculatorSuggestion[] }> {
+  const { data } = await api.post<{ calculators: CalculatorSuggestion[] }>(
+    `/api/${hospitalId}/cds/auto-extract`,
+    { transcript, chief_complaint },
+  );
+  return data;
 }
 
 export async function calculate(hospitalId: string, key: string, inputs: JsonObject) {
@@ -832,8 +851,45 @@ export async function scoreScreener(hospitalId: string, key: string, body: { ite
   return data;
 }
 
-export async function codingSuggest(hospitalId: string, note_text: string, established_patient = true) {
-  const { data } = await api.post(`/api/${hospitalId}/coding/suggest`, { note_text, established_patient });
+/** An E/M level candidate (backend/services/em_coding.py `_EM_TABLE`). */
+export type EmLevel = {
+  code: string;
+  level: number;
+  mdm: string;
+  patient?: string;
+};
+
+/** A suggested diagnosis or procedure code with the text that supports it. */
+export type CodeCandidate = {
+  code: string;
+  name: string;
+  support?: string;
+};
+
+/**
+ * The flat, backward-compatible half of the coding response. em_coding.suggest
+ * also returns setting, patient_type, em_leveling and em_ranked; add them here as
+ * screens start reading them.
+ */
+export type CodingSuggestResult = {
+  mdm?: string;
+  em_primary?: EmLevel;
+  em_alternate?: EmLevel;
+  icd10?: CodeCandidate[];
+  cpt_procedures?: CodeCandidate[];
+  modifiers?: { modifier: string; reason: string }[];
+  established_patient?: boolean;
+};
+
+export async function codingSuggest(
+  hospitalId: string,
+  note_text: string,
+  established_patient = true,
+): Promise<CodingSuggestResult> {
+  const { data } = await api.post<CodingSuggestResult>(
+    `/api/${hospitalId}/coding/suggest`,
+    { note_text, established_patient },
+  );
   return data;
 }
 
@@ -859,37 +915,161 @@ export async function letterPdfUrl(hospitalId: string, template_key: string, slo
 }
 
 // Inbox draft + result triage
-export async function inboxDraft(hospitalId: string, inbound_message: string, patient_chart: JsonObject = {}, hospital_name = "our clinic") {
-  const { data } = await api.post(`/api/${hospitalId}/inbox/draft`, { inbound_message, patient_chart, hospital_name });
+/**
+ * Shared head of the inbox drafting responses (backend/services/inbox_drafts.py).
+ * requires_clinician_review is always true: the FDA human-in-the-loop carve-out
+ * means nothing here is ever auto-sendable.
+ */
+export type InboxDraftBase = {
+  draft: string;
+  urgency: "routine" | "same_day" | "emergent" | "crisis";
+  requires_clinician_review: boolean;
+  grounding?: { claim: string; cited_field: string }[];
+  ungrounded_claims?: { claim: string; reason: string }[];
+  grounded_ratio?: number;
+  send_envelope?: JsonObject;
+};
+
+export type InboxDraftResult = InboxDraftBase & {
+  red_flags: string[];
+  red_flag_detail?: { label: string; urgency_floor: string }[];
+  tone: string;
+  suggested_action: "send_after_review" | "escalate_now" | "call_patient";
+  chart_fields_available?: string[];
+};
+
+export async function inboxDraft(
+  hospitalId: string,
+  inbound_message: string,
+  patient_chart: JsonObject = {},
+  hospital_name = "our clinic",
+): Promise<InboxDraftResult> {
+  const { data } = await api.post<InboxDraftResult>(`/api/${hospitalId}/inbox/draft`, {
+    inbound_message,
+    patient_chart,
+    hospital_name,
+  });
   return data;
 }
 
-export async function abnormalResultDraft(hospitalId: string, lab_name: string, value: number, recommended_action = "") {
-  const { data } = await api.post(`/api/${hospitalId}/inbox/result-draft`, { lab_name, value, recommended_action });
+/** Abnormal-result message draft. `classification` is the classify_lab payload. */
+export type AbnormalResultDraft = InboxDraftBase & {
+  classification: JsonObject;
+};
+
+export async function abnormalResultDraft(
+  hospitalId: string,
+  lab_name: string,
+  value: number,
+  recommended_action = "",
+): Promise<AbnormalResultDraft> {
+  const { data } = await api.post<AbnormalResultDraft>(
+    `/api/${hospitalId}/inbox/result-draft`,
+    { lab_name, value, recommended_action },
+  );
   return data;
 }
 
 // Refills
-export async function refillTriage(hospitalId: string, body: { medication_canonical: string; last_visit_iso?: string; relevant_lab_iso?: string; relevant_lab_value?: number; recent_hospitalization?: boolean }) {
-  const { data } = await api.post(`/api/${hospitalId}/refills/triage`, body);
+/** backend/services/refills.py; labs_to_order is present on needs_labs only. */
+export type RefillTriageResult = {
+  decision: "protocol_approved" | "needs_visit" | "needs_labs" | "physician_required";
+  reason: string;
+  rationale_codes: string[];
+  rationale_detail: { code: string; message: string }[];
+  patient_message: string;
+  labs_to_order?: string[];
+  auto_approved: boolean;
+  requires_clinician_review: boolean;
+  send_envelope?: JsonObject;
+  audited?: boolean;
+};
+
+export async function refillTriage(
+  hospitalId: string,
+  body: {
+    medication_canonical: string;
+    last_visit_iso?: string;
+    relevant_lab_iso?: string;
+    relevant_lab_value?: number;
+    recent_hospitalization?: boolean;
+  },
+): Promise<RefillTriageResult> {
+  const { data } = await api.post<RefillTriageResult>(`/api/${hospitalId}/refills/triage`, body);
   return data;
 }
 
 // PA packets
-export async function paPacket(hospitalId: string, body: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/pa/packet`, body);
+export type PaSubmissionChannel = { channel: string; status: string };
+
+/**
+ * Prior-auth packet plus its Da Vinci FHIR Claim. The packet body is assembled
+ * per payer, so only the parts the UI reads are pinned down here.
+ */
+export type PaPacketResult = {
+  packet: JsonObject & {
+    submission_channels?: PaSubmissionChannel[];
+    narrative?: JsonObject & { clinical_rationale?: string };
+  };
+  fhir_claim: unknown;
+};
+
+export async function paPacket(hospitalId: string, body: JsonObject): Promise<PaPacketResult> {
+  const { data } = await api.post<PaPacketResult>(`/api/${hospitalId}/pa/packet`, body);
   return data;
 }
 
 // Drug check
-export async function drugCheck(hospitalId: string, meds: string[], allergies: string[] = [], egfr?: number, complaint = "") {
-  const { data } = await api.post(`/api/${hospitalId}/drug-check`, { meds, allergies, egfr, complaint });
+/** One drug-drug interaction: `a` and `b` are the interacting medications. */
+export type DrugDrugAlert = {
+  a: string;
+  b: string;
+  severity: string;
+  reason: string;
+};
+
+export type DrugAllergyAlert = { med: string; allergy?: string };
+
+export type DrugCheckResult = {
+  drug_drug: DrugDrugAlert[];
+  drug_allergy: DrugAllergyAlert[];
+  any_high?: boolean;
+};
+
+export async function drugCheck(
+  hospitalId: string,
+  meds: string[],
+  allergies: string[] = [],
+  egfr?: number,
+  complaint = "",
+): Promise<DrugCheckResult> {
+  const { data } = await api.post<DrugCheckResult>(`/api/${hospitalId}/drug-check`, {
+    meds,
+    allergies,
+    egfr,
+    complaint,
+  });
   return data;
 }
 
 // Discharge plan
-export async function buildDischarge(hospitalId: string, body: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/discharge/build`, body);
+/** backend/services/discharge_plan.py. `summary` is a patient-education block. */
+export type DischargePlanResult = {
+  language: string;
+  summary?: {
+    headline?: string;
+    what_we_are_doing?: string;
+  } & JsonObject;
+  red_flags?: string[];
+  follow_up_text?: string;
+  sms_body?: string;
+};
+
+export async function buildDischarge(
+  hospitalId: string,
+  body: JsonObject,
+): Promise<DischargePlanResult> {
+  const { data } = await api.post<DischargePlanResult>(`/api/${hospitalId}/discharge/build`, body);
   return data;
 }
 
@@ -1019,13 +1199,64 @@ export async function hccEvaluate(
   return data;
 }
 
-export async function handoffIpass(hospitalId: string, chart_context: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/handoff/ipass`, { chart_context });
+/**
+ * Both handoff responses share this envelope (backend/services/handoff.py):
+ * `available` false means no model key or a parse failure and nothing else is
+ * present; otherwise the model's structured JSON is merged in and
+ * `rendered_text` carries the formatted version the UI displays.
+ */
+export type HandoffEnvelope = {
+  available: boolean;
+  reason?: string;
+  error?: string;
+  context_gaps?: string[];
+  rendered_text?: string;
+};
+
+export type HandoffIpassResult = HandoffEnvelope & {
+  illness_severity?: "stable" | "watcher" | "unstable";
+  severity_rationale?: string;
+  patient_summary?: string;
+  action_list?: {
+    action: string;
+    priority: "critical" | "routine" | "if-needed";
+    by_when: string;
+    responsible: string;
+    contingency: string;
+  }[];
+  situation_awareness?: string;
+};
+
+export async function handoffIpass(
+  hospitalId: string,
+  chart_context: JsonObject,
+): Promise<HandoffIpassResult> {
+  const { data } = await api.post<HandoffIpassResult>(
+    `/api/${hospitalId}/handoff/ipass`,
+    { chart_context },
+  );
   return data;
 }
 
-export async function handoffSbar(hospitalId: string, chart_context: JsonObject, consult_specialty = "cardiology", reason = "") {
-  const { data } = await api.post(`/api/${hospitalId}/handoff/sbar`, { chart_context, consult_specialty, reason });
+export type HandoffSbarResult = HandoffEnvelope & {
+  situation?: string;
+  background?: string;
+  assessment?: string;
+  recommendation?: string;
+  urgency?: "emergent" | "urgent" | "routine";
+  specific_questions?: string[];
+};
+
+export async function handoffSbar(
+  hospitalId: string,
+  chart_context: JsonObject,
+  consult_specialty = "cardiology",
+  reason = "",
+): Promise<HandoffSbarResult> {
+  const { data } = await api.post<HandoffSbarResult>(
+    `/api/${hospitalId}/handoff/sbar`,
+    { chart_context, consult_specialty, reason },
+  );
   return data;
 }
 
@@ -1076,18 +1307,81 @@ export async function resultLoopOverdue(hospitalId: string): Promise<ResultLoopO
 // nurse triage, TEFCA, telehealth, style learning, MedicationStatement
 // ============================================================================
 
-export async function hl7MdmRender(hospitalId: string, body: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/hl7/mdm/render`, body);
+export type Hl7MdmRenderResult = {
+  hl7_message: string;
+  /** The same message wrapped in an MLLP frame, base64 encoded. */
+  mllp_frame_b64: string;
+};
+
+export async function hl7MdmRender(hospitalId: string, body: JsonObject): Promise<Hl7MdmRenderResult> {
+  const { data } = await api.post<Hl7MdmRenderResult>(`/api/${hospitalId}/hl7/mdm/render`, body);
   return data;
 }
 
-export async function encounterStitch(hospitalId: string, notes: JsonObject[]) {
-  const { data } = await api.post(`/api/${hospitalId}/encounter/stitch`, { notes });
+/**
+ * Multi-encounter stitch (backend/services/multi_encounter.py). `available`
+ * gates the whole payload: false means no input or no model key, and only
+ * reason/error are present. The rest is the model's JSON, spread onto the same
+ * object by the service.
+ */
+export type EncounterStitchResult = {
+  available: boolean;
+  reason?: string;
+  error?: string;
+  encounter_threads?: unknown;
+  narrative_summary?: string;
+  threads?: {
+    thread_id: string;
+    chief_complaint: string;
+    trajectory: string;
+    summary: string;
+  }[];
+  active_problems?: {
+    problem: string;
+    first_documented: string;
+    last_status: string;
+    notes: string;
+  }[];
+  interventions_tried?: {
+    intervention: string;
+    outcome: string;
+    thread_id: string;
+  }[];
+  open_questions_for_clinician?: string[];
+};
+
+export async function encounterStitch(
+  hospitalId: string,
+  notes: JsonObject[],
+): Promise<EncounterStitchResult> {
+  const { data } = await api.post<EncounterStitchResult>(
+    `/api/${hospitalId}/encounter/stitch`,
+    { notes },
+  );
   return data;
 }
 
-export async function encounterHuddle(hospitalId: string, transcript: string, ward_context = "") {
-  const { data } = await api.post(`/api/${hospitalId}/encounter/huddle`, { transcript, ward_context });
+/**
+ * Ward-huddle parse. Like the stitch result, `available` gates everything, and
+ * the model's JSON is spread onto the object, so the extra keys are open.
+ */
+export type EncounterHuddleResult = {
+  available: boolean;
+  reason?: string;
+  error?: string;
+  speaker_count?: number;
+  [key: string]: unknown;
+};
+
+export async function encounterHuddle(
+  hospitalId: string,
+  transcript: string,
+  ward_context = "",
+): Promise<EncounterHuddleResult> {
+  const { data } = await api.post<EncounterHuddleResult>(
+    `/api/${hospitalId}/encounter/huddle`,
+    { transcript, ward_context },
+  );
   return data;
 }
 
@@ -1139,8 +1433,22 @@ export async function cohortPoll(hospitalId: string, content_location: string) {
   return data;
 }
 
-export async function cohortQuery(hospitalId: string, body: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/cohort/query`, body);
+/**
+ * De-identified cohort result (backend/services/cohort_export.py). The async
+ * export path returns status/manifest instead of inline rows, so both are
+ * optional. Patient rows are Safe-Harbor de-identified and their columns vary
+ * with the query, hence JsonObject.
+ */
+export type CohortQueryResult = {
+  count?: number;
+  patients?: JsonObject[];
+  deidentified?: string;
+  status?: string;
+  manifest?: unknown;
+};
+
+export async function cohortQuery(hospitalId: string, body: JsonObject): Promise<CohortQueryResult> {
+  const { data } = await api.post<CohortQueryResult>(`/api/${hospitalId}/cohort/query`, body);
   return data;
 }
 
@@ -1236,20 +1544,69 @@ export async function nurseTriageProtocols(hospitalId: string) {
   return data.protocols as string[];
 }
 
-export async function nurseTriageEvaluate(hospitalId: string, protocol_key: string, answers: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/nurse-triage/evaluate`, { protocol_key, answers });
+/** backend/services/nurse_triage.py `_result`. */
+export type NurseTriageResult = {
+  disposition: string;
+  reason: string;
+  sla: string;
+  instructions: string;
+};
+
+export async function nurseTriageEvaluate(
+  hospitalId: string,
+  protocol_key: string,
+  answers: JsonObject,
+): Promise<NurseTriageResult> {
+  const { data } = await api.post<NurseTriageResult>(
+    `/api/${hospitalId}/nurse-triage/evaluate`,
+    { protocol_key, answers },
+  );
   return data;
 }
 
-export async function tefcaQuery(hospitalId: string, patient_name: string, patient_dob: string, consent_attestation = true) {
-  const { data } = await api.post(`/api/${hospitalId}/tefca/query`, { patient_name, patient_dob, consent_attestation });
+/**
+ * TEFCA/QHIN response. The UI only renders it as raw JSON, and the payload
+ * mirrors whatever the responding QHIN sends, so it stays deliberately open.
+ */
+export type TefcaQueryResult = JsonObject;
+
+export async function tefcaQuery(
+  hospitalId: string,
+  patient_name: string,
+  patient_dob: string,
+  consent_attestation = true,
+): Promise<TefcaQueryResult> {
+  const { data } = await api.post<TefcaQueryResult>(
+    `/api/${hospitalId}/tefca/query`,
+    { patient_name, patient_dob, consent_attestation },
+  );
   return data;
 }
 
 export type TelehealthProvider = "doxy" | "zoom" | "teams" | "doximity";
 
-export async function telehealthSession(hospitalId: string, body: JsonObject) {
-  const { data } = await api.post(`/api/${hospitalId}/telehealth/session`, body);
+/**
+ * Telehealth join details. Fields beyond provider/url differ per vendor
+ * (backend/services/telehealth.py): doxy adds patient_message, zoom a passcode,
+ * doximity from/to numbers.
+ */
+export type TelehealthSessionResult = {
+  provider: string;
+  url: string;
+  patient_message?: string;
+  passcode?: string;
+  from?: string;
+  to?: string;
+};
+
+export async function telehealthSession(
+  hospitalId: string,
+  body: JsonObject,
+): Promise<TelehealthSessionResult> {
+  const { data } = await api.post<TelehealthSessionResult>(
+    `/api/${hospitalId}/telehealth/session`,
+    body,
+  );
   return data;
 }
 

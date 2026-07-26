@@ -12,7 +12,8 @@ import {
 } from "../lib/api";
 import type {
   PortalThreadSummary, PortalMessage, SepsisBundleElement, SepsisBundleResult,
-  TelehealthProvider,
+  TelehealthProvider, CohortQueryResult, EncounterStitchResult, EncounterHuddleResult,
+  NurseTriageResult, TefcaQueryResult, TelehealthSessionResult, Hl7MdmRenderResult,
 } from "../lib/api";
 import {
   sdohScreen, sdohReferralsBatch, careGapsSidebar, noShowEquityAudit,
@@ -300,7 +301,7 @@ function CohortPane({ hospitalId }: { hospitalId: string }) {
   const [icd, setIcd] = useState("E11.65");
   const [loinc, setLoinc] = useState("4548-4");
   const [thresh, setThresh] = useState(8.0);
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<CohortQueryResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -439,7 +440,7 @@ function LongitudinalPane({ hospitalId }: { hospitalId: string }) {
     { visit_index: "v2", date: "2026-01-12", chief_complaint: "knee pain follow-up", note_text: "Persistent R knee pain despite NSAIDs and PT, intra-articular cortisone given." },
     { visit_index: "v3", date: "2026-04-22", chief_complaint: "knee pain", note_text: "Pain returned 2mo after injection, now interfering with sleep. Discussing referral for arthroplasty." },
   ], null, 2));
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<EncounterStitchResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -450,7 +451,7 @@ function LongitudinalPane({ hospitalId }: { hospitalId: string }) {
     }
   };
   const [huddle, setHuddle] = useState("Attending: Bed 4 - Mr Garcia is trending up clinically, lactate down to 1.8 from 3.4. RN: he's on 2L still. Pharmacy: vanco trough was 14, target. Resident: plan to step down to floor today. Attending: agree, sign out the floor team to recheck CXR tomorrow.");
-  const [hout, setHout] = useState<any | null>(null);
+  const [hout, setHout] = useState<EncounterHuddleResult | null>(null);
   const [hbusy, setHbusy] = useState(false);
   const runH = async () => {
     setHbusy(true);
@@ -502,7 +503,7 @@ function NurseTriagePane({ hospitalId }: { hospitalId: string }) {
   const [protocols, setProtocols] = useState<string[]>([]);
   const [active, setActive] = useState<string>("chest_pain");
   const [answers, setAnswers] = useState<string>(JSON.stringify({ severe_or_crushing: false, with_dyspnea: true, age_over_50: true }, null, 2));
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<NurseTriageResult | null>(null);
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     nurseTriageProtocols(hospitalId).then(setProtocols).catch(() => {});
@@ -568,7 +569,7 @@ function NurseTriagePane({ hospitalId }: { hospitalId: string }) {
 function TefcaPane({ hospitalId }: { hospitalId: string }) {
   const [name, setName] = useState("Jane Doe");
   const [dob, setDob] = useState("1985-03-21");
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<TefcaQueryResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -609,7 +610,7 @@ function TefcaPane({ hospitalId }: { hospitalId: string }) {
 function TelehealthPane({ hospitalId }: { hospitalId: string }) {
   const [provider, setProvider] = useState<"doxy" | "zoom" | "teams" | "doximity">("doxy");
   const [extra, setExtra] = useState<string>('{ "clinician_handle": "drchen" }');
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<TelehealthSessionResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -679,7 +680,7 @@ function Hl7Pane({ hospitalId }: { hospitalId: string }) {
     receiving_app: "MEDITECH", receiving_facility: "COMMUNITY_HOSPITAL", encounter_id: "ENC-9981",
     note_type_code: "PROG", note_type_display: "Progress note", visit_class: "O",
   });
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<Hl7MdmRenderResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);

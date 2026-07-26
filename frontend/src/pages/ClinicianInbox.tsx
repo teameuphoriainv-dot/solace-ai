@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Inbox, Pill, ShieldCheck, Activity, Send, Loader2, FileCheck2, FileText, Braces, Gavel, BookCheck, CheckCircle2, AlertTriangle, XCircle, ExternalLink } from "lucide-react";
 import { inboxDraft, abnormalResultDraft, refillTriage, paPacket } from "../lib/api";
+import type {
+  InboxDraftResult, AbnormalResultDraft, RefillTriageResult, PaPacketResult,
+} from "../lib/api";
 import {
   paCompleteness,
   paHumanPacket,
@@ -79,7 +82,7 @@ export default function ClinicianInbox() {
 
 function InboxPane({ hospitalId }: { hospitalId: string }) {
   const [msg, setMsg] = useState("Hi doctor — I've had this dull headache for 3 days, mostly behind my eyes. Tylenol helps a little. Should I be worried?");
-  const [draft, setDraft] = useState<any | null>(null);
+  const [draft, setDraft] = useState<InboxDraftResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -111,7 +114,7 @@ function InboxPane({ hospitalId }: { hospitalId: string }) {
 function ResultsPane({ hospitalId }: { hospitalId: string }) {
   const [labName, setLabName] = useState("a1c");
   const [value, setValue] = useState(9.4);
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<AbnormalResultDraft | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => { setBusy(true); try { setOut(await abnormalResultDraft(hospitalId, labName, value)); } finally { setBusy(false); } };
   return (
@@ -145,7 +148,7 @@ function RefillsPane({ hospitalId }: { hospitalId: string }) {
   const [med, setMed] = useState("metformin");
   const [lastVisit, setLastVisit] = useState("2025-08-01");
   const [labDate, setLabDate] = useState("2025-08-01");
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<RefillTriageResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -187,7 +190,7 @@ function PAPane({ hospitalId }: { hospitalId: string }) {
   const [icd10, setIcd10] = useState("M54.16");
   const [requested, setRequested] = useState("MRI lumbar spine without contrast");
   const [code, setCode] = useState("72148");
-  const [out, setOut] = useState<any | null>(null);
+  const [out, setOut] = useState<PaPacketResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -222,7 +225,7 @@ function PAPane({ hospitalId }: { hospitalId: string }) {
           <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">Narrative</div>
           <pre className="text-xs bg-slate-50 rounded p-2 whitespace-pre-wrap">{out.packet?.narrative?.clinical_rationale}</pre>
           <div className="text-xs uppercase tracking-wide text-slate-500 mt-3 mb-1">Submission channels</div>
-          <div className="text-xs">{out.packet?.submission_channels?.map((s: any) => `${s.channel}: ${s.status}`).join(" | ")}</div>
+          <div className="text-xs">{out.packet?.submission_channels?.map((s) => `${s.channel}: ${s.status}`).join(" | ")}</div>
           <div className="text-xs uppercase tracking-wide text-slate-500 mt-3 mb-1">Da Vinci PAS Claim (FHIR)</div>
           <pre className="text-xs bg-slate-50 rounded p-2 max-h-64 overflow-auto">{JSON.stringify(out.fhir_claim, null, 2)}</pre>
         </div>
