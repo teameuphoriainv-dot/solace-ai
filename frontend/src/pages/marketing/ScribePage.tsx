@@ -65,7 +65,7 @@ function TemplateCycler() {
 }
 
 const steps = [
-  { Icon: AudioLines, title: "Capture every detail", desc: "Start the visit. Solace listens ambiently and transcribes in real time — no dictation, no templates to fill." },
+  { Icon: AudioLines, title: "Capture every detail", desc: "Start the visit. Solace listens ambiently and transcribes in real time, no dictation, no templates to fill." },
   { Icon: FileCheck2, title: "Let the AI do the heavy lifting", desc: "A structured draft in your format appears seconds after the visit ends, grounded in what was actually said." },
   { Icon: ScrollText, title: "Sign with confidence", desc: "Review, edit, sign. Suggested ICD-10/CPT codes ride along, and the note writes back to your EHR." },
 ];
@@ -73,14 +73,14 @@ const steps = [
 const trust = [
   { Icon: ShieldCheck, title: "HIPAA-aligned architecture", desc: "Audit trails on every action, consent-gated AI, and infrastructure designed for PHI from day one." },
   { Icon: EyeOff, title: "PHI isolation, enforced in code", desc: "Models reason over coded, de-identified data. A CI-gated test proves raw PHI never reaches the model." },
-  { Icon: Database, title: "Never trained on your data", desc: "Your notes are yours. Patient data is never used to train models — contractually and architecturally." },
+  { Icon: Database, title: "Never trained on your data", desc: "Your notes are yours. Patient data is never used to train models: contractually and architecturally." },
   { Icon: Lock, title: "Encrypted end to end", desc: "Customer-managed keys, encryption in transit and at rest, US-based infrastructure." },
 ];
 
 const faqs = [
   { q: "How fast is a note ready after the visit?", a: "A structured draft appears within seconds of ending the visit. Most clinicians review and sign in under a minute." },
-  { q: "Does it work for my specialty?", a: "Templates cover primary care, emergency, hospitalist, and specialty formats — SOAP, CHEDDAR, ED, and progress notes — and each can be customized to how you chart." },
-  { q: "Which EHRs does the note write back to?", a: "Any SMART on FHIR R4 system — Epic, Oracle Health, athenahealth, and SMART-conformant EHRs — as a DocumentReference with codes attached." },
+  { q: "Does it work for my specialty?", a: "Templates cover primary care, emergency, hospitalist, and specialty formats (SOAP, CHEDDAR, ED, and progress notes) and each can be customized to how you chart." },
+  { q: "Which EHRs does the note write back to?", a: "Any SMART on FHIR R4 system (Epic, Oracle Health, athenahealth, and SMART-conformant EHRs) as a DocumentReference with codes attached." },
   { q: "What happens to the audio?", a: "Audio is processed for transcription and not retained beyond the configured window. The model only ever sees de-identified, coded content." },
   { q: "Do clinicians stay in control?", a: "Always. Nothing is signed, coded, or written to the chart without explicit clinician review and confirmation." },
 ];
@@ -91,7 +91,7 @@ export default function ScribePage() {
       <MarketingHero
         eyebrow="AI Scribe"
         title="No more charting after hours."
-        sub="Solace listens to the visit, drafts a structured, coded note in seconds, and leaves the final word — always — with you."
+        sub="Solace listens to the visit, drafts a structured, coded note in seconds, and leaves the final word (always) with you."
         primaryCta={{ to: "/get-started", label: "Get started" }}
         secondaryCta={{ to: "/contact", label: "Book a demo" }}
       >
@@ -127,7 +127,7 @@ export default function ScribePage() {
           <SectionHeading
             eyebrow="Your format"
             title="Notes the way you actually write them."
-            sub="SOAP, CHEDDAR, ED, progress — pick a starting point, then tune sections, tone, and depth per clinician."
+            sub="SOAP, CHEDDAR, ED, progress: pick a starting point, then tune sections, tone, and depth per clinician."
           />
           <Reveal className="mt-12">
             <TemplateCycler />
@@ -149,7 +149,7 @@ export default function ScribePage() {
         <SectionHeading
           eyebrow="Trust"
           title="A secure partner you can trust."
-          sub="Built as a HIPAA business associate, with controls you can verify — not just claims."
+          sub="Built as a HIPAA business associate, with controls you can verify, not just claims."
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {trust.map(({ Icon, title, desc }, i) => (

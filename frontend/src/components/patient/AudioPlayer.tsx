@@ -22,7 +22,7 @@ export function AudioPlayer({ audioUrl }: Props) {
   if (!audioUrl || failed) {
     return (
       <div className="mx-4 mb-4 rounded-lg bg-surface-low px-4 py-3 text-sm text-text-muted">
-        Audio unavailable — please read the guidance above.
+        Audio unavailable: please read the guidance above.
       </div>
     );
   }

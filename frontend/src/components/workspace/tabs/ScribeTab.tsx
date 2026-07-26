@@ -92,7 +92,7 @@ export default function ScribeTab() {
           if (seg.isFinal) pendingChunkRef.current += (seg[0]?.transcript || "") + " ";
         }
       };
-      sr.onerror = () => { /* swallow — the flush timer retries */ };
+      sr.onerror = () => { /* swallow, the flush timer retries */ };
       // Keep listening across browser auto-stops while the session is active.
       sr.onend = () => {
         if (sessionStatusRef.current === "recording") {
@@ -261,14 +261,14 @@ export default function ScribeTab() {
         {recording && (
           <div className="flex items-center gap-2 rounded-lg bg-error-container px-4 py-2 text-sm text-error">
             <span className="w-2.5 h-2.5 rounded-full bg-error animate-pulse" aria-hidden="true" />
-            Ambient session recording — {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured.
+            Ambient session recording: {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured.
             Pause anytime; finalize when the visit ends.
           </div>
         )}
         {paused && (
           <div className="flex items-center gap-2 rounded-lg bg-warning-container px-4 py-2 text-sm text-warning">
             <Pause size={14} aria-hidden="true" />
-            Ambient session paused — {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured so far.
+            Ambient session paused: {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured so far.
             Resume to keep listening.
           </div>
         )}
@@ -364,7 +364,7 @@ export default function ScribeTab() {
             <div className="flex items-center gap-2 mb-3">
               <ClipboardCheck size={16} className="text-success" aria-hidden="true" />
               <div className="text-xs uppercase tracking-wide text-text-muted font-medium">
-                Finalized SOAP note — every line traceable to the conversation
+                Finalized SOAP note, every line traceable to the conversation
               </div>
             </div>
             {finalNote.sections.map((sec) => (
@@ -396,7 +396,7 @@ export default function ScribeTab() {
                 </button>
               </div>
               <div className="mt-1.5 text-xs text-secondary/80">
-                {speakerLabelOf(activeEvidence.speaker)} · {fmtMs(activeEvidence.begin_ms)}–{fmtMs(activeEvidence.end_ms)}
+                {speakerLabelOf(activeEvidence.speaker)} · {fmtMs(activeEvidence.begin_ms)} to {fmtMs(activeEvidence.end_ms)}
               </div>
               <div className="mt-1 text-sm text-ink">"{activeEvidence.snippet}"</div>
             </div>
@@ -596,7 +596,7 @@ function SessionNoteSection({
             ) : (
               <div className="mt-1 inline-flex items-center gap-1 text-[11px] text-warning">
                 <AlertTriangle size={10} aria-hidden="true" />
-                Not linked to the conversation — verify before signing.
+                Not linked to the conversation: verify before signing.
               </div>
             )}
           </div>

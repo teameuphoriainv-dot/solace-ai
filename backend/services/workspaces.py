@@ -114,7 +114,7 @@ def generate_workspace_id(hospital_id: str, name: str) -> str:
         suffix = secrets.token_hex(2)  # 4 hex chars
         trimmed = base[: _ID_MAX_LEN - 5].rstrip("-")
         candidate = f"{trimmed}-{suffix}"
-    raise WorkspaceExists("could not allocate a unique workspace_id — try another name")
+    raise WorkspaceExists("could not allocate a unique workspace_id: try another name")
 
 
 def assert_owned(workspace: dict[str, Any] | None, hospital_id: str) -> dict[str, Any]:

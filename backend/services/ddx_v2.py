@@ -237,7 +237,7 @@ def generate(
                 "diagnosis": rf["diagnosis"],
                 "icd10": rf["icd10"],
                 "weight": 0.05,
-                "supporting": ["red-flag canon match — verify by exam/test"],
+                "supporting": ["red-flag canon match: verify by exam/test"],
                 "refuting": [],
                 "discriminator": "rule out per institutional pathway",
                 "reasoning": (

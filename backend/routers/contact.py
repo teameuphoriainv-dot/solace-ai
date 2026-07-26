@@ -100,7 +100,7 @@ def submit_contact(body: ContactBody, request: Request = None) -> dict:
                 ("name", "email", "organization", "role", "topic", "message")}
         email_service.send_email(
             to=settings.contact_notify_email,
-            subject=f"[Solace contact] {record['topic']} — {record['name']}",
+            subject=f"[Solace contact] {record['topic']}: {record['name']}",
             html=(
                 f"<p><strong>{safe['name']}</strong> ({safe['email']})"
                 f"{' · ' + safe['organization'] if safe['organization'] else ''}"

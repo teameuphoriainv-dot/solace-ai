@@ -91,7 +91,7 @@ TOOLS: list[dict[str, Any]] = [
     },
     {
         "name": "escalate_911",
-        "description": "True medical emergency — chest pain, stroke, can't breathe, heavy bleeding, unconscious, suicidal. Tells the caller to dial 911 and immediately tries to transfer.",
+        "description": "True medical emergency: chest pain, stroke, can't breathe, heavy bleeding, unconscious, suicidal. Tells the caller to dial 911 and immediately tries to transfer.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -137,7 +137,7 @@ def _do_triage(tool_input: dict[str, Any], call_ctx: dict[str, Any]) -> dict[str
         esi = result.esi_level
     except Exception:
         log.exception("voice triage failed")
-        return {"say": "I want to be careful here — let me transfer you to a nurse who can help.", "escalate": "human"}
+        return {"say": "I want to be careful here: let me transfer you to a nurse who can help.", "escalate": "human"}
 
     if esi <= 2:
         say = (

@@ -56,7 +56,7 @@ def _narrate_system(allow_replan: bool) -> str:
     )
     return (
         "You are the NARRATOR for an EHR Copilot. You receive only STRUCTURED, coded "
-        "results from the planner's primitives — never raw patient data. Compose a "
+        "results from the planner's primitives: never raw patient data. Compose a "
         "clinical, scannable answer as an artifact tree of interactive blocks.\n\n"
         "RULES:\n"
         "- Output ONLY a JSON object: {\"blocks\": [ ... ]}.\n"

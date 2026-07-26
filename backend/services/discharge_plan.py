@@ -72,7 +72,7 @@ Rules:
 
 def red_flags(assessment: str, language: str = "en") -> list[str]:
     if not claude.available():
-        return ["Worsening symptoms — call our office or go to the ED."]
+        return ["Worsening symptoms: call our office or go to the ED."]
     lang_full = LANG_NAME.get(language, "English")
     user = f"Assessment: {assessment}\n\nLanguage: {lang_full}\n\nReturn JSON now."
     try:
@@ -173,7 +173,7 @@ def tiered_return_precautions(assessment: str, language: str = "en") -> dict[str
     if not claude.available():
         tiers = _empty_tiers()
         tiers["emergency_department"] = [
-            "Symptoms get worse or you are worried — go to the emergency department."
+            "Symptoms get worse or you are worried: go to the emergency department."
         ]
         return {"tiers": tiers, "labels": dict(_TIER_LABEL), "language": language}
     lang_full = LANG_NAME.get(language, "English")
@@ -197,7 +197,7 @@ def tiered_return_precautions(assessment: str, language: str = "en") -> dict[str
         log.warning("tiered precaution gen failed: %s", e)
         tiers = _empty_tiers()
         tiers["emergency_department"] = [
-            "Symptoms get worse or you are worried — go to the emergency department."
+            "Symptoms get worse or you are worried: go to the emergency department."
         ]
         return {"tiers": tiers, "labels": dict(_TIER_LABEL), "language": language}
 

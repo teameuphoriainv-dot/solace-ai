@@ -59,12 +59,12 @@ EMERGENCY_KEYWORDS = (
 
 EMERGENCY_RESPONSE = (
     "This sounds like an emergency. Please hang up and dial nine one one right now. "
-    "If you can't, stay on the line — I'm connecting you to a clinician."
+    "If you can't, stay on the line: I'm connecting you to a clinician."
 )
 
 GOODBYE_DEFAULT = "Take care. Goodbye."
 TRANSFER_PROMPT = "Connecting you now. Please hold."
-NO_INPUT_PROMPT = "I didn't catch that — could you say it again?"
+NO_INPUT_PROMPT = "I didn't catch that: could you say it again?"
 
 
 # =====================================================================================
@@ -82,63 +82,63 @@ NO_INPUT_PROMPT = "I didn't catch that — could you say it again?"
 INTAKE_QUESTIONS: dict[str, dict[str, str]] = {
     "en": {
         "CHIEF_COMPLAINT": "What's the main reason you're calling today?",
-        "CHIEF_COMPLAINT_REPROMPT": "I want to make sure I help — can you tell me what's bothering you?",
+        "CHIEF_COMPLAINT_REPROMPT": "I want to make sure I help: can you tell me what's bothering you?",
         "ONSET": "When did this start?",
-        "ONSET_REPROMPT": "Roughly how long has this been going on — hours, days?",
+        "ONSET_REPROMPT": "Roughly how long has this been going on: hours, days?",
         "SEVERITY": "On a scale of zero to ten, how bad is it right now?",
-        "SEVERITY_REPROMPT": "Just a number from zero to ten — how bad does it feel?",
+        "SEVERITY_REPROMPT": "Just a number from zero to ten: how bad does it feel?",
         "HISTORY": "Do you have any ongoing health conditions or take any medications?",
         "HISTORY_REPROMPT": "Any past conditions, surgeries, or daily medications? A simple no is fine.",
         "RED_FLAG_SCREEN": "Are you having any chest pain, trouble breathing, or heavy bleeding right now?",
-        "RED_FLAG_SCREEN_REPROMPT": "Just to be safe — any chest pain, trouble breathing, or severe bleeding? Yes or no.",
+        "RED_FLAG_SCREEN_REPROMPT": "Just to be safe, any chest pain, trouble breathing, or severe bleeding? Yes or no.",
     },
     "es": {
         "CHIEF_COMPLAINT": "¿Cuál es el motivo principal de su llamada hoy?",
-        "CHIEF_COMPLAINT_REPROMPT": "Quiero ayudarle — ¿puede decirme qué le molesta?",
+        "CHIEF_COMPLAINT_REPROMPT": "Quiero ayudarle. ¿Puede decirme qué le molesta?",
         "ONSET": "¿Cuándo comenzó esto?",
-        "ONSET_REPROMPT": "¿Más o menos cuánto tiempo lleva así — horas, días?",
+        "ONSET_REPROMPT": "¿Más o menos cuánto tiempo lleva así: horas, días?",
         "SEVERITY": "En una escala del cero al diez, ¿qué tan fuerte es ahora?",
-        "SEVERITY_REPROMPT": "Solo un número del cero al diez — ¿qué tan fuerte se siente?",
+        "SEVERITY_REPROMPT": "Solo un número del cero al diez. ¿Qué tan fuerte se siente?",
         "HISTORY": "¿Tiene alguna condición de salud o toma algún medicamento?",
         "HISTORY_REPROMPT": "¿Alguna condición, cirugía o medicamento diario? Un simple no está bien.",
         "RED_FLAG_SCREEN": "¿Tiene dolor en el pecho, dificultad para respirar o sangrado fuerte ahora?",
-        "RED_FLAG_SCREEN_REPROMPT": "Para estar seguros — ¿dolor de pecho, dificultad para respirar o sangrado? Sí o no.",
+        "RED_FLAG_SCREEN_REPROMPT": "Para estar seguros: ¿dolor de pecho, dificultad para respirar o sangrado? Sí o no.",
     },
     "zh": {
         "CHIEF_COMPLAINT": "请问您今天来电的主要原因是什么?",
-        "CHIEF_COMPLAINT_REPROMPT": "我想帮您 — 能告诉我您哪里不舒服吗?",
+        "CHIEF_COMPLAINT_REPROMPT": "我想帮您: 能告诉我您哪里不舒服吗?",
         "ONSET": "这个情况是什么时候开始的?",
-        "ONSET_REPROMPT": "大概持续多久了 — 几个小时还是几天?",
+        "ONSET_REPROMPT": "大概持续多久了: 几个小时还是几天?",
         "SEVERITY": "从零到十,现在有多严重?",
-        "SEVERITY_REPROMPT": "请给一个零到十的数字 — 有多严重?",
+        "SEVERITY_REPROMPT": "请给一个零到十的数字: 有多严重?",
         "HISTORY": "您有长期的健康问题或在服用药物吗?",
         "HISTORY_REPROMPT": "有过往病史、手术或日常药物吗?没有也可以。",
         "RED_FLAG_SCREEN": "您现在有胸痛、呼吸困难或大量出血吗?",
-        "RED_FLAG_SCREEN_REPROMPT": "为安全起见 — 有胸痛、呼吸困难或严重出血吗?是或不是。",
+        "RED_FLAG_SCREEN_REPROMPT": "为安全起见: 有胸痛、呼吸困难或严重出血吗?是或不是。",
     },
     "vi": {
         "CHIEF_COMPLAINT": "Lý do chính bạn gọi hôm nay là gì?",
-        "CHIEF_COMPLAINT_REPROMPT": "Tôi muốn giúp bạn — bạn có thể cho biết bạn bị gì không?",
+        "CHIEF_COMPLAINT_REPROMPT": "Tôi muốn giúp bạn: bạn có thể cho biết bạn bị gì không?",
         "ONSET": "Việc này bắt đầu khi nào?",
-        "ONSET_REPROMPT": "Khoảng bao lâu rồi — vài giờ hay vài ngày?",
+        "ONSET_REPROMPT": "Khoảng bao lâu rồi: vài giờ hay vài ngày?",
         "SEVERITY": "Trên thang điểm từ không đến mười, bây giờ nặng cỡ nào?",
-        "SEVERITY_REPROMPT": "Chỉ một con số từ không đến mười — nặng cỡ nào?",
+        "SEVERITY_REPROMPT": "Chỉ một con số từ không đến mười: nặng cỡ nào?",
         "HISTORY": "Bạn có bệnh nền hoặc đang dùng thuốc gì không?",
         "HISTORY_REPROMPT": "Có bệnh sử, phẫu thuật hay thuốc hàng ngày không? Không cũng được.",
         "RED_FLAG_SCREEN": "Bạn có đau ngực, khó thở hoặc chảy máu nhiều ngay bây giờ không?",
-        "RED_FLAG_SCREEN_REPROMPT": "Để chắc chắn — có đau ngực, khó thở hoặc chảy máu nặng không? Có hay không.",
+        "RED_FLAG_SCREEN_REPROMPT": "Để chắc chắn: có đau ngực, khó thở hoặc chảy máu nặng không? Có hay không.",
     },
     "fr": {
         "CHIEF_COMPLAINT": "Quelle est la raison principale de votre appel aujourd'hui ?",
-        "CHIEF_COMPLAINT_REPROMPT": "Je veux vous aider — pouvez-vous me dire ce qui ne va pas ?",
+        "CHIEF_COMPLAINT_REPROMPT": "Je veux vous aider: pouvez-vous me dire ce qui ne va pas ?",
         "ONSET": "Quand cela a-t-il commencé ?",
-        "ONSET_REPROMPT": "Depuis combien de temps environ — des heures, des jours ?",
+        "ONSET_REPROMPT": "Depuis combien de temps environ: des heures, des jours ?",
         "SEVERITY": "Sur une échelle de zéro à dix, c'est à quel point maintenant ?",
-        "SEVERITY_REPROMPT": "Juste un chiffre de zéro à dix — c'est à quel point ?",
+        "SEVERITY_REPROMPT": "Juste un chiffre de zéro à dix: c'est à quel point ?",
         "HISTORY": "Avez-vous des problèmes de santé ou prenez-vous des médicaments ?",
         "HISTORY_REPROMPT": "Des antécédents, chirurgies ou médicaments quotidiens ? Un simple non suffit.",
         "RED_FLAG_SCREEN": "Avez-vous des douleurs à la poitrine, du mal à respirer ou un saignement important ?",
-        "RED_FLAG_SCREEN_REPROMPT": "Par sécurité — douleur thoracique, difficulté à respirer ou saignement ? Oui ou non.",
+        "RED_FLAG_SCREEN_REPROMPT": "Par sécurité: douleur thoracique, difficulté à respirer ou saignement ? Oui ou non.",
     },
 }
 

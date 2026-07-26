@@ -139,7 +139,7 @@ def _aws_transcribe(
     bucket = settings.s3_bucket_media
     if not bucket:
         raise TranscriptionError(
-            "S3_BUCKET_MEDIA not set — required for AWS Transcribe. "
+            "S3_BUCKET_MEDIA not set: required for AWS Transcribe. "
             "Set TRANSCRIPTION_PROVIDER=openai for local dev without S3."
         )
 

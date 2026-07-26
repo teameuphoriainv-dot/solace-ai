@@ -91,7 +91,7 @@ export function TourLauncher({
         <button
           type="button"
           onClick={tour.start}
-          aria-label={`${def.label} — open product tour`}
+          aria-label={`${def.label}: open product tour`}
           title={def.label}
           data-tour="tour-launcher"
           className={`${posClass} z-[60] w-10 h-10 rounded-full bg-surface-lowest shadow-card ring-1 ring-line text-text-muted hover:text-primary hover:ring-primary/40 flex items-center justify-center transition-colors ${buttonClassName}`}

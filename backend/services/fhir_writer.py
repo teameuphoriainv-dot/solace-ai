@@ -425,7 +425,7 @@ def write(resource: dict[str, Any], *, fhir_base_url: str | None = None, access_
         body = r.json()
         return {"ok": True, "id": body.get("id"), "url": r.headers.get("Location") or url, "stored": "remote"}
     except Exception as e:
-        log.warning("FHIR write failed (%s): %s — falling back to local store", rt, e)
+        log.warning("FHIR write failed (%s): %s: falling back to local store", rt, e)
         return _store_local(rt, resource)
 
 

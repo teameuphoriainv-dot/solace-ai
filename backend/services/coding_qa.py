@@ -123,7 +123,7 @@ def _review_em_code(
     elif time_documented and not agrees_with_time:
         rationale = (
             f"E&M {code} is MDM-supported, but the documented total time maps to "
-            f"{time_check.get('time_based_code')} — reconcile MDM vs. time before "
+            f"{time_check.get('time_based_code')}: reconcile MDM vs. time before "
             "billing to withstand a downcoding review."
         )
     else:
@@ -174,7 +174,7 @@ def _review_cpt_code(entry: dict[str, Any], ncci: dict[str, Any]) -> dict[str, A
         )
     elif flags:
         rationale = (
-            f"CPT {code} is supported but a bundling edit applies — append "
+            f"CPT {code} is supported but a bundling edit applies: append "
             "documentation/modifier justification to defend separate payment."
         )
     elif band == "low":
@@ -184,7 +184,7 @@ def _review_cpt_code(entry: dict[str, Any], ncci: dict[str, Any]) -> dict[str, A
         )
     else:
         rationale = (
-            f"CPT {code} is documented and passes NCCI edits — defensible as billed."
+            f"CPT {code} is documented and passes NCCI edits: defensible as billed."
         )
 
     return {

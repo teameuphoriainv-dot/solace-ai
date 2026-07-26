@@ -210,7 +210,7 @@ export function PatientDetailBody({
               <div key={k} className="bg-surface-lowest rounded-xl p-3 ring-1 ring-line/45">
                 <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
                 <div className="text-lg font-bold tracking-editorial text-ink mt-0.5">
-                  {detail.composites[k] ?? "—"}
+                  {detail.composites[k] ?? "-"}
                 </div>
               </div>
             ))}
@@ -405,7 +405,7 @@ export function PatientDetailBody({
                   : r.reason === "not_configured"
                   ? "Twilio SMS not configured for this hospital."
                   : r.reason === "invalid_number"
-                  ? "Invalid phone number — try again with a valid 10-digit US number."
+                  ? "Invalid phone number: try again with a valid 10-digit US number."
                   : `Couldn't send: ${r.message || r.reason}`,
               );
             }}

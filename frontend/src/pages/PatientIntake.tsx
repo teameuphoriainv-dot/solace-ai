@@ -112,7 +112,7 @@ export default function PatientIntake() {
       .then((r) => {
         if (r.matched) applyEhrMatch(r);
       })
-      .catch(() => { /* silent — patient flow continues either way */ });
+      .catch(() => { /* silent: patient flow continues either way */ });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [insurance?.member_id, ehrMatched, hospitalId]);
 
@@ -442,7 +442,7 @@ export default function PatientIntake() {
                 We found your medical records
               </div>
               <div className="text-emerald-900/85 text-[13px] mt-0.5 leading-snug">
-                {ehrMatched.ehr_record?.name ? `${ehrMatched.ehr_record.name} — ` : ""}
+                {ehrMatched.ehr_record?.name ? `${ehrMatched.ehr_record.name}: ` : ""}
                 allergies, medications, and conditions have been pre-filled. Please review and confirm on the next step.
               </div>
             </div>

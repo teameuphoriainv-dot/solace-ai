@@ -65,7 +65,7 @@ def _estimate_visit_cost(summary: dict[str, Any], visit_type: str) -> dict[str, 
         "deductible_remaining": deductible_remaining,
         "deductible_met": deductible_remaining <= 0,
         "note": (
-            "Copay applies — deductible met"
+            "Copay applies: deductible met"
             if deductible_remaining <= 0
             else "Patient may owe visit charge toward deductible before copay applies"
         ),
@@ -90,7 +90,7 @@ def chain(
     last = fields.get("patient_last") or fields.get("last_name") or ""
     dob = fields.get("patient_dob") or fields.get("dob") or ""
     if not (member_id and payer):
-        return {"ocr": fields, "eligibility": None, "summary": None, "error": "incomplete OCR — try a clearer photo"}
+        return {"ocr": fields, "eligibility": None, "summary": None, "error": "incomplete OCR: try a clearer photo"}
     full = eligibility.check(payer, member_id, first, last, dob, service_type=service_type)
     summary = eligibility.summarize_for_clinician(full)
     return {

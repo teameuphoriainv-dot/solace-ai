@@ -70,7 +70,7 @@ export default function PatientSchedule() {
       if (r.success) {
         setConfirmed(r.appointment);
       } else {
-        setError("Couldn't book that slot — try another.");
+        setError("Couldn't book that slot: try another.");
       }
     } catch (e: any) {
       const status = e?.response?.status;
@@ -78,7 +78,7 @@ export default function PatientSchedule() {
       // message — never the raw server detail or JS error string.
       setError(
         status === 409
-          ? "Someone just booked that slot — please pick another."
+          ? "Someone just booked that slot: please pick another."
           : "Couldn't book that slot. Please try again."
       );
     } finally {

@@ -31,7 +31,7 @@ const VALUE_PROPS: ValueProp[] = [
   {
     icon: Mic,
     title: "Ambient scribe",
-    body: "Visit audio becomes a structured note while you stay with the patient. Review, edit, sign — no after-hours charting.",
+    body: "Visit audio becomes a structured note while you stay with the patient. Review, edit, sign, no after-hours charting.",
   },
   {
     icon: Activity,
@@ -46,7 +46,7 @@ const VALUE_PROPS: ValueProp[] = [
   {
     icon: ShieldCheck,
     title: "Admin automation",
-    body: "Eligibility checks, prior-auth packets, coding suggestions, and inbox drafts handled — clinicians stay clinical.",
+    body: "Eligibility checks, prior-auth packets, coding suggestions, and inbox drafts handled: clinicians stay clinical.",
   },
 ];
 
@@ -95,7 +95,7 @@ export default function ClinicianLanding() {
     e.preventDefault();
     if (!hospitalName.trim() || provisioning) return;
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(adminEmail.trim())) {
-      setError("Enter a valid admin email — that's the account you'll sign in with.");
+      setError("Enter a valid admin email: that's the account you'll sign in with.");
       return;
     }
     setProvisioning(true);
@@ -121,7 +121,7 @@ export default function ClinicianLanding() {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      setError("Copy failed — select the URL manually.");
+      setError("Copy failed: select the URL manually.");
     }
   }
 
@@ -158,7 +158,7 @@ export default function ClinicianLanding() {
             </h1>
             <p className="mt-7 text-lg md:text-2xl text-text-muted leading-relaxed max-w-2xl">
               Solace listens, triages, charts, and clears the administrative
-              backlog — so your clinicians spend their attention on patients,
+              backlog, so your clinicians spend their attention on patients,
               not paperwork.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-10">
@@ -170,7 +170,7 @@ export default function ClinicianLanding() {
                 See the patient experience
               </Button>
             </div>
-            <p className="mt-5 text-sm text-text-muted">No install — patients scan and go.</p>
+            <p className="mt-5 text-sm text-text-muted">No install: patients scan and go.</p>
           </div>
         </div>
       </section>
@@ -243,7 +243,7 @@ export default function ClinicianLanding() {
                 <p className="mt-3 text-text-muted leading-relaxed">
                   Create a private Solace workspace at a unique URL and become its
                   first admin. Invite your care team by email, share the patient
-                  intake link, and you are live — everything isolated to your
+                  intake link, and you are live: everything isolated to your
                   practice.
                 </p>
                 <ul className="mt-6 space-y-3">
@@ -276,7 +276,7 @@ export default function ClinicianLanding() {
                 <ul className="mt-6 space-y-3">
                   {[
                     "Passwordless, single-use email sign-in",
-                    "Your admin invites you — links never expose who belongs where",
+                    "Your admin invites you: links never expose who belongs where",
                     "Not invited yet? Ask your workspace admin to add your email",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2 text-text-muted">
@@ -303,7 +303,7 @@ export default function ClinicianLanding() {
                     expires shortly.
                   </p>
                   <p className="text-sm text-text-muted">
-                    Not invited yet? Ask your workspace admin to add your email — they can do it
+                    Not invited yet? Ask your workspace admin to add your email: they can do it
                     from the workspace settings.
                   </p>
                   <Button variant="tertiary" onClick={() => setJoinSent(false)} className="self-start">
@@ -488,7 +488,7 @@ export default function ClinicianLanding() {
                   />
                   <p className="mt-1 text-xs text-text-muted">
                     You become the workspace admin. We email you a single-use sign-in link to
-                    finish setup — no password.
+                    finish setup, no password.
                   </p>
                 </div>
 

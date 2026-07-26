@@ -316,7 +316,7 @@ export default function ConfigPanel({
                   {workspaces.map((w) => (
                     <option key={w.workspace_id} value={w.workspace_id}>
                       {w.name}
-                      {configs.some((c) => c.workspace_id === w.workspace_id) ? " — bound" : ""}
+                      {configs.some((c) => c.workspace_id === w.workspace_id) ? " (bound)" : ""}
                     </option>
                   ))}
                 </select>
@@ -355,7 +355,7 @@ export default function ConfigPanel({
                 <input
                   value={form.label}
                   onChange={(e) => set({ label: e.target.value })}
-                  placeholder="ED — Epic production"
+                  placeholder="ED: Epic production"
                   className={inputClass}
                 />
               </label>
@@ -382,7 +382,7 @@ export default function ConfigPanel({
               </label>
 
               <label className="flex flex-col gap-1.5">
-                <FieldLabel>Scopes — SMART v1 (one per line)</FieldLabel>
+                <FieldLabel>Scopes: SMART v1 (one per line)</FieldLabel>
                 <textarea
                   value={form.scopes}
                   onChange={(e) => set({ scopes: e.target.value })}
@@ -392,7 +392,7 @@ export default function ConfigPanel({
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <FieldLabel>Scopes — SMART v2 (one per line)</FieldLabel>
+                <FieldLabel>Scopes: SMART v2 (one per line)</FieldLabel>
                 <textarea
                   value={form.scopes_v2}
                   onChange={(e) => set({ scopes_v2: e.target.value })}
@@ -435,7 +435,7 @@ export default function ConfigPanel({
                 <p className="text-xs text-text-muted mt-1.5">
                   Enter AWS Secrets Manager <span className="font-semibold text-ink">names</span>,
                   not values. The secret itself stays in Secrets Manager and is fetched server-side
-                  at token time — pasting a raw client secret or PEM here is rejected.
+                  at token time: pasting a raw client secret or PEM here is rejected.
                 </p>
                 {([
                   ["client_secret_ref", "client secret ref", "solace/ehr/epic-client-secret"],

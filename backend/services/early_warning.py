@@ -58,7 +58,7 @@ _PROVENANCE = {
     "calibrated_on": "published external validations of NEWS2/MEWS/qSOFA/SIRS "
                      "thresholds; conformal width from a synthetic nonconformity set",
     "validated_on_real_cohort": False,
-    "intended_use": "clinical decision support only — not an autonomous diagnosis",
+    "intended_use": "clinical decision support only, not an autonomous diagnosis",
     "note": "Re-calibrate the conformal interval and re-run bias_audit on a "
             "held-out labeled cohort before any real-patient deployment.",
 }
@@ -207,8 +207,8 @@ def sepsis_ews(
         "criteria_met": qsofa_criteria,
         "positive": qsofa_count >= 2,
         "interpretation": (
-            "qSOFA >= 2 with suspected infection: high risk of poor outcome — "
-            "escalate assessment and consider sepsis."
+            "qSOFA >= 2 with suspected infection: high risk of poor outcome. "
+            "Escalate assessment and consider sepsis."
             if qsofa_count >= 2
             else "qSOFA < 2: does not rule out sepsis (qSOFA is specific, not sensitive)."
         ),
@@ -230,7 +230,7 @@ def sepsis_ews(
         "criteria_met": sirs_criteria,
         "positive": sirs_count >= 2,
         "interpretation": (
-            "SIRS >= 2: sensitive but non-specific — supports but does not "
+            "SIRS >= 2: sensitive but non-specific: supports but does not "
             "confirm infection."
             if sirs_count >= 2
             else "SIRS < 2."
@@ -282,7 +282,7 @@ def sepsis_ews(
     sofa_organ_proxies = {
         "organs": sofa_proxies,
         "proxy_total": sofa_total,
-        "note": "Single-organ proxies only — NOT a validated full SOFA score, "
+        "note": "Single-organ proxies only, NOT a validated full SOFA score, "
                 "and deliberately NOT added to the EWS aggregate.",
     }
 
@@ -334,7 +334,7 @@ def sepsis_ews(
         "calibration_note": (
             "Thresholds taken from externally validated NEWS2/MEWS/qSOFA/SIRS "
             "scores; per-feature contributions carry a `source` tag. Transparent "
-            "by design — contrast the opaque Epic ESM (Wong et al., JAMA Intern "
+            "by design: contrast the opaque Epic ESM (Wong et al., JAMA Intern "
             "Med 2021, AUC 0.63, 67% of sepsis cases missed)."
         ),
         "provenance": _PROVENANCE,
@@ -512,7 +512,7 @@ def deterioration_index(
             score += s
             push("aki_creatinine", s,
                  f"Creatinine {creatinine_baseline}->{creatinine_now} mg/dL "
-                 f"(+{abs_rise:.1f}, {ratio:.1f}x) — {stage} AKI")
+                 f"(+{abs_rise:.1f}, {ratio:.1f}x): {stage} AKI")
 
     score = round(min(100.0, score), 1)
     if score >= 60:
@@ -656,7 +656,7 @@ def bias_audit(
         "interpretation": (
             "No subgroup exceeds the disparity threshold."
             if not flags else
-            f"{len(flags)} subgroup(s) flagged — investigate case mix and "
+            f"{len(flags)} subgroup(s) flagged: investigate case mix and "
             "score calibration for these populations before deployment."
         ),
         "provenance": _PROVENANCE,

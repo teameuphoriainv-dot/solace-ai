@@ -75,7 +75,7 @@ def schema_card() -> dict:
             "operational_models": OPERATIONAL_MODELS,
         },
         "note": (
-            "You never receive raw patient values — only coded outputs from the "
+            "You never receive raw patient values: only coded outputs from the "
             "primitives. Real values (drug product names, numeric vitals, dates) "
             "are rendered to the clinician through deterministic slots you bind by "
             "reference."

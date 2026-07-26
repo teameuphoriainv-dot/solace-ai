@@ -17,7 +17,7 @@ export function PhotoCapture({
   file,
   onChange,
   label = "Take a photo",
-  description = "Optional — helps the clinician see what you see",
+  description = "Optional: helps the clinician see what you see",
 }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);

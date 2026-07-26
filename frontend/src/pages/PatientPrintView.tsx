@@ -141,7 +141,7 @@ export default function PatientPrintView() {
               <div>Language: <span className="text-ink font-mono">{(detail.language || "en").toUpperCase()}</span></div>
               <div className="mt-2">
                 <span className="inline-block px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold bg-error text-white">
-                  AI draft — clinician verification required
+                  AI draft: clinician verification required
                 </span>
               </div>
             </div>

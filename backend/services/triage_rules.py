@@ -37,7 +37,7 @@ RULES: list[tuple[re.Pattern[str], ShortcutResult]] = [
         ShortcutResult(
             esi_level=1,
             reason="rule.esi1.life_threatening_keywords",
-            recommendation="ESI 1 — immediate resuscitation. Direct to trauma bay; clinician sees first.",
+            recommendation="ESI 1: immediate resuscitation. Direct to trauma bay; clinician sees first.",
         ),
     ),
     # ESI 1 — catastrophic trauma: traumatic amputation, dismemberment,
@@ -53,7 +53,7 @@ RULES: list[tuple[re.Pattern[str], ShortcutResult]] = [
         ShortcutResult(
             esi_level=1,
             reason="rule.esi1.catastrophic_trauma",
-            recommendation="ESI 1 — catastrophic trauma / hemorrhage. Trauma team activation; hemorrhage control, airway, shock protocol.",
+            recommendation="ESI 1: catastrophic trauma / hemorrhage. Trauma team activation; hemorrhage control, airway, shock protocol.",
         ),
     ),
     # ESI 2 — high-risk presentations that must not wait (chest pain, severe
@@ -71,7 +71,7 @@ RULES: list[tuple[re.Pattern[str], ShortcutResult]] = [
         ShortcutResult(
             esi_level=2,
             reason="rule.esi2.high_risk_presentation",
-            recommendation="ESI 2 — high-risk; do not let wait. Expedite to acute bed; vitals + clinician promptly.",
+            recommendation="ESI 2: high-risk; do not let wait. Expedite to acute bed; vitals + clinician promptly.",
         ),
     ),
     # Suicidal ideation / overdose — ESI 2 by default, but flag for crisis intervention
@@ -80,7 +80,7 @@ RULES: list[tuple[re.Pattern[str], ShortcutResult]] = [
         ShortcutResult(
             esi_level=2,
             reason="rule.esi2.crisis",
-            recommendation="ESI 2 — psychiatric emergency. Continuous observation; psych consult.",
+            recommendation="ESI 2: psychiatric emergency. Continuous observation; psych consult.",
         ),
     ),
     # Active stroke symptoms — ESI 1
@@ -89,7 +89,7 @@ RULES: list[tuple[re.Pattern[str], ShortcutResult]] = [
         ShortcutResult(
             esi_level=1,
             reason="rule.esi1.stroke_symptoms",
-            recommendation="ESI 1 — possible stroke. Activate stroke alert; CT head STAT.",
+            recommendation="ESI 1: possible stroke. Activate stroke alert; CT head STAT.",
         ),
     ),
     # Pure administrative — no clinical evaluation needed (skip whole AI pipeline)
@@ -103,7 +103,7 @@ RULES: list[tuple[re.Pattern[str], ShortcutResult]] = [
         ShortcutResult(
             esi_level=5,
             reason="rule.esi5.administrative",
-            recommendation="ESI 5 — non-clinical / administrative. Direct to front desk; no medical workup.",
+            recommendation="ESI 5: non-clinical / administrative. Direct to front desk; no medical workup.",
         ),
     ),
 ]

@@ -200,9 +200,9 @@ def evaluate_chart(*, conditions: list[dict[str, str]], prior_notes: list[str], 
             "years_lapsed": year - m["last_documented_year"],
             "meat_evidence": meat,
             "action": (
-                "Re-attest — MEAT evidence already in notes, confirm at encounter"
+                "Re-attest: MEAT evidence already in notes, confirm at encounter"
                 if meat["audit_ready"]
-                else "Document MEAT at encounter — insufficient evidence in prior notes"
+                else "Document MEAT at encounter: insufficient evidence in prior notes"
             ),
             "meat_checklist": _meat_checklist(),
         })

@@ -113,7 +113,7 @@ export default function PatientResult() {
               : prev
           );
           setComfortPending(false);
-          return; // done — stop polling
+          return; // done: stop polling
         }
       } catch {
         // swallow — retry on the next tick (within the cap)

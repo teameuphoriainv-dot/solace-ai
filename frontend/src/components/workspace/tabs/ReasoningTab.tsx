@@ -107,7 +107,7 @@ export default function ReasoningTab() {
           <h2 className="text-base font-bold tracking-tight">Clinical Reasoning</h2>
           <p className="text-text-muted text-[13px] mt-0.5 leading-snug">
             Ranked differential, suggested workup, and disposition for {patient.name}.
-            Derived from the intake transcript — nothing to re-enter.
+            Derived from the intake transcript: nothing to re-enter.
           </p>
           <button
             type="button"
@@ -128,7 +128,7 @@ export default function ReasoningTab() {
           </button>
           {!canRun && (
             <p className="text-text-muted text-[11px] mt-1.5">
-              No intake transcript on file — reasoning needs the patient narrative.
+              No intake transcript on file: reasoning needs the patient narrative.
             </p>
           )}
           {runError && (

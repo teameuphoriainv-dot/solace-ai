@@ -43,17 +43,17 @@ log = logging.getLogger(__name__)
 # --------------------------------------------------------------------------
 RISK_TIERS: dict[str, dict[str, Any]] = {
     "tier_1_high": {
-        "label": "Tier 1 — High clinical risk",
+        "label": "Tier 1: High clinical risk",
         "definition": "Output can plausibly change an acute disposition or acuity decision; a silent error could delay time-critical care.",
         "oversight": "Mandatory human-in-the-loop, conformal uncertainty surfaced, monthly subgroup audit, model owner sign-off on every version.",
     },
     "tier_2_moderate": {
-        "label": "Tier 2 — Moderate clinical risk",
+        "label": "Tier 2: Moderate clinical risk",
         "definition": "Output informs documentation, coding, or non-acute planning; errors are recoverable and clinician-reviewed before any chart write.",
         "oversight": "Human-in-the-loop, quarterly subgroup audit, override-rate monitoring.",
     },
     "tier_3_low": {
-        "label": "Tier 3 — Low clinical risk",
+        "label": "Tier 3: Low clinical risk",
         "definition": "Output drives operational/administrative actions only; never gates clinical access or care.",
         "oversight": "Human-in-the-loop where patient-facing, semi-annual fairness review, no autonomous action.",
     },
@@ -67,13 +67,13 @@ BIAS_AUDIT_METHODOLOGY: dict[str, Any] = {
     "framework": "HTI-1 DSI fairness source attributes + four-fifths (80%) disparate-impact rule (EEOC Uniform Guidelines, applied as an equity heuristic, not a legal standard).",
     "protected_attributes": ["sex", "age_band", "race_ethnicity", "insurance_type"],
     "primary_metrics": {
-        "fnr": "False-negative rate — proportion of truly high-acuity / positive cases the model under-classified. The safety-critical metric for triage: a missed high-acuity patient is the worst failure.",
-        "fpr": "False-positive rate — proportion of truly low-acuity / negative cases the model over-classified. Drives over-triage, alert fatigue, and resource strain.",
+        "fnr": "False-negative rate: proportion of truly high-acuity / positive cases the model under-classified. The safety-critical metric for triage: a missed high-acuity patient is the worst failure.",
+        "fpr": "False-positive rate: proportion of truly low-acuity / negative cases the model over-classified. Drives over-triage, alert fatigue, and resource strain.",
         "selection_rate": "Proportion of a subgroup receiving the positive / high-acuity prediction, used for disparate-impact ratios.",
     },
     "disparate_impact": {
         "definition": "For each metric, ratio of the least-favored subgroup to the most-favored subgroup within a protected attribute.",
-        "fnr_ratio_convention": "min(FNR) / max(FNR) — a low ratio means one subgroup is missed far more often.",
+        "fnr_ratio_convention": "min(FNR) / max(FNR), a low ratio means one subgroup is missed far more often.",
         "flag_threshold": 0.80,
         "flag_rule": "Any disparate-impact ratio below 0.80 is flagged for mandatory model-owner review before the version may ship.",
     },
@@ -146,12 +146,12 @@ CARDS: dict[str, dict[str, Any]] = {
         "intended_output": "An Emergency Severity Index (ESI 1-5) point estimate plus a conformal prediction set at 90% / 95% coverage and SHAP feature attributions. Intended to inform, never replace, the triage nurse's acuity assignment.",
         "model_type": "Gradient-boosted decision trees (LightGBM 5-fold ensemble) with a CatBoost + XGBoost stacked layer; SHAP-based feature attribution.",
         "training_data": {
-            "source": "Triagegeist Kaggle clinical pipeline (publicly published) — 1.2M de-identified triage encounters",
+            "source": "Triagegeist Kaggle clinical pipeline (publicly published): 1.2M de-identified triage encounters",
             "label": "Discharge ESI from accredited US ED encounters",
             "demographics": "Adult and pediatric mix; 53% female; multi-payer; geographic mix US",
         },
         "data_provenance": {
-            "origin": "Triagegeist Kaggle clinical pipeline — publicly published, de-identified ED triage encounters.",
+            "origin": "Triagegeist Kaggle clinical pipeline: publicly published, de-identified ED triage encounters.",
             "lineage": "Raw encounters -> HIPAA Safe Harbor de-identification (upstream) -> Triagegeist feature engineering -> Solace 5-fold ensemble training.",
             "consent_basis": "Secondary use of de-identified data; no individually identifiable PHI retained, so HIPAA authorization is not implicated.",
             "time_range": "Historical retrospective encounters; not continuously refreshed in v1.2.",
@@ -192,12 +192,12 @@ CARDS: dict[str, dict[str, Any]] = {
     "differential_diagnosis_v2": {
         "name": "Solace differential diagnosis engine",
         "version": "v2 (2026-05)",
-        "intended_use": "Decision support — ranked differential with conformal sets and red-flag surfacing. Never auto-acts.",
+        "intended_use": "Decision support: ranked differential with conformal sets and red-flag surfacing. Never auto-acts.",
         "intended_population": "Clinicians assessing undifferentiated US ED and primary-care presentations, all ages. Not intended for inpatient deterioration cohorts or for autonomous use without clinician review.",
         "intended_output": "A ranked differential diagnosis list with a conformal candidate set and a deterministic red-flag overlay. Output is advisory; the clinician owns the diagnostic decision.",
         "model_type": "Claude Sonnet 4.5 with two-stage prompting (structured fact extraction -> narrative + ranking); deterministic red-flag canon overlay.",
         "training_data": {
-            "source": "Anthropic Claude — see Anthropic's model card. Solace prompt + canon curated by US-licensed physicians.",
+            "source": "Anthropic Claude: see Anthropic's model card. Solace prompt + canon curated by US-licensed physicians.",
         },
         "data_provenance": {
             "origin": "Base reasoning from Anthropic Claude Sonnet 4.5 (training data per Anthropic's published model card; not controlled by Solace).",
@@ -238,10 +238,10 @@ CARDS: dict[str, dict[str, Any]] = {
         "version": "v1 (2026-05)",
         "intended_use": "Generate SOAP-style draft notes with Linked Evidence from a patient-clinician audio recording.",
         "intended_population": "English-speaking patient-clinician encounters in US ED and primary-care settings. Not intended for multi-party (>3 speaker) encounters or non-English audio at v1.",
-        "intended_output": "A SOAP-structured draft note with Linked Evidence spans tying each statement back to the transcript. Always a draft — never auto-submitted to the chart.",
+        "intended_output": "A SOAP-structured draft note with Linked Evidence spans tying each statement back to the transcript. Always a draft: never auto-submitted to the chart.",
         "model_type": "AWS HealthScribe diarized ASR + section summarization (BAA-covered); Claude refinement layer for style transfer; deterministic Linked Evidence span renderer.",
         "training_data": {
-            "source": "AWS HealthScribe — see AWS service card. Refinement prompts curated by US ED + primary-care physicians.",
+            "source": "AWS HealthScribe: see AWS service card. Refinement prompts curated by US ED + primary-care physicians.",
         },
         "data_provenance": {
             "origin": "ASR and section summarization from AWS HealthScribe (training data per AWS service card). Solace contributes refinement prompts and the Linked Evidence renderer.",
@@ -283,7 +283,7 @@ CARDS: dict[str, dict[str, Any]] = {
     "coding_assistant": {
         "name": "Solace E&M + ICD-10 + CPT suggestion",
         "version": "v1 (2026-05)",
-        "intended_use": "Decision support — top-3 code candidates per encounter; clinician selects.",
+        "intended_use": "Decision support: top-3 code candidates per encounter; clinician selects.",
         "intended_population": "US ambulatory and ED encounters being coded for billing. Not intended for inpatient DRG assignment or for autonomous claim submission.",
         "intended_output": "Top-3 E&M level, ICD-10, and CPT candidates per encounter, each with rationale. Clinician or coder selects the final codes.",
         "model_type": "LLM candidate generation (Claude Sonnet 4.5) with deterministic NCCI edit + MDM-rubric validators.",
@@ -308,7 +308,7 @@ CARDS: dict[str, dict[str, Any]] = {
         "synthetic_data_caveat": "No synthetic encounters used. Validators are deterministic rule engines derived from public CMS/AMA references, not model-generated.",
         "limitations": [
             "MA HCC capture needs longer-window data; v1 surfaces gaps but does not auto-recapture",
-            "Modifier-25 + 59 logic conservative — may underflag",
+            "Modifier-25 + 59 logic conservative: may underflag",
         ],
         "fairness": {
             "fnr_by_group_under_audit": True,
@@ -322,7 +322,7 @@ CARDS: dict[str, dict[str, Any]] = {
     "evidence_rag": {
         "name": "Solace evidence-grounded recommendation engine",
         "version": "v1 (2026-05)",
-        "intended_use": "Decision support — answer clinical questions using ONLY a curated open-evidence corpus (USPSTF, ACC/AHA, IDSA, CDC, NIH, ADA, GINA, GOLD, ACOG). Refuses to answer when evidence is insufficient.",
+        "intended_use": "Decision support: answer clinical questions using ONLY a curated open-evidence corpus (USPSTF, ACC/AHA, IDSA, CDC, NIH, ADA, GINA, GOLD, ACOG). Refuses to answer when evidence is insufficient.",
         "intended_population": "Clinicians seeking guideline-grounded answers to clinical questions. Not intended for specialist-depth domains (oncology regimens, complex surgery) not covered by the corpus.",
         "intended_output": "A synthesized answer in which every claim carries an inline citation to the curated corpus, or an explicit refusal when no sufficient evidence is retrieved.",
         "model_type": "Hybrid BM25-flavored retrieval over curated snippets + Claude Sonnet 4.5 synthesis with strict citation grounding.",
@@ -337,13 +337,13 @@ CARDS: dict[str, dict[str, Any]] = {
         "risk_tier": "tier_2_moderate",
         "monitoring_plan": {
             "cadence": "Quarterly review of corpus freshness and refusal-rate calibration (Tier 2).",
-            "drift_detection": "Citation-grounding spot checks — every sampled answer's claims re-verified against cited snippets.",
+            "drift_detection": "Citation-grounding spot checks, every sampled answer's claims re-verified against cited snippets.",
             "triggers": "Any detected uncited or unsupported claim triggers immediate prompt-grounding review.",
             "rollback": "Corpus and synthesis prompt versioned; prior version restorable.",
         },
         "synthetic_data_caveat": "No synthetic data. The corpus is real published guideline text; the engine has no parametric-memory fallback and will not generate uncited claims.",
         "limitations": [
-            "Starter corpus is intentionally narrow (10-25 snippets) — production swap is a vector index over the same sources.",
+            "Starter corpus is intentionally narrow (10-25 snippets): production swap is a vector index over the same sources.",
             "No specialty-specialist depth (oncology regimens, complex surgery) until partner content is licensed.",
         ],
         "fairness": {
@@ -359,13 +359,13 @@ CARDS: dict[str, dict[str, Any]] = {
     "early_warning_sepsis": {
         "name": "Solace sepsis early-warning + deterioration index",
         "version": "v1 (2026-05)",
-        "intended_use": "Decision support — surface sepsis risk and deterioration trajectory from vitals + labs with transparent per-feature attribution. Direct successor to Epic ESM family.",
+        "intended_use": "Decision support: surface sepsis risk and deterioration trajectory from vitals + labs with transparent per-feature attribution. Direct successor to Epic ESM family.",
         "intended_population": "Hospitalized and ED patients with recorded vital signs; all adult ages. v1 thresholds are adult-calibrated and not validated for pediatric early-warning.",
         "intended_output": "A sepsis early-warning score and a continuous deterioration index, each with transparent per-feature contribution. Surfaces to a clinician; never auto-pages or auto-escalates.",
         "model_type": "Deterministic MEWS + qSOFA hybrid with infection markers (sepsis EWS) and a Rothman-flavored continuous score (deterioration index).",
         "training_data": {"source": "Published MEWS / qSOFA / Rothman-style validation literature; no proprietary training set in v1."},
         "data_provenance": {
-            "origin": "v1 is rule-based — thresholds derived from published MEWS, qSOFA, and Rothman-style validation studies, not from a Solace training set.",
+            "origin": "v1 is rule-based: thresholds derived from published MEWS, qSOFA, and Rothman-style validation studies, not from a Solace training set.",
             "lineage": "Vitals + labs -> deterministic score computation -> per-feature attribution -> clinician-facing surface.",
             "consent_basis": "Operates on already-collected clinical observations; no separate data collection or training.",
             "time_range": "Score logic fixed at v1 release; v2 will train on hospital data with documented date ranges.",
@@ -382,7 +382,7 @@ CARDS: dict[str, dict[str, Any]] = {
             "triggers": "Sensitivity drop or subgroup disparate-impact ratio < 0.80 triggers threshold review.",
             "rollback": "Thresholds are versioned configuration; prior version restorable instantly.",
         },
-        "synthetic_data_caveat": "No synthetic data and no machine-learned model in v1 — the score is fully deterministic and inspectable. v2 (gradient-boosted on hospital data) will publish its own synthetic-data attestation.",
+        "synthetic_data_caveat": "No synthetic data and no machine-learned model in v1, the score is fully deterministic and inspectable. v2 (gradient-boosted on hospital data) will publish its own synthetic-data attestation.",
         "limitations": [
             "v1 is rule-based; v2 will be a calibrated gradient-boosted model trained on hospital data.",
             "Requires accurate vital-sign timestamps for trend features.",
@@ -400,7 +400,7 @@ CARDS: dict[str, dict[str, Any]] = {
     "hcc_capture": {
         "name": "Solace HCC capture for MA recapture",
         "version": "v1 (2026-05)",
-        "intended_use": "Decision support — surface previously documented HCCs needing annual recapture and suspect undocumented HCCs from prior notes.",
+        "intended_use": "Decision support: surface previously documented HCCs needing annual recapture and suspect undocumented HCCs from prior notes.",
         "intended_population": "Medicare Advantage panels under risk-adjusted contracts. Not intended for fee-for-service-only populations or for autonomous diagnosis attestation.",
         "intended_output": "A list of HCCs needing annual recapture and textually evidenced suspect HCCs, each requiring clinician MEAT-checklist confirmation before attestation.",
         "model_type": "Deterministic ICD-10 → HCC mapping (CMS-HCC v28 subset) + Claude Sonnet 4.5 NLP suspecting from prior-note free text.",
@@ -420,7 +420,7 @@ CARDS: dict[str, dict[str, Any]] = {
         },
         "synthetic_data_caveat": "No synthetic data. The HCC mapping is a deterministic public-table lookup; the NLP layer suspects only from real prior-note text and never fabricates a diagnosis.",
         "limitations": [
-            "Suspecting requires explicit textual evidence — does not infer from labs or claims.",
+            "Suspecting requires explicit textual evidence: does not infer from labs or claims.",
             "v28 mapping is a curated subset; full table swap is a config update.",
         ],
         "fairness": {
@@ -432,7 +432,7 @@ CARDS: dict[str, dict[str, Any]] = {
     "handoff_generator": {
         "name": "Solace I-PASS / SBAR handoff generator",
         "version": "v1 (2026-05)",
-        "intended_use": "Decision support — generate I-PASS sign-out and SBAR consult summaries from chart context. Adopts evidence-based handoff structure shown to cut handoff errors 30% (Starmer NEJM 2014).",
+        "intended_use": "Decision support: generate I-PASS sign-out and SBAR consult summaries from chart context. Adopts evidence-based handoff structure shown to cut handoff errors 30% (Starmer NEJM 2014).",
         "intended_population": "Clinicians performing shift sign-out or consult handoff in US inpatient and ED settings.",
         "intended_output": "A draft I-PASS sign-out or SBAR consult summary structured from chart context. The clinician edits and verifies before any handoff use.",
         "model_type": "Claude Sonnet 4.5 with structured prompts.",
@@ -480,7 +480,7 @@ CARDS: dict[str, dict[str, Any]] = {
         },
         "synthetic_data_caveat": "No synthetic data. The classifier is deliberately conservative, biasing toward keeping content rather than fabricated removal; loop tracking is fully deterministic.",
         "limitations": [
-            "Conservative bias — may keep ambiguous segments. Clinician can always view unredacted transcript.",
+            "Conservative bias: may keep ambiguous segments. Clinician can always view unredacted transcript.",
         ],
         "fairness": {
             "fnr_by_group_under_audit": False,
@@ -525,7 +525,7 @@ CARDS: dict[str, dict[str, Any]] = {
             "equity_note": "Literature shows ML no-show models may disadvantage Black patients via proxies; we exclude race and zip; v2 will publish disparate-impact tests before deployment.",
         },
         "governance": {
-            "intended_action": "Reminder cadence only — never used to deny scheduling",
+            "intended_action": "Reminder cadence only: never used to deny scheduling",
         },
     },
 }
@@ -661,7 +661,7 @@ def compute_subgroup_rates(counts: dict[str, dict[str, dict[str, int]]]) -> dict
             if flagged:
                 msg = (
                     f"{axis}: {metric} disparate-impact ratio {ratio} < {threshold} "
-                    f"(min '{lo_group}'={lo}, max '{hi_group}'={hi}) — "
+                    f"(min '{lo_group}'={lo}, max '{hi_group}'={hi}): "
                     f"mandatory model-owner review before ship."
                 )
                 axis_out["flags"].append(msg)
@@ -811,7 +811,7 @@ def transparency_summary() -> dict[str, Any]:
 SYNTHETIC_COHORT_PROVENANCE = "synthetic validation cohort"
 
 TRUST_REPORT_DISCLAIMER = (
-    "Preliminary — calibration and conformal-coverage figures on this page are "
+    "Preliminary: calibration and conformal-coverage figures on this page are "
     "measured on a SYNTHETIC validation cohort with no real-world clinical "
     "outcome labels. They demonstrate that the uncertainty machinery is wired "
     "and measurable; they are NOT a claim of real-world clinical calibration. "
@@ -1123,7 +1123,7 @@ def ai_bom() -> dict[str, Any]:
                 "default": "AWS Bedrock",
                 "baa_covered": True,
                 "baa_basis": "AWS BAA covers Amazon Bedrock; model invocation stays inside the AWS perimeter (lib.claude default provider=bedrock).",
-                "opt_in_fallback": "Direct Anthropic API (CLAUDE_PROVIDER=direct) — local dev only; requires a separate Anthropic BAA before any PHI use.",
+                "opt_in_fallback": "Direct Anthropic API (CLAUDE_PROVIDER=direct): local dev only; requires a separate Anthropic BAA before any PHI use.",
             },
             "purpose": "Differential diagnosis, disposition/workup reasoning, ambient-scribe refinement, coding candidate generation, HCC suspecting, handoff and evidence-RAG synthesis.",
             "data_handling": {
@@ -1150,9 +1150,9 @@ def ai_bom() -> dict[str, Any]:
                 "default": "AWS Bedrock",
                 "baa_covered": True,
                 "baa_basis": "AWS BAA covers Amazon Bedrock (lib.claude default provider=bedrock).",
-                "opt_in_fallback": "Direct Anthropic API (CLAUDE_PROVIDER=direct) — local dev only.",
+                "opt_in_fallback": "Direct Anthropic API (CLAUDE_PROVIDER=direct): local dev only.",
             },
-            "purpose": "Structured/boilerplate generation — follow-up questions, OCR labeling, redaction classification, letters, discharge text.",
+            "purpose": "Structured/boilerplate generation: follow-up questions, OCR labeling, redaction classification, letters, discharge text.",
             "data_handling": {
                 "phi_minimization": "Same content_guard redaction path as the clinical tier.",
                 "attribution": "lib.ai_log per-call attribution.",
@@ -1174,7 +1174,7 @@ def ai_bom() -> dict[str, Any]:
                 "default": "AWS Transcribe / AWS HealthScribe",
                 "baa_covered": True,
                 "baa_basis": "AWS BAA covers Amazon Transcribe and HealthScribe; audio + transcript stay inside the AWS perimeter.",
-                "opt_in_fallback": "OpenAI Whisper (TRANSCRIPTION_PROVIDER=openai) — local dev only; not BAA-covered, must not see PHI.",
+                "opt_in_fallback": "OpenAI Whisper (TRANSCRIPTION_PROVIDER=openai): local dev only; not BAA-covered, must not see PHI.",
             },
             "purpose": "Transcribe patient/clinician audio; HealthScribe produces diarized transcript + sections for the ambient scribe.",
             "data_handling": {
@@ -1199,7 +1199,7 @@ def ai_bom() -> dict[str, Any]:
                 "default": "AWS Polly",
                 "baa_covered": True,
                 "baa_basis": "AWS BAA covers Amazon Polly; comfort-script synthesis stays inside the AWS perimeter.",
-                "opt_in_fallback": "ElevenLabs (TTS_PROVIDER=elevenlabs) — local dev only; not BAA-covered.",
+                "opt_in_fallback": "ElevenLabs (TTS_PROVIDER=elevenlabs): local dev only; not BAA-covered.",
             },
             "purpose": "Synthesize patient comfort/instruction audio from text.",
             "data_handling": {
@@ -1273,7 +1273,7 @@ def ai_bom() -> dict[str, Any]:
         "disclosure": (
             "Model identifiers and provider/BAA posture are read from live config "
             "and code at request time, not hand-maintained. No benchmark numbers "
-            "are asserted here — see /api/model-cards and the Trust Report "
+            "are asserted here: see /api/model-cards and the Trust Report "
             "calibration block (synthetic cohort) for measured figures."
         ),
     }
@@ -1342,7 +1342,7 @@ def attestation_pack() -> dict[str, Any]:
             "design_commitment",
             ["EHR Copilot PHI-isolation design", "CI no-PHI leak test (fail-closed gate)"],
             threat="Sensitive-data disclosure to an LLM (OWASP LLM06); HIPAA minimum-necessary violation.",
-            framework_refs=["HIPAA §164.502(b) minimum necessary", "OWASP LLM Top 10 — LLM06", "NIST AI RMF MAP-1"],
+            framework_refs=["HIPAA §164.502(b) minimum necessary", "OWASP LLM Top 10: LLM06", "NIST AI RMF MAP-1"],
             caveat="Enforced by a CI leak test rather than a formal external audit; no third-party penetration test of the isolation boundary has been published yet.",
         ),
         _control(
@@ -1352,7 +1352,7 @@ def attestation_pack() -> dict[str, Any]:
             "implemented",
             ["backend/lib/content_guard.py:scan", "backend/lib/content_guard.py:_PII_REDACTIONS"],
             threat="Prompt injection (OWASP LLM01); PHI leakage to third-party providers (OWASP LLM06 / HIPAA §164.514).",
-            framework_refs=["HIPAA §164.514(b) Safe Harbor", "OWASP LLM Top 10 — LLM01, LLM06", "constitution SEC-005, COMP-001"],
+            framework_refs=["HIPAA §164.514(b) Safe Harbor", "OWASP LLM Top 10: LLM01, LLM06", "constitution SEC-005, COMP-001"],
         ),
         _control(
             "AISC-03",
@@ -1376,7 +1376,7 @@ def attestation_pack() -> dict[str, Any]:
         _control(
             "AISC-05",
             "AI override transparency",
-            "Every clinician accept / edit / reject of an AI suggestion is logged and surfaced as aggregate accept/edit/reject rates via the governance override metrics — a continuous signal of real clinical agreement.",
+            "Every clinician accept / edit / reject of an AI suggestion is logged and surfaced as aggregate accept/edit/reject rates via the governance override metrics, a continuous signal of real clinical agreement.",
             "implemented",
             ["backend/lib/provenance.py:metrics", "backend/routers/governance.py:override_metrics"],
             threat="Automation bias / undetected model drift through unmonitored acceptance.",
@@ -1398,7 +1398,7 @@ def attestation_pack() -> dict[str, Any]:
             "implemented",
             ["backend/services/model_cards.py:CARDS (governance.human_in_loop / no_autosubmit flags)"],
             threat="Excessive agency / unsafe autonomous action (OWASP LLM08).",
-            framework_refs=["OWASP LLM Top 10 — LLM08", "HTI-1 DSI risk-management source attributes"],
+            framework_refs=["OWASP LLM Top 10: LLM08", "HTI-1 DSI risk-management source attributes"],
         ),
         _control(
             "AISC-08",

@@ -27,7 +27,7 @@ import { AgentChat, AgentConsole } from "../../copilot-agent";
 
 const SUGGESTIONS = [
   "Any prior cardiac workup or admissions?",
-  "Is the patient on anticoagulants — any bleeding risk?",
+  "Is the patient on anticoagulants, any bleeding risk?",
   "Summarize the relevant history for this complaint.",
   "Any medication interactions I should know about?",
 ];
@@ -346,7 +346,7 @@ export default function CopilotTab() {
                         {f.current.length ? (
                           f.current.map((c) => <div key={c} className="text-ink">{c}</div>)
                         ) : (
-                          <div className="italic text-text-muted">—</div>
+                          <div className="italic text-text-muted">-</div>
                         )}
                       </div>
                       <div>
@@ -366,7 +366,7 @@ export default function CopilotTab() {
                             </div>
                           ))
                         ) : (
-                          <div className="italic text-text-muted">—</div>
+                          <div className="italic text-text-muted">-</div>
                         )}
                       </div>
                     </div>

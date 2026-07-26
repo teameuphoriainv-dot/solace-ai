@@ -81,7 +81,7 @@ export default function ClinicianInbox() {
 }
 
 function InboxPane({ hospitalId }: { hospitalId: string }) {
-  const [msg, setMsg] = useState("Hi doctor — I've had this dull headache for 3 days, mostly behind my eyes. Tylenol helps a little. Should I be worried?");
+  const [msg, setMsg] = useState("Hi doctor: I've had this dull headache for 3 days, mostly behind my eyes. Tylenol helps a little. Should I be worried?");
   const [draft, setDraft] = useState<InboxDraftResult | null>(null);
   const [busy, setBusy] = useState(false);
   const run = async () => {
@@ -292,7 +292,7 @@ function PAFollowUp({ hospitalId, packet }: { hospitalId: string; packet: Record
               {completeness.blockers.map((b, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs bg-rose-50 border border-rose-200 rounded p-2">
                   <XCircle className="w-3.5 h-3.5 text-rose-600 mt-0.5 shrink-0" aria-hidden="true" />
-                  <div><b className="text-rose-900">{b.field}</b> — {b.message}<div className="text-rose-700 mt-0.5">Fix: {b.fix}</div></div>
+                  <div><b className="text-rose-900">{b.field}</b>: {b.message}<div className="text-rose-700 mt-0.5">Fix: {b.fix}</div></div>
                 </div>
               ))}
             </div>
@@ -303,13 +303,13 @@ function PAFollowUp({ hospitalId, packet }: { hospitalId: string; packet: Record
               {completeness.warnings.map((w, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs bg-amber-50 border border-amber-200 rounded p-2">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-600 mt-0.5 shrink-0" aria-hidden="true" />
-                  <div>{w.field ? <b className="text-amber-900">{w.field} — </b> : null}{w.message}</div>
+                  <div>{w.field ? <b className="text-amber-900">{w.field} - </b> : null}{w.message}</div>
                 </div>
               ))}
             </div>
           )}
           {completeness.blockers?.length === 0 && completeness.warnings?.length === 0 && (
-            <div className="flex items-center gap-2 text-xs text-emerald-800"><CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" /> No blockers or warnings — packet is clean.</div>
+            <div className="flex items-center gap-2 text-xs text-emerald-800"><CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" /> No blockers or warnings: packet is clean.</div>
           )}
         </div>
       )}

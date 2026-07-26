@@ -17,8 +17,8 @@ const FIELDS: { key: keyof Vitals; label: string; placeholder: string; step?: st
   { key: "respiratory_rate", label: "Resp. rate", placeholder: "16", step: "1" },
   { key: "temperature_c", label: "Temp (°C)", placeholder: "37.0", step: "0.1" },
   { key: "spo2", label: "SpO₂ (%)", placeholder: "98", step: "1" },
-  { key: "gcs_total", label: "GCS (3–15)", placeholder: "15", step: "1" },
-  { key: "pain_score", label: "Pain (0–10)", placeholder: "3", step: "1" },
+  { key: "gcs_total", label: "GCS (3 to 15)", placeholder: "15", step: "1" },
+  { key: "pain_score", label: "Pain (0 to 10)", placeholder: "3", step: "1" },
 ];
 
 export function VitalsPanel({ hospitalId, patientId, existing, onRefined }: Props) {

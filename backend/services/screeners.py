@@ -105,18 +105,18 @@ def phq9(items: list[int]) -> dict[str, Any]:
     flags: list[str] = []
     red_alerts: list[dict[str, Any]] = []
     if si:
-        flags.append("positive item 9 — suicidality screen positive — ASSESS NOW")
+        flags.append("positive item 9: suicidality screen positive. ASSESS NOW")
         red_alerts.append({
             "type": "suicidality",
             "instrument": "PHQ-9",
             "item": 9,
             "item_score": item9,
             "severity": "critical" if item9 >= 2 else "high",
-            "message": "PHQ-9 item 9 positive — thoughts of being better off dead or self-harm. "
+            "message": "PHQ-9 item 9 positive: thoughts of being better off dead or self-harm. "
                        "Perform a same-encounter safety assessment before disposition.",
         })
     if score >= 15:
-        flags.append("major depressive disorder likely — same-day pharmacotherapy + counseling discussion")
+        flags.append("major depressive disorder likely, same-day pharmacotherapy + counseling discussion")
     return {
         "score": score,
         "severity": sev,
@@ -143,9 +143,9 @@ def gad7(items: list[int]) -> dict[str, Any]:
         sev = "severe"
     flags: list[str] = []
     if score >= 15:
-        flags.append("severe GAD — consider pharmacotherapy + referral")
+        flags.append("severe GAD: consider pharmacotherapy + referral")
     elif score >= 10:
-        flags.append("moderate anxiety — further diagnostic assessment warranted")
+        flags.append("moderate anxiety: further diagnostic assessment warranted")
     return {
         "score": score,
         "severity": sev,
@@ -167,13 +167,13 @@ def audit_c(items: list[int], sex: str = "M") -> dict[str, Any]:
     flags: list[str] = []
     red_alerts: list[dict[str, Any]] = []
     if positive:
-        flags.append("alcohol misuse screen positive — brief intervention indicated")
+        flags.append("alcohol misuse screen positive: brief intervention indicated")
     if score >= 8:
         red_alerts.append({
             "type": "high_risk_drinking",
             "instrument": "AUDIT-C",
             "severity": "high",
-            "message": "AUDIT-C >=8 indicates high-risk / probable alcohol use disorder — "
+            "message": "AUDIT-C >=8 indicates high-risk / probable alcohol use disorder: "
                        "assess for withdrawal risk and consider full AUDIT.",
         })
     return {
@@ -204,18 +204,18 @@ def epds(items: list[int]) -> dict[str, Any]:
     flags: list[str] = []
     red_alerts: list[dict[str, Any]] = []
     if si:
-        flags.append("positive item 10 — self-harm screen positive — ASSESS NOW")
+        flags.append("positive item 10: self-harm screen positive. ASSESS NOW")
         red_alerts.append({
             "type": "suicidality",
             "instrument": "EPDS",
             "item": 10,
             "item_score": item10,
             "severity": "critical" if item10 >= 2 else "high",
-            "message": "EPDS item 10 positive — thoughts of self-harm in a perinatal patient. "
+            "message": "EPDS item 10 positive: thoughts of self-harm in a perinatal patient. "
                        "Perform a same-encounter safety assessment before disposition.",
         })
     if score >= 13:
-        flags.append("perinatal depression likely — refer perinatal psychiatry")
+        flags.append("perinatal depression likely: refer perinatal psychiatry")
     return {
         "score": score,
         "severity": sev,
@@ -264,7 +264,7 @@ def pcl5(items: list[int]) -> dict[str, Any]:
     probable = score >= 33
     flags: list[str] = []
     if probable:
-        flags.append("PCL-5 >=33 — probable PTSD; refer behavioral health")
+        flags.append("PCL-5 >=33: probable PTSD; refer behavioral health")
     if dsm5_provisional:
         flags.append("meets provisional DSM-5 PTSD symptom-cluster criteria")
     return {
@@ -288,7 +288,7 @@ def ace(items: list[int]) -> dict[str, Any]:
     score = sum(1 if x > 0 else 0 for x in clean)
     if score >= 4:
         risk = "high"
-        flags = ["ACE >= 4 — elevated lifetime risk for chronic disease, mental health, substance use"]
+        flags = ["ACE >= 4: elevated lifetime risk for chronic disease, mental health, substance use"]
     elif score >= 1:
         risk = "elevated"
         flags = []
@@ -309,7 +309,7 @@ def crafft(items: list[int]) -> dict[str, Any]:
     return {
         "score": score,
         "positive": positive,
-        "flags": ["positive — full substance use assessment indicated"] if positive else [],
+        "flags": ["positive: full substance use assessment indicated"] if positive else [],
         "red_alerts": [],
         "citation": _CRAFFT_CITATION,
     }
@@ -387,7 +387,7 @@ def _community_categories(risks: list[str]) -> list[str]:
 # ---- Registry --------------------------------------------------------------------
 SCREENERS: dict[str, dict[str, Any]] = {
     "phq9": {
-        "name": "PHQ-9 — depression",
+        "name": "PHQ-9: depression",
         "fn": phq9,
         "expected_items": 9,
         "items": [
@@ -405,7 +405,7 @@ SCREENERS: dict[str, dict[str, Any]] = {
         "citation": _PHQ9_CITATION,
     },
     "gad7": {
-        "name": "GAD-7 — anxiety",
+        "name": "GAD-7: anxiety",
         "fn": gad7,
         "expected_items": 7,
         "items": [
@@ -421,7 +421,7 @@ SCREENERS: dict[str, dict[str, Any]] = {
         "citation": _GAD7_CITATION,
     },
     "audit_c": {
-        "name": "AUDIT-C — alcohol misuse",
+        "name": "AUDIT-C: alcohol misuse",
         "fn": audit_c,
         "expected_items": 3,
         "items": [
@@ -433,7 +433,7 @@ SCREENERS: dict[str, dict[str, Any]] = {
         "citation": _AUDITC_CITATION,
     },
     "epds": {
-        "name": "EPDS — perinatal depression",
+        "name": "EPDS: perinatal depression",
         "fn": epds,
         "expected_items": 10,
         "items": [
@@ -452,7 +452,7 @@ SCREENERS: dict[str, dict[str, Any]] = {
         "citation": _EPDS_CITATION,
     },
     "pcl5": {
-        "name": "PCL-5 — PTSD",
+        "name": "PCL-5: PTSD",
         "fn": pcl5,
         "expected_items": 20,
         # Real 20 DSM-5 PCL-5 items. "In the past month, how much were you bothered by:"
@@ -501,7 +501,7 @@ SCREENERS: dict[str, dict[str, Any]] = {
         "citation": _ACE_CITATION,
     },
     "crafft": {
-        "name": "CRAFFT — adolescent substance",
+        "name": "CRAFFT: adolescent substance",
         "fn": crafft,
         "expected_items": 6,
         "items": [
@@ -516,7 +516,7 @@ SCREENERS: dict[str, dict[str, Any]] = {
         "citation": _CRAFFT_CITATION,
     },
     "prapare": {
-        "name": "PRAPARE — social determinants",
+        "name": "PRAPARE: social determinants",
         "fn": prapare,
         "expected_items": None,
         "items": PRAPARE_DOMAINS,

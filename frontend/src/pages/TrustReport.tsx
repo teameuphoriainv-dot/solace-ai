@@ -23,9 +23,9 @@ const MATURITY_LABEL: Record<string, string> = {
 const CoverageChart = lazy(() => import("../components/ui/CoverageChart"));
 
 const RISK_TIER_LABEL: Record<string, string> = {
-  tier_1_high: "Tier 1 — High clinical risk",
-  tier_2_moderate: "Tier 2 — Moderate clinical risk",
-  tier_3_low: "Tier 3 — Low clinical risk",
+  tier_1_high: "Tier 1: High clinical risk",
+  tier_2_moderate: "Tier 2: Moderate clinical risk",
+  tier_3_low: "Tier 3: Low clinical risk",
 };
 
 function pct(value: number): string {
@@ -159,7 +159,7 @@ export default function TrustReport() {
                   <AlertTriangle size={20} className="shrink-0 mt-0.5 text-warning" aria-hidden />
                   <div>
                     <p className="font-semibold tracking-editorial">
-                      Preliminary — synthetic validation cohort; real-world clinical calibration
+                      Preliminary: synthetic validation cohort; real-world clinical calibration
                       pending
                     </p>
                     <p className="mt-1.5 text-sm text-text-muted">{report.disclaimer}</p>
@@ -182,7 +182,7 @@ export default function TrustReport() {
                       <span className="ml-2 text-xs text-text-muted">{m.version}</span>
                     </div>
                     <span className="shrink-0 text-xs rounded-sm bg-surface-high px-2 py-0.5 text-text-muted">
-                      {m.risk_tier ? RISK_TIER_LABEL[m.risk_tier] ?? m.risk_tier : "—"}
+                      {m.risk_tier ? RISK_TIER_LABEL[m.risk_tier] ?? m.risk_tier : "-"}
                     </span>
                   </li>
                 ))}
@@ -227,7 +227,7 @@ export default function TrustReport() {
                       <dd className="mt-0.5 font-semibold text-ink">
                         {report.calibration.target_coverage !== null
                           ? pct(report.calibration.target_coverage)
-                          : "—"}
+                          : "-"}
                       </dd>
                     </div>
                     <div className="rounded-md bg-surface-low p-3">
@@ -260,7 +260,7 @@ export default function TrustReport() {
                       <span className="font-medium text-ink">{m.name}</span>
                       <span className="shrink-0 text-xs text-text-muted">
                         {m.subgroup_audit_applicable
-                          ? `subgroup audit: ${m.groups_audited.join(", ") || "—"}`
+                          ? `subgroup audit: ${m.groups_audited.join(", ") || "-"}`
                           : "not a patient predictor"}
                       </span>
                     </div>
@@ -351,7 +351,7 @@ export default function TrustReport() {
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 {Object.entries(report.ai_bom.data_handling_controls).map(([k, v]) => (
                   <div key={k} className="text-xs text-text-muted">
-                    <span className="font-medium text-ink">{v.control}</span> — {v.evidence}
+                    <span className="font-medium text-ink">{v.control}</span>: {v.evidence}
                   </div>
                 ))}
               </div>

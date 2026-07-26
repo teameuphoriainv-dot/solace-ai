@@ -7,7 +7,7 @@ import { ContactForm } from "../../components/marketing/ContactForm";
 const reasons = [
   { Icon: CalendarClock, title: "Book a demo", desc: "A 30-minute walkthrough of triage, scribe, and the copilot on your workflows." },
   { Icon: ShieldCheck, title: "Security reviews", desc: "Questionnaires, architecture deep-dives, and BAA conversations." },
-  { Icon: Mail, title: "Everything else", desc: "Integrations, partnerships, press, or support — same form, fast routing." },
+  { Icon: Mail, title: "Everything else", desc: "Integrations, partnerships, press, or support, same form, fast routing." },
 ];
 
 export default function ContactPage() {
@@ -16,7 +16,7 @@ export default function ContactPage() {
       <MarketingHero
         eyebrow="Contact"
         title="Talk to a human. Quickly."
-        sub="Demos, security reviews, integration questions, or anything else — we respond within one business day."
+        sub="Demos, security reviews, integration questions, or anything else: we respond within one business day."
       />
       <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">

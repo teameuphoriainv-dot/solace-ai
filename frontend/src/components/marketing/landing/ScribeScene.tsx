@@ -7,16 +7,16 @@ import { Mic, FileText, Sparkles } from "lucide-react";
 // itself, the codes land. The waveform genuinely "speaks" while act 1 is live.
 
 const captions = [
-  { who: "Dr. Nguyen", text: "Morning, Olivia — what's been going on?" },
+  { who: "Dr. Nguyen", text: "Morning, Olivia. What's been going on?" },
   { who: "Olivia", text: "This cough just won't quit. Three weeks now, worse at night." },
   { who: "Dr. Nguyen", text: "Any fever or chest pain? Short of breath on stairs?" },
-  { who: "Olivia", text: "No fever — but stairs make my chest feel tight." },
+  { who: "Olivia", text: "No fever, but stairs make my chest feel tight." },
 ];
 
 const note = [
   { h: "Subjective", t: "3-week persistent cough, worse nocturnally. Exertional chest tightness. Denies fever." },
   { h: "Objective", t: "Scattered end-expiratory wheeze. SpO2 98% RA. Afebrile." },
-  { h: "Assessment", t: "Subacute cough — suspect post-viral airway hyperreactivity." },
+  { h: "Assessment", t: "Subacute cough: suspect post-viral airway hyperreactivity." },
   { h: "Plan", t: "CXR today. Albuterol MDI PRN. Return 2 weeks, sooner if worsening." },
 ];
 
@@ -47,7 +47,7 @@ function CaptionLine({ p, i, who, text }: { p: MotionValue<number>; i: number; w
   return (
     <motion.p style={{ opacity: finalOpacity, y }} className="text-[15px] leading-relaxed text-white/90 sm:text-base">
       <span className="font-medium text-primary-fixed">{who}</span>
-      <span className="text-white/40"> — </span>
+      <span className="text-white/40"> - </span>
       {text}
     </motion.p>
   );

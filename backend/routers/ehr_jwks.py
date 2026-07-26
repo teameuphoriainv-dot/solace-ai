@@ -33,7 +33,7 @@ def _load_jwks() -> dict:
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
-        log.warning("SOLACE_EHR_JWKS is not valid JSON — serving empty key set")
+        log.warning("SOLACE_EHR_JWKS is not valid JSON: serving empty key set")
         return {"keys": []}
     # Accept either a full {"keys": [...]} doc or a bare list of JWKs.
     keys = data.get("keys") if isinstance(data, dict) else data

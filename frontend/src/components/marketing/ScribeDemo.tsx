@@ -9,7 +9,7 @@ import { Mic, FileText, ArrowRight } from "lucide-react";
 // All purely presentational; timings tuned for readability, not realism.
 
 const transcript = [
-  { who: "Dr. Nguyen", text: "Morning, Olivia — what brings you in today?" },
+  { who: "Dr. Nguyen", text: "Morning, Olivia. What brings you in today?" },
   { who: "Olivia", text: "This cough won't quit. Three weeks now, worse at night." },
   { who: "Dr. Nguyen", text: "Any fever, chest pain, or shortness of breath?" },
   { who: "Olivia", text: "No fever. A little tight when I climb stairs." },

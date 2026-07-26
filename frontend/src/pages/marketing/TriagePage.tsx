@@ -10,9 +10,9 @@ import { FAQAccordion } from "../../components/marketing/FAQAccordion";
 
 const intake = [
   { who: "patient" as const, text: "My chest has felt tight since this morning, and I'm a bit dizzy." },
-  { who: "solace" as const, text: "I'm sorry — that sounds frightening. Does the tightness spread to your arm, jaw, or back?" },
+  { who: "solace" as const, text: "I'm sorry. That sounds frightening. Does the tightness spread to your arm, jaw, or back?" },
   { who: "patient" as const, text: "A little into my left shoulder." },
-  { who: "solace" as const, text: "Thank you. A clinician is being notified now. Please stay seated — you're in the right place." },
+  { who: "solace" as const, text: "Thank you. A clinician is being notified now. Please stay seated: you're in the right place." },
 ];
 
 const summary = [
@@ -106,12 +106,12 @@ function IntakeDemo() {
 
 const journey = [
   { Icon: QrCode, title: "Check in with a QR code", desc: "No app, no download, no kiosk line. Patients scan and start intake from their own phone, in their own language." },
-  { Icon: MessageSquareText, title: "Tell their story once", desc: "Voice-first intake captures the chief complaint, history, and symptoms — and turns them into a provisional ESI with a comfort protocol while they wait." },
-  { Icon: Stethoscope, title: "Arrive at the bedside briefed", desc: "Clinicians see the pre-brief, scribe note, and acuity before walking in. Bedside vitals refine the ESI with SHAP-backed explanations — both stages shown side by side." },
+  { Icon: MessageSquareText, title: "Tell their story once", desc: "Voice-first intake captures the chief complaint, history, and symptoms, and turns them into a provisional ESI with a comfort protocol while they wait." },
+  { Icon: Stethoscope, title: "Arrive at the bedside briefed", desc: "Clinicians see the pre-brief, scribe note, and acuity before walking in. Bedside vitals refine the ESI with SHAP-backed explanations, both stages shown side by side." },
 ];
 
 const safety = [
-  { Icon: Activity, title: "Two-stage acuity", desc: "A provisional intake ESI, then an ML-refined score from real vitals — with the contributing factors shown, never a black box." },
+  { Icon: Activity, title: "Two-stage acuity", desc: "A provisional intake ESI, then an ML-refined score from real vitals, with the contributing factors shown, never a black box." },
   { Icon: BellRing, title: "Pain escalation", desc: "Patients can flag worsening symptoms mid-wait; the dashboard raises a red-banner alert instantly." },
   { Icon: Languages, title: "Every language", desc: "Intake, explanations, and comfort protocols are generated per patient, per language." },
 ];
@@ -119,8 +119,8 @@ const safety = [
 const faqs = [
   { q: "Does the AI decide who gets seen first?", a: "No. Solace produces a provisional acuity with its reasoning shown; clinicians always make the call. Bedside vitals trigger a second, explainable refinement stage." },
   { q: "What do patients need to install?", a: "Nothing. The intake is a mobile web page reached by scanning a QR code in the waiting room." },
-  { q: "How does this fit our existing triage workflow?", a: "It runs ahead of your nurse triage, not instead of it — patients arrive at the desk already understood, and the bedside stage matches your standard ESI flow." },
-  { q: "Is the waiting room data secure?", a: "Yes — short-lived intake sessions, encrypted storage with customer-managed keys, automatic data expiry, and full audit logging." },
+  { q: "How does this fit our existing triage workflow?", a: "It runs ahead of your nurse triage, not instead of it: patients arrive at the desk already understood, and the bedside stage matches your standard ESI flow." },
+  { q: "Is the waiting room data secure?", a: "Yes: short-lived intake sessions, encrypted storage with customer-managed keys, automatic data expiry, and full audit logging." },
 ];
 
 export default function TriagePage() {
@@ -128,8 +128,8 @@ export default function TriagePage() {
     <MarketingLayout>
       <MarketingHero
         eyebrow="Smart Triage"
-        title="Every patient seen, understood, and safe — from the first hello."
-        sub="QR check-in, voice intake, and a two-stage ESI engine that explains itself — so the waiting room is never a blind spot."
+        title="Every patient seen, understood, and safe, from the first hello."
+        sub="QR check-in, voice intake, and a two-stage ESI engine that explains itself, so the waiting room is never a blind spot."
         primaryCta={{ to: "/get-started", label: "Get started" }}
         secondaryCta={{ to: "/contact", label: "Book a demo" }}
       >
@@ -140,7 +140,7 @@ export default function TriagePage() {
         <SectionHeading
           eyebrow="The journey"
           title="From the parking lot to the bedside."
-          sub="Solace walks the patient through the wait — and walks the clinician in prepared."
+          sub="Solace walks the patient through the wait, and walks the clinician in prepared."
         />
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {journey.map(({ Icon, title, desc }, i) => (

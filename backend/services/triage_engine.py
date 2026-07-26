@@ -176,7 +176,7 @@ def _parse_chief_complaint(text: str) -> tuple[int, float]:
             _log.info("TRIAGE_MATCH level=%d conf=%.2f matches=%d first=%s", level, conf, len(matched), matched[0][:60])
             return level, conf
 
-    _log.warning("TRIAGE_NO_MATCH complaint=%r — defaulting to ESI 3", normalized[:200])
+    _log.warning("TRIAGE_NO_MATCH complaint=%r: defaulting to ESI 3", normalized[:200])
 
     # Fallback: try legacy exact-substring matching (most critical first)
     legacy_map = [

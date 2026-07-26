@@ -232,7 +232,7 @@ def _xca_document_query(match: dict[str, Any]) -> list[dict[str, Any]]:
     route = _QHIN_ROUTES.get(qhin, {})
     xca_url = route.get("xca") or _QHIN_ROUTES.get(_HOME_QHIN, {}).get("xca")
     if not xca_url:
-        log.warning("XCA query skipped — no endpoint for QHIN '%s'", qhin)
+        log.warning("XCA query skipped, no endpoint for QHIN '%s'", qhin)
         return []
     body = _http_post(
         xca_url,

@@ -78,7 +78,7 @@ TRIGGERS: list[TriggerDef] = [
         name="encounter.event",
         label="Encounter event (EHR)",
         description=(
-            "Fires on an EHR encounter lifecycle event — admit, transfer, "
+            "Fires on an EHR encounter lifecycle event: admit, transfer, "
             "discharge or status change synced from the connected EHR."
         ),
         sample_context={

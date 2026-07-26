@@ -62,7 +62,7 @@ def enforce(identity: str, *, source_ip: str | None = None) -> None:
         )
         raise HTTPException(
             status_code=429,
-            detail="temporarily rate-limited after abuse detection — retry in 1 hour",
+            detail="temporarily rate-limited after abuse detection: retry in 1 hour",
             headers={"Retry-After": "3600"},
         )
 

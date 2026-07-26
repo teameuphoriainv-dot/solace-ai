@@ -5,7 +5,7 @@ import { motion, MotionValue, useReducedMotion, useScroll, useTransform } from "
 // ghost to ink as you scroll through the section.
 
 const WORDS =
-  "Healthcare software shouts. Ours doesn't. We build for the 3 a.m. shift — fewer clicks, quieter screens, honest uncertainty, and a chart that never comes before the patient.".split(" ");
+  "Healthcare software shouts. Ours doesn't. We build for the 3 a.m. shift: fewer clicks, quieter screens, honest uncertainty, and a chart that never comes before the patient.".split(" ");
 
 const ACCENT = new Set(["3", "a.m.", "shift", "patient."]);
 

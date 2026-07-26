@@ -304,7 +304,7 @@ _PAIRS: list[tuple[str, str, str, str]] = [
     ("warfarin", "antiplatelet", "high", "Increased bleeding risk; INR variability"),
     ("doac", "nsaid", "moderate", "Additive bleeding risk"),
     ("doac", "antiplatelet", "moderate", "Additive bleeding risk"),
-    ("anticoagulant", "anticoagulant", "high", "Duplicate anticoagulation — major bleeding risk"),
+    ("anticoagulant", "anticoagulant", "high", "Duplicate anticoagulation: major bleeding risk"),
     # Warfarin CYP / metabolic interactions
     ("warfarin", "fluoroquinolone", "high", "Major INR elevation via CYP inhibition"),
     ("warfarin", "macrolide", "moderate", "INR elevation reported"),
@@ -316,48 +316,48 @@ _PAIRS: list[tuple[str, str, str, str]] = [
     ("dabigatran", "azole_antifungal", "high", "P-gp inhibition raises dabigatran"),
     ("doac", "cyp3a4_inhibitor", "moderate", "CYP3A4/P-gp inhibition may raise DOAC levels"),
     # PDE5 + nitrate — absolute contraindication
-    ("pde5_inhibitor", "nitrate", "contraindicated", "Severe, potentially fatal hypotension — CONTRAINDICATED"),
+    ("pde5_inhibitor", "nitrate", "contraindicated", "Severe, potentially fatal hypotension: CONTRAINDICATED"),
     # Statin myopathy
     ("cyp3a4_statin", "cyp3a4_inhibitor", "high", "Severe myopathy/rhabdomyolysis risk via CYP3A4 inhibition"),
     ("cyp3a4_statin", "amiodarone", "high", "Myopathy risk; cap simvastatin at 20 mg"),
     ("statin", "macrolide", "moderate", "Increased statin levels; myopathy risk"),
     # Serotonin syndrome — any two serotonergic agents
-    ("serotonergic", "serotonergic", "moderate", "Additive serotonergic load — serotonin syndrome risk"),
+    ("serotonergic", "serotonergic", "moderate", "Additive serotonergic load: serotonin syndrome risk"),
     # GI bleed — SSRI/SNRI + NSAID
-    ("ssri", "nsaid", "moderate", "Antiplatelet effect of SSRI plus NSAID — GI bleed risk"),
-    ("snri", "nsaid", "moderate", "Antiplatelet effect of SNRI plus NSAID — GI bleed risk"),
+    ("ssri", "nsaid", "moderate", "Antiplatelet effect of SSRI plus NSAID: GI bleed risk"),
+    ("snri", "nsaid", "moderate", "Antiplatelet effect of SNRI plus NSAID: GI bleed risk"),
     # QT prolongation — any two QT-prolonging agents
-    ("qt_prolonging", "qt_prolonging", "moderate", "Additive QT prolongation — torsades risk"),
+    ("qt_prolonging", "qt_prolonging", "moderate", "Additive QT prolongation: torsades risk"),
     ("amiodarone", "fluoroquinolone", "high", "Major QT prolongation; arrhythmia risk"),
     ("amiodarone", "macrolide", "high", "Major QT prolongation; arrhythmia risk"),
     # Digoxin toxicity
     ("digoxin", "amiodarone", "high", "Digoxin toxicity; halve digoxin dose"),
-    ("digoxin", "verapamil", "high", "Raised digoxin levels — toxicity risk"),
+    ("digoxin", "verapamil", "high", "Raised digoxin levels: toxicity risk"),
     ("digoxin", "k_sparing_diuretic", "moderate", "Digoxin toxicity risk"),
     ("digoxin", "hypokalemic_diuretic", "moderate", "Hypokalemia potentiates digoxin toxicity"),
     # Hyperkalemia cluster
-    ("raas", "k_sparing_diuretic", "moderate", "Hyperkalemia risk — monitor potassium"),
-    ("raas", "potassium_supplement", "moderate", "Hyperkalemia risk — monitor potassium"),
+    ("raas", "k_sparing_diuretic", "moderate", "Hyperkalemia risk: monitor potassium"),
+    ("raas", "potassium_supplement", "moderate", "Hyperkalemia risk: monitor potassium"),
     ("k_sparing_diuretic", "potassium_supplement", "high", "Significant hyperkalemia risk"),
-    ("raas", "raas", "moderate", "Dual RAAS blockade — hyperkalemia and AKI risk"),
+    ("raas", "raas", "moderate", "Dual RAAS blockade: hyperkalemia and AKI risk"),
     ("raas", "nsaid", "moderate", "Reduced antihypertensive effect; AKI risk (triple-whammy with diuretic)"),
     # CNS / respiratory depression — opioid + any CNS depressant
-    ("opioid", "benzodiazepine", "high", "Respiratory depression — FDA black box warning"),
+    ("opioid", "benzodiazepine", "high", "Respiratory depression: FDA black box warning"),
     ("opioid", "z_drug", "high", "Additive CNS/respiratory depression"),
-    ("opioid", "cns_depressant", "moderate", "Additive sedation — counsel on CNS depression"),
+    ("opioid", "cns_depressant", "moderate", "Additive sedation: counsel on CNS depression"),
     # Bradycardia — beta-blocker + non-DHP CCB
     ("beta_blocker", "nondhp_ccb", "high", "Severe bradycardia and heart block risk"),
     # Lithium
-    ("lithium", "nsaid", "high", "Reduced lithium clearance — lithium toxicity"),
-    ("lithium", "raas", "moderate", "Reduced lithium clearance — monitor levels"),
-    ("lithium", "hypokalemic_diuretic", "moderate", "Thiazide reduces lithium clearance — toxicity risk"),
+    ("lithium", "nsaid", "high", "Reduced lithium clearance: lithium toxicity"),
+    ("lithium", "raas", "moderate", "Reduced lithium clearance: monitor levels"),
+    ("lithium", "hypokalemic_diuretic", "moderate", "Thiazide reduces lithium clearance: toxicity risk"),
     # Methotrexate
-    ("methotrexate", "nsaid", "high", "Reduced methotrexate clearance — marrow toxicity"),
+    ("methotrexate", "nsaid", "high", "Reduced methotrexate clearance: marrow toxicity"),
     ("methotrexate", "sulfonamide", "high", "Additive marrow toxicity; reduced MTX clearance"),
     # Metformin + contrast
     ("metformin", "iv contrast", "moderate", "Hold metformin 48h around contrast in CKD"),
     # Allopurinol
-    ("allopurinol", "azathioprine", "high", "Azathioprine toxicity — xanthine oxidase inhibition"),
+    ("allopurinol", "azathioprine", "high", "Azathioprine toxicity: xanthine oxidase inhibition"),
 ]
 
 
@@ -367,15 +367,15 @@ _PAIRS: list[tuple[str, str, str, str]] = [
 # --------------------------------------------------------------------------
 _CROSS_REACTIVITY: list[tuple[str, str, str, str]] = [
     ("penicillin", "cephalosporin", "moderate",
-     "Penicillin allergy — ~1-2% cross-reactivity with cephalosporins (higher for 1st-gen)"),
+     "Penicillin allergy: ~1-2% cross-reactivity with cephalosporins (higher for 1st-gen)"),
     ("penicillin", "carbapenem", "moderate",
-     "Penicillin allergy — low but documented cross-reactivity with carbapenems"),
+     "Penicillin allergy: low but documented cross-reactivity with carbapenems"),
     ("cephalosporin", "penicillin", "moderate",
-     "Cephalosporin allergy — possible cross-reactivity with penicillins"),
+     "Cephalosporin allergy: possible cross-reactivity with penicillins"),
     ("nsaid", "nsaid", "high",
-     "Reported NSAID/aspirin hypersensitivity — class-wide reaction risk (avoid all NSAIDs)"),
+     "Reported NSAID/aspirin hypersensitivity: class-wide reaction risk (avoid all NSAIDs)"),
     ("sulfonamide", "sulfonamide", "moderate",
-     "Sulfonamide allergy — applies across sulfonamide antibiotics"),
+     "Sulfonamide allergy: applies across sulfonamide antibiotics"),
 ]
 
 
@@ -397,7 +397,7 @@ _RENAL_FLAGS: dict[str, tuple[float, str, str]] = {
     "sulfamethoxazole-trimethoprim": (30, "reduce dose by 50% if CrCl 15-30; avoid if <15", "moderate"),
     "fluconazole": (50, "reduce maintenance dose by 50% if CrCl <50", "low"),
     "allopurinol": (60, "reduce dose with renal impairment to limit toxicity", "moderate"),
-    "lithium": (60, "renally cleared — toxicity risk; monitor levels closely", "high"),
+    "lithium": (60, "renally cleared: toxicity risk; monitor levels closely", "high"),
 }
 
 
@@ -409,7 +409,7 @@ _RENAL_FLAGS: dict[str, tuple[float, str, str]] = {
 _HEPATIC_FLAGS: dict[str, dict[str, tuple[str, str]]] = {
     "apixaban": {
         "B": ("moderate", "use with caution in Child-Pugh B"),
-        "C": ("high", "not recommended in Child-Pugh C — coagulopathy"),
+        "C": ("high", "not recommended in Child-Pugh C: coagulopathy"),
     },
     "rivaroxaban": {
         "B": ("high", "avoid in Child-Pugh B/C with coagulopathy"),
@@ -439,18 +439,18 @@ _HEPATIC_FLAGS: dict[str, dict[str, tuple[str, str]]] = {
     },
     "morphine": {
         "B": ("moderate", "reduce dose / extend interval in hepatic impairment"),
-        "C": ("high", "marked accumulation — large dose reduction needed"),
+        "C": ("high", "marked accumulation: large dose reduction needed"),
     },
     "oxycodone": {
         "B": ("moderate", "reduce starting dose by 1/3 to 1/2 in hepatic impairment"),
-        "C": ("high", "marked accumulation — large dose reduction needed"),
+        "C": ("high", "marked accumulation: large dose reduction needed"),
     },
     "diazepam": {
-        "B": ("moderate", "prolonged sedation — prefer lorazepam (no active metabolites)"),
+        "B": ("moderate", "prolonged sedation: prefer lorazepam (no active metabolites)"),
         "C": ("high", "avoid long-acting benzodiazepines in hepatic impairment"),
     },
     "methotrexate": {
-        "B": ("high", "hepatotoxic — avoid in significant liver disease"),
+        "B": ("high", "hepatotoxic, avoid in significant liver disease"),
         "C": ("contraindicated", "contraindicated in significant hepatic disease"),
     },
 }
@@ -461,16 +461,16 @@ _HEPATIC_FLAGS: dict[str, dict[str, tuple[str, str]]] = {
 # therapeutic-duplication concern worth surfacing.
 # --------------------------------------------------------------------------
 _DUPLICATE_CLASSES: dict[str, tuple[str, str]] = {
-    "nsaid": ("moderate", "Two NSAIDs — no added benefit, additive GI/renal toxicity"),
-    "opioid": ("moderate", "Multiple opioids — review for unintended duplication"),
-    "benzodiazepine": ("moderate", "Multiple benzodiazepines — additive sedation, review duplication"),
-    "ssri": ("high", "Two SSRIs — serotonin syndrome risk, almost never intended"),
-    "statin": ("moderate", "Two statins — duplicate therapy, additive myopathy risk"),
-    "acei": ("high", "Two ACE inhibitors — duplicate therapy, hyperkalemia/AKI risk"),
-    "arb": ("high", "Two ARBs — duplicate therapy, hyperkalemia/AKI risk"),
-    "anticoagulant": ("high", "Two anticoagulants — major bleeding risk unless bridging"),
-    "beta_blocker": ("moderate", "Two beta-blockers — additive bradycardia/hypotension"),
-    "ppi": ("low", "Two proton-pump inhibitors — duplicate therapy"),
+    "nsaid": ("moderate", "Two NSAIDs, no added benefit, additive GI/renal toxicity"),
+    "opioid": ("moderate", "Multiple opioids: review for unintended duplication"),
+    "benzodiazepine": ("moderate", "Multiple benzodiazepines: additive sedation, review duplication"),
+    "ssri": ("high", "Two SSRIs: serotonin syndrome risk, almost never intended"),
+    "statin": ("moderate", "Two statins: duplicate therapy, additive myopathy risk"),
+    "acei": ("high", "Two ACE inhibitors: duplicate therapy, hyperkalemia/AKI risk"),
+    "arb": ("high", "Two ARBs: duplicate therapy, hyperkalemia/AKI risk"),
+    "anticoagulant": ("high", "Two anticoagulants: major bleeding risk unless bridging"),
+    "beta_blocker": ("moderate", "Two beta-blockers: additive bradycardia/hypotension"),
+    "ppi": ("low", "Two proton-pump inhibitors: duplicate therapy"),
 }
 
 

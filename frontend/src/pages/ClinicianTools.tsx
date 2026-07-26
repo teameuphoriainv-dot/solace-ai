@@ -407,7 +407,7 @@ function EwsPane({ hospitalId }: { hospitalId: string }) {
         </div>
       )}
 
-      <Panel title="Deterioration index — 4h trend">
+      <Panel title="Deterioration index: 4h trend">
         <pre className="text-xs bg-surface-low rounded-md p-2.5 overflow-auto text-ink">
           {JSON.stringify(d, null, 2)}
         </pre>
@@ -630,7 +630,7 @@ function LoopsPane({ hospitalId }: { hospitalId: string }) {
       <Panel>
         <div className="flex items-center justify-between gap-3">
           <div className="text-[10px] uppercase tracking-wider text-text-muted font-semibold">
-            Overdue abnormal results — closed-loop worklist
+            Overdue abnormal results: closed-loop worklist
           </div>
           <ActionButton onClick={refresh} busy={busy} variant="dark" className="h-8 px-3">
             Refresh
@@ -775,12 +775,12 @@ function EhrPane({ hospitalId }: { hospitalId: string }) {
             {status.online ? (
               <span className="flex items-center gap-1.5 text-success">
                 <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden />
-                Adapter reachable — write-backs route to {status.vendor}.
+                Adapter reachable: write-backs route to {status.vendor}.
               </span>
             ) : (
               <span className="flex items-center gap-1.5 text-warning">
                 <AlertCircle className="w-4 h-4 shrink-0" aria-hidden />
-                Adapter offline — use dry-run to preview routing.
+                Adapter offline: use dry-run to preview routing.
               </span>
             )}
           </div>
@@ -816,7 +816,7 @@ function EhrPane({ hospitalId }: { hospitalId: string }) {
               <span className="text-sm text-ink">
                 {writeOut.dry_run
                   ? `${writeOut.resource_type} routed to ${writeOut.routed_to}`
-                  : `${writeOut.stored ?? "stored"} as ${writeOut.id ?? "—"} via ${writeOut.vendor ?? "vendor"}`}
+                  : `${writeOut.stored ?? "stored"} as ${writeOut.id ?? "-"} via ${writeOut.vendor ?? "vendor"}`}
               </span>
             </div>
             {writeOut.url && (
@@ -962,7 +962,7 @@ function SafetyPane({ hospitalId }: { hospitalId: string }) {
               )}
               <span className="text-sm font-semibold text-ink">
                 {out.has_critical_contraindication
-                  ? "Critical contraindication present — review before ordering."
+                  ? "Critical contraindication present: review before ordering."
                   : "No critical contraindications detected."}
               </span>
             </div>

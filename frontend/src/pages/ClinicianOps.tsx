@@ -228,7 +228,7 @@ function PortalPane({ hospitalId }: { hospitalId: string }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Panel title="Threads" className="md:col-span-1">
           {threads.length === 0 && (
-            <div className="text-sm text-text-muted">No threads yet — simulate one above.</div>
+            <div className="text-sm text-text-muted">No threads yet: simulate one above.</div>
           )}
           <div className="space-y-1">
             {threads.map((t) => (
@@ -423,7 +423,7 @@ function SepsisPane({ hospitalId }: { hospitalId: string }) {
                   </span>
                 </span>
                 <span className="text-xs text-text-muted shrink-0">
-                  {e.minutes != null ? `${e.minutes} min` : "—"}
+                  {e.minutes != null ? `${e.minutes} min` : "-"}
                 </span>
               </div>
             ))}
@@ -719,7 +719,7 @@ function Hl7Pane({ hospitalId }: { hospitalId: string }) {
           </pre>
           <div className="flex items-center gap-1.5 text-xs text-text-muted mt-2">
             <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden />
-            Send via MLLP TCP to your Mirth/Rhapsody listener — port 6661 by default.
+            Send via MLLP TCP to your Mirth/Rhapsody listener: port 6661 by default.
           </div>
         </Panel>
       )}
@@ -886,7 +886,7 @@ function SdohPane({ hospitalId }: { hospitalId: string }) {
           {!consent && (
             <div className="flex items-center gap-1.5 text-xs text-warning mt-2">
               <AlertTriangle className="w-3.5 h-3.5 shrink-0" aria-hidden />
-              Without consent, referrals return blocked — capture consent before sharing PHI with community partners.
+              Without consent, referrals return blocked: capture consent before sharing PHI with community partners.
             </div>
           )}
           <ActionButton onClick={makeReferrals} busy={refBusy} variant="dark" icon={Send} className="mt-3">
@@ -987,7 +987,7 @@ function CareGapsPane({ hospitalId }: { hospitalId: string }) {
           </div>
           {out.more_gaps > 0 && (
             <div className="text-xs text-text-muted mt-2.5">
-              + {out.more_gaps} more gap{out.more_gaps === 1 ? "" : "s"} not shown — open the full care-gap report.
+              + {out.more_gaps} more gap{out.more_gaps === 1 ? "" : "s"} not shown: open the full care-gap report.
             </div>
           )}
         </Panel>
@@ -1041,7 +1041,7 @@ function NoShowPane({ hospitalId }: { hospitalId: string }) {
 
   return (
     <div className="space-y-3">
-      <Panel title="Equity audit — fairness across groups">
+      <Panel title="Equity audit: fairness across groups">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <label className="flex flex-col gap-1">
             <FieldLabel>Group key</FieldLabel>
@@ -1230,7 +1230,7 @@ function ResultLoopPane({ hospitalId }: { hospitalId: string }) {
       });
       setClosures((prev) => prev.map((c) => (c.closure_id === updated.closure_id ? updated : c)));
     } catch {
-      setAdvanceErr(`Cannot transition to ${toState} from ${closure.state} — illegal step.`);
+      setAdvanceErr(`Cannot transition to ${toState} from ${closure.state}: illegal step.`);
     } finally {
       setAdvanceBusy(null);
     }

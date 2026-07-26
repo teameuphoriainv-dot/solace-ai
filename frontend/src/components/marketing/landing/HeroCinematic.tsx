@@ -99,7 +99,7 @@ export function HeroCinematic() {
 
         <motion.p {...appear(0.85)} className="mt-7 max-w-xl text-base leading-relaxed text-text-muted sm:text-lg">
           Triage that listens, notes that write themselves, and an EHR copilot that never
-          moves without you. One platform — PHI isolation enforced in code.
+          moves without you. One platform: PHI isolation enforced in code.
         </motion.p>
 
         <motion.div {...appear(1.0)} className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
@@ -131,7 +131,7 @@ export function HeroCinematic() {
         className="relative mx-auto mb-8 flex flex-col items-center gap-1.5 text-text-muted"
         aria-hidden="true"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em]">Scroll — watch a visit chart itself</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em]">Scroll: watch a visit chart itself</span>
         <motion.span animate={reduced ? {} : { y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
           <ChevronDown size={16} />
         </motion.span>

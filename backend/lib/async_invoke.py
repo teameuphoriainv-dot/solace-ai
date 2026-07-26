@@ -64,7 +64,7 @@ def dispatch_deferred_artifacts(hospital_id: str, patient_id: str) -> str:
                 )
         else:
             log.warning(
-                "AWS_LAMBDA_FUNCTION_NAME unset in AWS mode — cannot self-invoke; "
+                "AWS_LAMBDA_FUNCTION_NAME unset in AWS mode: cannot self-invoke; "
                 "running deferred artifacts in a thread for hospital=%s",
                 hospital_id,
             )

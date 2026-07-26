@@ -218,7 +218,7 @@ export default function ShowcaseDemo() {
 
       {/* Footer hint */}
       <footer className="shrink-0 hidden sm:block px-6 py-2 bg-surface-lowest border-t border-line text-[12px] text-text-muted text-center">
-        Drag the divider to resize either screen. Complete the intake on the left — the patient
+        Drag the divider to resize either screen. Complete the intake on the left, the patient
         appears on the clinician queue at right within a few seconds.
       </footer>
     </div>

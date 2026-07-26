@@ -124,7 +124,7 @@ export function useAudioRecorder(): UseAudioRecorder {
             }
             setLiveTranscript((finalChunksRef.current + " " + interim).trim());
           };
-          rec.onerror = () => { /* swallow — server path remains as fallback */ };
+          rec.onerror = () => { /* swallow: server path remains as fallback */ };
           rec.onend = () => { /* allow caller to read liveTranscript */ };
           speechRef.current = rec;
           rec.start();

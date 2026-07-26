@@ -44,7 +44,7 @@ export function PainEscalateButton({ hospitalId, patientId }: Props) {
     >
       {sentAt ? (
         <span className="inline-flex items-center gap-2">
-          <Check size={22} /> Clinician notified — stay seated
+          <Check size={22} /> Clinician notified: stay seated
         </span>
       ) : (
         <span className="inline-flex items-center gap-2">

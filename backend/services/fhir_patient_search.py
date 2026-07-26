@@ -533,7 +533,7 @@ def _normalize_patient(
         "age": _age_from_dob(dob),
         "sex": _normalize_sex(gender),
         "phone": phone,
-        "blood_type": "—",
+        "blood_type": "-",
         "height_cm": None,
         "weight_kg": None,
         "bmi": None,
@@ -681,7 +681,7 @@ def _prior_visits(bundle: dict) -> list[dict]:
             "date": (period.get("start") or "")[:10],
             "type": type_text or "Encounter",
             "facility": _ref_display(r.get("serviceProvider")),
-            "chief_complaint": reason or "—",
+            "chief_complaint": reason or "-",
             "disposition": str(r.get("status") or ""),
             "note": "",
         })

@@ -62,7 +62,7 @@ TOOLS: list[dict[str, Any]] = [
         "description": (
             "Run ONE coded chart primitive (from search_chart) and get its coded "
             "result. Real patient values appear only as {\"$slot\": \"S#\"} "
-            "markers — to show one to the clinician, write the token {S#} in "
+            "markers, to show one to the clinician, write the token {S#} in "
             "your final reply and it will be filled in for them."
         ),
         "input_schema": {
@@ -77,7 +77,7 @@ TOOLS: list[dict[str, Any]] = [
     {
         "name": "propose_write",
         "description": (
-            "Propose ONE FHIR resource to add to the chart. It is NOT written — "
+            "Propose ONE FHIR resource to add to the chart. It is NOT written: "
             "the clinician must confirm it in the UI. resource_type must be one "
             f"of {list(ALLOWED_WRITE_TYPES)}. Do not include patient identifiers "
             "or a subject reference; the server attaches the subject itself."
@@ -98,13 +98,13 @@ TOOLS: list[dict[str, Any]] = [
 def _system_prompt() -> str:
     return (
         "You are a clinical chart agent inside an EHR. You NEVER see raw patient "
-        "data — only coded outputs from the tools. Work in this loop: use "
+        "data: only coded outputs from the tools. Work in this loop: use "
         "search_chart to discover primitives, read_chart to fetch coded facts, "
         "and propose_write to draft chart additions for clinician confirmation.\n\n"
         "RULES:\n"
         "- Never guess a real patient value. Coded results carry real values only "
         "as {\"$slot\": \"S#\"} markers; surface one by writing the token {S#} in "
-        "your reply — it is filled in for the clinician after you finish.\n"
+        "your reply: it is filled in for the clinician after you finish.\n"
         "- Writes are proposals only; the clinician confirms each one. Allowed "
         f"resource types: {', '.join(ALLOWED_WRITE_TYPES)}.\n"
         "- Be concise and clinical. When you have enough data, reply in plain "
@@ -287,7 +287,7 @@ def run_agent(
             log.warning("copilot agent model round %d failed: %s", round_no, e)
             events.append(_event("think", f"Model round {round_no}",
                                  None, int((time.monotonic() - t0) * 1000), "error"))
-            reply_text = reply_text or "The AI backend is unavailable right now — please retry."
+            reply_text = reply_text or "The AI backend is unavailable right now: please retry."
             break
         ms = int((time.monotonic() - t0) * 1000)
         rounds = round_no
@@ -324,7 +324,7 @@ def run_agent(
         if round_no == MAX_ROUNDS:
             reply_text = text.strip() or (
                 "I reached my reasoning budget before finishing. Here is what I "
-                "gathered so far — ask again to continue."
+                "gathered so far: ask again to continue."
             )
             events.append(_event("info", "Round budget reached",
                                  f"{MAX_ROUNDS} rounds", None, None))

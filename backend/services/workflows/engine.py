@@ -132,7 +132,7 @@ def _execute_chain(steps: list, context: dict) -> list[dict]:
             idx += 1
 
     if executed >= MAX_STEPS:
-        log.warning("workflow chain hit MAX_STEPS=%d cap — halted", MAX_STEPS)
+        log.warning("workflow chain hit MAX_STEPS=%d cap: halted", MAX_STEPS)
     return results
 
 
@@ -144,7 +144,7 @@ def _run_step_bounded(stype: str, sconfig: dict, context: dict) -> dict:
         try:
             return future.result(timeout=STEP_TIMEOUT_SECONDS)
         except FuturesTimeout:
-            log.warning("workflow action %s exceeded %.0fs — abandoned",
+            log.warning("workflow action %s exceeded %.0fs: abandoned",
                         stype, STEP_TIMEOUT_SECONDS)
             return {"success": False, "reason": "step_timeout", "type": stype}
         except Exception as e:  # noqa: BLE001

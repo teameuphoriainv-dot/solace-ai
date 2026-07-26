@@ -263,7 +263,7 @@ export default function CodingTab() {
           />
           <p className="text-xs text-primary">
             Decision-support only. Nothing here is submitted to a payer or the
-            EHR — review every code and apply it yourself in your billing
+            EHR: review every code and apply it yourself in your billing
             system.
           </p>
         </div>
@@ -293,7 +293,7 @@ export default function CodingTab() {
         />
         {!sourcedNote && (
           <p className="text-xs text-warning mt-1.5">
-            No scribe note or transcript on this patient — paste the encounter
+            No scribe note or transcript on this patient: paste the encounter
             note above.
           </p>
         )}
@@ -344,12 +344,12 @@ export default function CodingTab() {
               </span>
             )}
             <span className="rounded-full bg-success-container px-3 py-1 text-success font-medium">
-              Not submitted — review required
+              Not submitted: review required
             </span>
           </div>
 
           {/* E&M ranked levels + MDM rubric */}
-          <Section title="E&M level — top 3 candidates" icon={<Hash size={16} />}>
+          <Section title="E&M level: top 3 candidates" icon={<Hash size={16} />}>
             {result.em_ranked && result.em_ranked.length > 0 ? (
               <ul className="space-y-2.5">
                 {result.em_ranked.map((em) => (
@@ -378,7 +378,7 @@ export default function CodingTab() {
                       <ConfidenceBar value={em.confidence} />
                     </div>
                     <p className="text-xs text-text-muted mt-1.5">
-                      Time range: {em.time_min[0]}–{em.time_min[1]} min
+                      Time range: {em.time_min[0]} to {em.time_min[1]} min
                     </p>
                     {em.supporting_documentation && (
                       <p className="text-xs text-ink mt-1.5">
@@ -389,7 +389,7 @@ export default function CodingTab() {
                     {!em.agrees_with_time && (
                       <p className="flex items-center gap-1.5 text-xs text-warning mt-1.5">
                         <AlertTriangle size={12} aria-hidden="true" />
-                        Documented time points to a different level — see the
+                        Documented time points to a different level: see the
                         time cross-check below.
                       </p>
                     )}
@@ -410,7 +410,7 @@ export default function CodingTab() {
                   {leveling?.mdm_tier && (
                     <span className="font-normal text-text-muted">
                       {" "}
-                      — overall: {leveling.mdm_tier}
+: overall: {leveling.mdm_tier}
                     </span>
                   )}
                 </p>
@@ -505,7 +505,7 @@ export default function CodingTab() {
             ) : (
               <p className="text-sm text-text-muted">
                 {timeCheck?.note ||
-                  "No total encounter time documented — leveling is MDM-based only."}
+                  "No total encounter time documented: leveling is MDM-based only."}
               </p>
             )}
           </Section>
@@ -624,7 +624,7 @@ export default function CodingTab() {
               )}
             </Section>
 
-            <Section title="CPT procedures — top 3" icon={<Hash size={16} />}>
+            <Section title="CPT procedures: top 3" icon={<Hash size={16} />}>
               {result.cpt_ranked && result.cpt_ranked.length > 0 ? (
                 <ul className="space-y-2">
                   {result.cpt_ranked.map((cpt) => (

@@ -430,7 +430,7 @@ def _parse_rsa_private_key(pem: str) -> tuple[int, int]:
         ec_oid = bytes([0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01])
         if ec_oid in algo:
             raise PrivateKeyJwtError(
-                "PKCS#8 key wraps an EC key — unsupported. Use an RSA key (RS384)."
+                "PKCS#8 key wraps an EC key: unsupported. Use an RSA key (RS384)."
             )
         # privateKey OCTET STRING wraps the PKCS#1 RSAPrivateKey.
         tag, inner, _ = _der_read_tlv(outer, idx)

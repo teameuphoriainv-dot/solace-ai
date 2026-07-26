@@ -104,7 +104,7 @@ def require(
             source_ip=source_ip, status_code=401,
         )
         raise HTTPException(
-            status_code=401, detail="intake token required — please re-scan the QR code"
+            status_code=401, detail="intake token required: please re-scan the QR code"
         )
 
     try:
@@ -139,7 +139,7 @@ def require(
             extra={"token_prefix": token[:8]},
         )
         raise HTTPException(
-            status_code=403, detail="intake token expired — please re-scan the QR code"
+            status_code=403, detail="intake token expired: please re-scan the QR code"
         )
 
     fp = _fingerprint(source_ip, user_agent)

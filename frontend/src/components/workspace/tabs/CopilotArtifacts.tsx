@@ -26,7 +26,7 @@ function humanize(key: string): string {
 }
 
 function asText(v: unknown): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   if (typeof v === "object") return JSON.stringify(v);
   return String(v);
 }
@@ -235,7 +235,7 @@ function Differential({ title, ranked = [] }: { title?: string; ranked?: Dx[] })
             >
               <span className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-text-muted">{i + 1}</span>
-                <span className="text-sm font-medium text-ink">{d.diagnosis || "—"}</span>
+                <span className="text-sm font-medium text-ink">{d.diagnosis || "-"}</span>
                 {d.must_not_miss && (
                   <span className="rounded-full bg-error-container px-1.5 py-0.5 text-[10px] font-semibold uppercase text-error">
                     must not miss

@@ -318,7 +318,7 @@ def med_reconciliation_write(
             "subject": {"reference": body.patient_ref},
             "medicationCodeableConcept": {"text": med},
             "dateAsserted": fhir_writer._now_iso(),
-            "note": [{"text": "Reconciled via Solace — confirm before any new prescription."}],
+            "note": [{"text": "Reconciled via Solace: confirm before any new prescription."}],
         }
         try:
             r = fhir_writer.write(resource)

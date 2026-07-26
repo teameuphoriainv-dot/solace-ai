@@ -95,16 +95,16 @@ _STEROID = {"prednisone", "methotrexate"}
 # for audits, QA dashboards, and downstream automation.
 RATIONALE_CODES = {
     "PROTOCOL_MATCH":        "Medication has a standing-order protocol and all conditions are met.",
-    "CONTROLLED_SUBSTANCE":  "Controlled substance — DEA-scheduled, requires prescriber decision.",
-    "ANTICOAGULANT":         "Anticoagulant — narrow therapeutic index, requires prescriber decision.",
-    "ANTIBIOTIC_PER_COURSE": "Antibiotic — each course requires a fresh clinical decision.",
-    "STEROID_IMMUNOSUPP":    "Steroid/immunosuppressant — requires prescriber decision.",
+    "CONTROLLED_SUBSTANCE":  "Controlled substance: DEA-scheduled, requires prescriber decision.",
+    "ANTICOAGULANT":         "Anticoagulant: narrow therapeutic index, requires prescriber decision.",
+    "ANTIBIOTIC_PER_COURSE": "Antibiotic, each course requires a fresh clinical decision.",
+    "STEROID_IMMUNOSUPP":    "Steroid/immunosuppressant: requires prescriber decision.",
     "NO_PROTOCOL":           "No standing-order protocol exists for this medication.",
-    "RECENT_HOSPITALIZATION": "Recent hospitalization — medication regimen may have changed.",
+    "RECENT_HOSPITALIZATION": "Recent hospitalization: medication regimen may have changed.",
     "VISIT_OUT_OF_WINDOW":   "Last visit is older than the protocol's required interval.",
     "VISIT_DATE_UNKNOWN":    "No last-visit date on file; cannot confirm visit window.",
     "LAB_OUT_OF_WINDOW":     "Required monitoring lab is missing or older than 12 months.",
-    "ON_ANTICOAGULANT_FLAG": "Patient is flagged as on an anticoagulant — interaction review needed.",
+    "ON_ANTICOAGULANT_FLAG": "Patient is flagged as on an anticoagulant: interaction review needed.",
 }
 
 
@@ -249,7 +249,7 @@ def triage(
     if recent_hospitalization:
         return _finish(
             "physician_required",
-            "Recent hospitalization — clinician review required.",
+            "Recent hospitalization: clinician review required.",
             ["RECENT_HOSPITALIZATION"],
             "Your provider will review your refill in light of your recent hospital visit.",
         )
@@ -258,7 +258,7 @@ def triage(
     if on_anticoagulant:
         return _finish(
             "physician_required",
-            "Patient is on an anticoagulant — interaction review required before refill.",
+            "Patient is on an anticoagulant: interaction review required before refill.",
             ["ON_ANTICOAGULANT_FLAG"],
             "Your provider needs to review this refill because of another medication "
             "you take. We'll be in touch within 1-2 business days.",

@@ -411,7 +411,7 @@ def _suggest_modifiers(em_code: str | None, cpt_candidates: list[dict[str, Any]]
         mods.append({
             "modifier": "59",
             "attach_to": cpt_codes[1],
-            "reason": "Distinct procedural service — separate site/session/lesion "
+            "reason": "Distinct procedural service: separate site/session/lesion "
                       "from the other procedure(s) billed.",
             "confidence": 0.5,
             "requires": "Document separate anatomic site, session, or lesion; "

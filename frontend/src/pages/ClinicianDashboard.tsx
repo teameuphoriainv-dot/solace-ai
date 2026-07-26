@@ -399,7 +399,7 @@ export default function ClinicianDashboard() {
                 <div className="-mt-2 text-sm text-error font-medium">{pinError}</div>
               )}
               <div className="-mt-1 rounded-md bg-surface-low ring-1 ring-line px-3 py-2 text-[11px] text-text-muted leading-relaxed">
-                <span className="font-semibold text-ink">Demo access</span> — Dr. Chen 224466 ·
+                <span className="font-semibold text-ink">Demo access</span>: Dr. Chen 224466 ·
                 Dr. Patel 113355 · Dr. Kim 667788
               </div>
               <Button
@@ -679,7 +679,7 @@ export default function ClinicianDashboard() {
 
 /** Compact human-readable wait for the stat strip: 100 → "1h 40m", 45 → "45m". */
 function formatWaitShort(mins: number): string {
-  if (!mins || mins <= 0) return "—";
+  if (!mins || mins <= 0) return "-";
   if (mins < 60) return `${mins}m`;
   const h = Math.floor(mins / 60);
   const m = mins % 60;

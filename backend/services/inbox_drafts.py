@@ -231,7 +231,7 @@ def _build_send_envelope(
         "signature": f"Your care team at {hospital_name}",
         "auto_send_eligible": False,              # immutable: clinician must send
         "auto_send_block_reason": (
-            "FDA human-in-the-loop carve-out — a licensed clinician must review "
+            "FDA human-in-the-loop carve-out, a licensed clinician must review "
             "and send all patient-facing clinical communication."
         ),
         "delivery_urgency": urgency,
@@ -272,7 +272,7 @@ def draft_reply(
 
     if not claude.available():
         out: dict[str, Any] = {
-            "draft": "(AI not configured — please reply manually)",
+            "draft": "(AI not configured: please reply manually)",
             "tone": "matter-of-fact",
             "urgency": rule_floor,
             "suggested_action": "escalate_now" if rf else "send_after_review",
@@ -297,7 +297,7 @@ def draft_reply(
             out = json.loads(text)
         except Exception as e:
             log.warning("inbox draft failed: %s", e)
-            out = {"draft": "(draft failed — please reply manually)", "tone": "matter-of-fact"}
+            out = {"draft": "(draft failed: please reply manually)", "tone": "matter-of-fact"}
 
     # ---- Apply rule-based floors the model cannot override ----------------------
     out["red_flags"] = rf

@@ -41,8 +41,8 @@ export type EhrConfig = {
   sandbox: boolean;
   status: string; // "active" | "disabled"
   confidential_client: boolean;
-  client_secret_ref: string; // Secrets Manager name — never a value
-  private_key_ref: string; // Secrets Manager name — never a PEM
+  client_secret_ref: string; // Secrets Manager name: never a value
+  private_key_ref: string; // Secrets Manager name: never a PEM
   kid: string;
   created_at?: string | null;
   created_by?: string | null;

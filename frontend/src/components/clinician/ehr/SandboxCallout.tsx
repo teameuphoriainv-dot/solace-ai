@@ -19,7 +19,7 @@ export default function SandboxCallout({ onConnect }: { onConnect: () => void })
             Try it now with the SMART Health IT sandbox
           </div>
           <p className="text-xs text-text-muted mt-0.5">
-            No credentials needed — a public R4 sandbox with synthetic patients. Run the full
+            No credentials needed, a public R4 sandbox with synthetic patients. Run the full
             SMART on FHIR launch and come back connected.
           </p>
         </div>

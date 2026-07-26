@@ -170,18 +170,18 @@ def _infer_citation_id(url: str) -> str:
 # --------------------------------------------------------------------------- #
 _SEED_CORPUS: list[EvidenceSnippet] = [
     EvidenceSnippet(
-        title="2023 ACC/AHA Chest Pain Guideline — initial evaluation",
+        title="2023 ACC/AHA Chest Pain Guideline: initial evaluation",
         body="In adults presenting with acute chest pain, obtain a 12-lead ECG within 10 minutes. "
              "Use a clinical risk score (HEART, EDACS, or TIMI) plus high-sensitivity troponin to "
              "stratify ACS risk. Patients with HEART score 0-3 and two negative hs-troponins are "
              "low risk and can be discharged with outpatient follow-up.",
-        source="J Am Coll Cardiol — Gulati et al.", year=2023,
+        source="J Am Coll Cardiol: Gulati et al.", year=2023,
         url="https://www.jacc.org/doi/10.1016/j.jacc.2021.07.053",
         tags=["chest pain", "acs", "heart score", "troponin"],
         citation_id="DOI:10.1016/j.jacc.2021.07.053", license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="USPSTF screening — colorectal cancer (2021 update)",
+        title="USPSTF screening: colorectal cancer (2021 update)",
         body="USPSTF recommends colorectal cancer screening starting at age 45 for average-risk "
              "adults. Acceptable modalities: colonoscopy every 10 years, FIT annually, FIT-DNA "
              "every 1-3 years, flexible sigmoidoscopy every 5 years, or CT colonography every 5 years.",
@@ -191,7 +191,7 @@ _SEED_CORPUS: list[EvidenceSnippet] = [
         license="public-domain",
     ),
     EvidenceSnippet(
-        title="USPSTF — breast cancer screening (2024)",
+        title="USPSTF: breast cancer screening (2024)",
         body="USPSTF recommends biennial screening mammography for women aged 40 to 74. Women "
              "with dense breasts may benefit from supplemental imaging; this is an individualized "
              "discussion. Screening should continue until life expectancy is less than 10 years.",
@@ -201,58 +201,58 @@ _SEED_CORPUS: list[EvidenceSnippet] = [
         license="public-domain",
     ),
     EvidenceSnippet(
-        title="2024 ADA standards — diabetes management",
+        title="2024 ADA standards: diabetes management",
         body="In adults with type 2 diabetes and established CVD, use SGLT2 inhibitors or GLP-1 "
              "receptor agonists with proven CV benefit independent of A1c. A1c target is "
              "individualized; <7% for most, <6.5% if achievable safely, 7.5-8% in elderly with "
              "limited life expectancy. Annual eye, foot, kidney, and depression screening.",
-        source="Diabetes Care — ADA", year=2024,
+        source="Diabetes Care: ADA", year=2024,
         url="https://diabetesjournals.org/care/issue/47/Supplement_1",
         tags=["diabetes", "a1c", "sglt2", "glp-1", "screening"],
         license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="2017 ACC/AHA — hypertension management",
+        title="2017 ACC/AHA: hypertension management",
         body="BP target <130/80 in adults with confirmed HTN. First-line agents: thiazide-type "
              "diuretic, CCB, ACE-I, or ARB (alone or in combination). Avoid combining ACE-I "
              "with ARB. In Black adults without CKD or HF, prefer thiazide or CCB as first-line.",
-        source="J Am Coll Cardiol — Whelton et al.", year=2017,
+        source="J Am Coll Cardiol: Whelton et al.", year=2017,
         url="https://www.jacc.org/doi/10.1016/j.jacc.2017.11.006",
         tags=["hypertension", "htn", "blood pressure", "ace", "arb", "thiazide"],
         citation_id="DOI:10.1016/j.jacc.2017.11.006", license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="Surviving Sepsis Campaign 2021 — adult sepsis bundle",
+        title="Surviving Sepsis Campaign 2021: adult sepsis bundle",
         body="Hour-1 bundle: lactate, blood cultures before antibiotics, broad-spectrum "
              "antibiotics, 30 mL/kg crystalloid for hypotension or lactate >=4 mmol/L, "
              "vasopressors for MAP <65 after fluids. Reassess lactate q2-4h.",
-        source="Crit Care Med — Evans et al.", year=2021,
+        source="Crit Care Med: Evans et al.", year=2021,
         url="https://journals.lww.com/ccmjournal/Abstract/2021/11000/Surviving_Sepsis_Campaign__International.21.aspx",
         tags=["sepsis", "lactate", "antibiotics", "fluids"],
         license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="IDSA — uncomplicated cystitis in women",
+        title="IDSA: uncomplicated cystitis in women",
         body="First-line for uncomplicated cystitis: nitrofurantoin 100 mg PO BID x 5 days, "
              "TMP-SMX DS BID x 3 days (if local resistance <20%), or fosfomycin 3 g x1 single "
              "dose. Avoid fluoroquinolones for uncomplicated UTI.",
-        source="Clin Infect Dis — IDSA Gupta et al.", year=2011,
+        source="Clin Infect Dis: IDSA Gupta et al.", year=2011,
         url="https://academic.oup.com/cid/article/52/5/e103/388286",
         tags=["uti", "cystitis", "nitrofurantoin", "tmp-smx", "fosfomycin"],
         citation_id="DOI:10.1093/cid/ciq257", license="open-access",
     ),
     EvidenceSnippet(
-        title="CHEST — ACCP DVT/PE management guideline",
+        title="CHEST: ACCP DVT/PE management guideline",
         body="For confirmed proximal DVT or PE, anticoagulation with apixaban, rivaroxaban, "
              "edoxaban, or dabigatran is preferred over warfarin in patients without cancer or "
              "renal/hepatic disease. Treat 3 months minimum; extend if unprovoked or persistent risk.",
-        source="CHEST — Stevens et al.", year=2021,
+        source="CHEST: Stevens et al.", year=2021,
         url="https://journal.chestnet.org/article/S0012-3692(21)01506-3/fulltext",
         tags=["dvt", "pe", "vte", "anticoagulation", "doac", "apixaban"],
         license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="USPSTF — depression screening",
+        title="USPSTF: depression screening",
         body="Screen all adults for depression; staff-assisted depression-care supports must be "
              "in place. PHQ-2 then PHQ-9 is a common workflow. Treat or refer for psychotherapy "
              "and/or pharmacotherapy when indicated.",
@@ -262,17 +262,17 @@ _SEED_CORPUS: list[EvidenceSnippet] = [
         license="public-domain",
     ),
     EvidenceSnippet(
-        title="ACOG — postpartum hypertension",
+        title="ACOG: postpartum hypertension",
         body="Postpartum BP >=160/110 mmHg or signs of severe features warrant urgent treatment "
              "with labetalol, hydralazine, or oral nifedipine. Continue surveillance for at least "
              "72 hours postpartum and follow-up within 7-10 days.",
-        source="Obstet Gynecol — ACOG", year=2020,
+        source="Obstet Gynecol: ACOG", year=2020,
         url="https://www.acog.org/clinical/clinical-guidance/practice-bulletin/articles/2020/06/gestational-hypertension-and-preeclampsia",
         tags=["postpartum", "hypertension", "preeclampsia", "labetalol"],
         license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="2023 GINA — asthma management",
+        title="2023 GINA: asthma management",
         body="Track 1 (preferred): low-dose ICS-formoterol as both maintenance and reliever (MART "
              "regimen). Step up by symptoms and lung function. Avoid SABA-only therapy. Confirm "
              "diagnosis with spirometry and bronchodilator response.",
@@ -282,7 +282,7 @@ _SEED_CORPUS: list[EvidenceSnippet] = [
         license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="2023 GOLD — COPD management",
+        title="2023 GOLD: COPD management",
         body="Initial therapy guided by symptom (mMRC, CAT) and exacerbation risk. LAMA or "
              "LABA monotherapy for low-risk; LABA+LAMA combination for higher-risk; add ICS only "
              "if frequent exacerbations or eosinophils >=300.",
@@ -292,17 +292,17 @@ _SEED_CORPUS: list[EvidenceSnippet] = [
         license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="AHA stroke guideline — tPA window",
+        title="AHA stroke guideline: tPA window",
         body="Alteplase 0.9 mg/kg IV (max 90 mg) within 4.5 hours of last-known-well in eligible "
              "ischemic stroke. Endovascular thrombectomy up to 24 hours in select large-vessel "
              "occlusions with favorable imaging.",
-        source="Stroke — Powers et al.", year=2019,
+        source="Stroke: Powers et al.", year=2019,
         url="https://www.ahajournals.org/doi/10.1161/STR.0000000000000211",
         tags=["stroke", "tpa", "alteplase", "thrombectomy"],
         citation_id="DOI:10.1161/STR.0000000000000211", license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="CDC — adult immunization schedule",
+        title="CDC: adult immunization schedule",
         body="Annual influenza for all adults; Tdap or Td every 10 years (one Tdap if not "
              "previously); zoster (Shingrix) two-dose at age 50+; pneumococcal (PCV20 or PCV15+PPSV23) "
              "at age 65+ or earlier with risk; HPV through age 26, shared decision 27-45.",
@@ -316,13 +316,13 @@ _SEED_CORPUS: list[EvidenceSnippet] = [
         body="In non-valvular Afib, calculate CHA2DS2-VASc; anticoagulate at 2+ in men or 3+ "
              "in women (or 1+ at clinician discretion). DOAC preferred over warfarin except in "
              "moderate-severe mitral stenosis or mechanical valve. Rate or rhythm control is reasonable.",
-        source="J Am Coll Cardiol — Joglar et al.", year=2024,
+        source="J Am Coll Cardiol: Joglar et al.", year=2024,
         url="https://www.jacc.org/doi/10.1016/j.jacc.2023.08.017",
         tags=["afib", "atrial fibrillation", "anticoagulation", "cha2ds2", "doac"],
         citation_id="DOI:10.1016/j.jacc.2023.08.017", license="guideline-fair-use",
     ),
     EvidenceSnippet(
-        title="USPSTF — lung cancer screening",
+        title="USPSTF: lung cancer screening",
         body="Annual low-dose CT for adults age 50-80 with 20+ pack-year smoking history who "
              "currently smoke or quit within past 15 years. Stop screening if life expectancy <10 "
              "years or willing/able to undergo curative lung surgery.",
@@ -391,7 +391,7 @@ def _corpus() -> tuple[EvidenceSnippet, ...]:
             continue
         seen.add(key)
         deduped.append(s)
-    log.info("evidence_rag: corpus ready — %d snippets (seed=%d)", len(deduped), len(_SEED_CORPUS))
+    log.info("evidence_rag: corpus ready: %d snippets (seed=%d)", len(deduped), len(_SEED_CORPUS))
     return tuple(deduped)
 
 
@@ -493,7 +493,7 @@ def _dense_index() -> Any:
             token_pattern=r"(?u)\b[a-z0-9][a-z0-9-]+\b",
         )
         matrix = vec.fit_transform(docs)
-        log.info("evidence_rag: dense TF-IDF index built — %s", matrix.shape)
+        log.info("evidence_rag: dense TF-IDF index built: %s", matrix.shape)
         return (vec, matrix)
     except Exception as e:  # noqa: BLE001
         log.warning("evidence_rag: dense index build failed, falling back to BM25: %s", e)

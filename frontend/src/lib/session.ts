@@ -89,7 +89,7 @@ export function hasStoredSession(): boolean {
  */
 export type SessionExpiredListener = (reason: string) => void;
 
-export const SESSION_EXPIRED_MESSAGE = "Session expired — please sign in again.";
+export const SESSION_EXPIRED_MESSAGE = "Session expired: please sign in again.";
 
 const _expiredListeners = new Set<SessionExpiredListener>();
 

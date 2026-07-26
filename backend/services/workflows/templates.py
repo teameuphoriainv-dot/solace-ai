@@ -32,7 +32,7 @@ TEMPLATES: list[dict] = [
     {
         "id": "high_acuity_slack_ping",
         "label": "Slack the on-call when ESI 1-2 arrives",
-        "description": "Posts to a Slack channel whenever a high-acuity patient checks in — keeps the attending in the loop.",
+        "description": "Posts to a Slack channel whenever a high-acuity patient checks in: keeps the attending in the loop.",
         "trigger": "patient.checked_in",
         "filters": {"patient.esi_level_lte": 2},
         "steps": [
@@ -60,7 +60,7 @@ TEMPLATES: list[dict] = [
                 "config": {
                     "webhook_url": "",
                     "text": (
-                        ":bell: Pain alarm: {{patient.name}} (ESI {{patient.esi_level}}) — "
+                        ":bell: Pain alarm: {{patient.name}} (ESI {{patient.esi_level}}), "
                         "{{patient.waited_minutes}}m wait. Acknowledge on the dashboard."
                     ),
                 },
@@ -72,7 +72,7 @@ TEMPLATES: list[dict] = [
         "label": "Notify Slack when appointment is booked",
         "description": (
             "Posts a Slack message when a patient books a slot online. "
-            "Note: appointment confirmation SMS is sent directly by the booking endpoint — "
+            "Note: appointment confirmation SMS is sent directly by the booking endpoint: "
             "the workflow context does not include the raw phone number (it is hashed per "
             "HIPAA §164.514 before storage). Use a Slack or webhook step here instead."
         ),
@@ -84,8 +84,8 @@ TEMPLATES: list[dict] = [
                 "config": {
                     "channel": "#appointments",
                     "message": (
-                        "New appointment: {{appointment.patient_name}} — "
-                        "{{appointment.slot_iso}} — {{appointment.reason_short}}. "
+                        "New appointment: {{appointment.patient_name}}, "
+                        "{{appointment.slot_iso}}, {{appointment.reason_short}}. "
                         "Confirmation: {{appointment.confirmation_code}}."
                     ),
                 },
@@ -164,7 +164,7 @@ TEMPLATES: list[dict] = [
                 "if": {"result.flag": "critical-high"},
                 "config": {
                     "resource": "flag",
-                    "value": "Critical {{result.test_name}} = {{result.value_numeric}} {{result.unit}} — clinician review required.",
+                    "value": "Critical {{result.test_name}} = {{result.value_numeric}} {{result.unit}}: clinician review required.",
                 },
             },
         ],

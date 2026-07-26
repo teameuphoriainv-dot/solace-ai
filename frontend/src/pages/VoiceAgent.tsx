@@ -22,7 +22,7 @@ type Message = {
   escalate?: "human" | "911" | null;
 };
 
-const HOSPITAL_PHONE = "+1 (512) 555-0177"; // demo number — flip when Twilio is provisioned
+const HOSPITAL_PHONE = "+1 (512) 555-0177"; // demo number: flip when Twilio is provisioned
 const HOSPITAL_ID = "demo";
 
 export default function VoiceAgent() {
@@ -155,10 +155,10 @@ export default function VoiceAgent() {
             </div>
             <h1 className="text-4xl sm:text-5xl font-bold tracking-editorial-tight leading-[1.05]">
               Patients dial in.<br />
-              Solace answers — <span className="text-primary">in their language</span>.
+              Solace answers - <span className="text-primary">in their language</span>.
             </h1>
             <p className="mt-5 text-lg text-text-muted leading-relaxed max-w-xl">
-              The same Whisper + Claude + ElevenLabs stack that powers waiting-room intake now answers your main line. Triage, scheduling, FAQ, escalation — all 24/7, in 10+ languages, with a real clinician one warm-transfer away.
+              The same Whisper + Claude + ElevenLabs stack that powers waiting-room intake now answers your main line. Triage, scheduling, FAQ, escalation, all 24/7, in 10+ languages, with a real clinician one warm-transfer away.
             </p>
 
             <div className="mt-8 bg-surface-lowest rounded-xl shadow-card p-6 flex flex-col gap-4">
@@ -186,7 +186,7 @@ export default function VoiceAgent() {
               <Stat icon={Globe2}     label="Languages"   value="10+ live" />
               <Stat icon={ShieldCheck} label="Compliance"  value="HIPAA · BAA-pending" />
               <Stat icon={Sparkles}    label="Same brain"  value="Whisper · Claude · ElevenLabs" />
-              <Stat icon={Volume2}     label="Cost per call" value="~$0.05–0.10" />
+              <Stat icon={Volume2}     label="Cost per call" value="~$0.05 to 0.10" />
             </div>
           </div>
 
@@ -214,7 +214,7 @@ export default function VoiceAgent() {
             <Step n={1} title="Caller dials in"          body="Twilio routes the call by dialed-number → hospital_id." Icon={PhoneCall} />
             <Step n={2} title="Agent listens"            body="Twilio <Record> → S3 → Whisper STT in the caller's language." Icon={Mic} />
             <Step n={3} title="Claude reasons"           body="Tool-using Claude picks: triage, book, FAQ, transfer, or 911." Icon={Sparkles} />
-            <Step n={4} title="ElevenLabs speaks back"  body="Cached MP3 in S3 — repeat phrases cost $0 after first run." Icon={Volume2} />
+            <Step n={4} title="ElevenLabs speaks back"  body="Cached MP3 in S3: repeat phrases cost $0 after first run." Icon={Volume2} />
           </div>
         </section>
 
@@ -236,7 +236,7 @@ export default function VoiceAgent() {
           />
           <Capability
             title="Emergency-aware"
-            body={`Hard-coded triggers ("chest pain", "stroke", "can't breathe", "overdose") bypass Claude entirely — the agent says "dial 911" instantly and warm-transfers to a clinician.`}
+            body={`Hard-coded triggers ("chest pain", "stroke", "can't breathe", "overdose") bypass Claude entirely, the agent says "dial 911" instantly and warm-transfers to a clinician.`}
             Icon={AlertOctagon}
           />
         </section>
@@ -244,11 +244,11 @@ export default function VoiceAgent() {
         <section className="mt-12 bg-surface-lowest rounded-xl p-6 shadow-card">
           <h3 className="text-lg font-bold tracking-editorial mb-3">Cost engineering</h3>
           <ul className="text-[14px] leading-relaxed text-ink space-y-2">
-            <li><span className="font-semibold">Same Lambda</span> — no Fargate, no WebSocket. Twilio <span className="font-mono">&lt;Record&gt;</span> pattern keeps the agent on the existing arm64 container.</li>
-            <li><span className="font-semibold">TTS cache by hash</span> — every phrase the agent speaks gets stored in S3 keyed on <span className="font-mono">sha256(voice + lang + text)</span>. Greetings, "anything else?", FAQ canned answers cost $0 after the first generation.</li>
+            <li><span className="font-semibold">Same Lambda</span>: no Fargate, no WebSocket. Twilio <span className="font-mono">&lt;Record&gt;</span> pattern keeps the agent on the existing arm64 container.</li>
+            <li><span className="font-semibold">TTS cache by hash</span>: every phrase the agent speaks gets stored in S3 keyed on <span className="font-mono">sha256(voice + lang + text)</span>. Greetings, "anything else?", FAQ canned answers cost $0 after the first generation.</li>
             <li><span className="font-semibold">Twilio voice</span> $0.0085/min in + $1/mo per number. Whisper $0.006/min. Claude Sonnet ~$0.005-0.015/turn. ElevenLabs cached.</li>
-            <li><span className="font-semibold">PAY_PER_REQUEST DynamoDB</span> — zero idle cost between calls. 90-day TTL on call rows, 30-day on appointments.</li>
-            <li><span className="font-semibold">Per-call envelope</span> roughly <span className="font-mono">$0.05 + $0.015 × minutes</span> — a 4-min call is under nine cents, all-in.</li>
+            <li><span className="font-semibold">PAY_PER_REQUEST DynamoDB</span>: zero idle cost between calls. 90-day TTL on call rows, 30-day on appointments.</li>
+            <li><span className="font-semibold">Per-call envelope</span> roughly <span className="font-mono">$0.05 + $0.015 × minutes</span>: a 4-min call is under nine cents, all-in.</li>
           </ul>
         </section>
       </main>

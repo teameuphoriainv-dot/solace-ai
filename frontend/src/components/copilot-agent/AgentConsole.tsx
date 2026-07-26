@@ -136,7 +136,7 @@ export default function AgentConsole() {
                 <Activity className="h-4 w-4" aria-hidden />
                 <p>Waiting for activity</p>
                 <p className="text-slate-700">
-                  Ask the agent something — every FHIR read, reasoning round
+                  Ask the agent something, every FHIR read, reasoning round
                   and proposed write appears here.
                 </p>
               </div>

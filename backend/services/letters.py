@@ -52,7 +52,7 @@ CATEGORIES: dict[str, str] = {
 TEMPLATES: dict[str, dict[str, Any]] = {
     # ---- Leave & FMLA certification ------------------------------------------------
     "fmla_who_certifies_health_provider": {
-        "name": "FMLA WH-380-E (Health Care Provider Certification — Employee)",
+        "name": "FMLA WH-380-E (Health Care Provider Certification: Employee)",
         "audience": "Employer / DOL",
         "category": "leave_certification",
         "slots": [
@@ -85,7 +85,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         ),
     },
     "fmla_who_certifies_family_member": {
-        "name": "FMLA WH-380-F (Health Care Provider Certification — Family Member)",
+        "name": "FMLA WH-380-F (Health Care Provider Certification: Family Member)",
         "audience": "Employer / DOL",
         "category": "leave_certification",
         "slots": [
@@ -185,7 +185,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         ],
         "required": ["patient_name", "absence_dates", "return_date", "provider_name"],
         "guidance": (
-            "Brief excuse note for an employer. Do not disclose a diagnosis — the "
+            "Brief excuse note for an employer. Do not disclose a diagnosis, the "
             "employer is not entitled to it. restrictions defaults to 'none'."
         ),
         "body": (
@@ -323,7 +323,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         ),
         "body": (
             "{today}\n\n"
-            "Return-to-Play — Concussion Protocol\n\n"
+            "Return-to-Play: Concussion Protocol\n\n"
             "Patient: {patient_name}   DOB: {patient_dob}\n"
             "Date of injury: {injury_date}\n\n"
             "Current graduated step: {current_step}\n"
@@ -446,7 +446,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "guidance": (
             "Standard outbound referral. specific_question states exactly what the "
             "referring provider wants answered. Include only history/meds/labs "
-            "relevant to the referral question — not the whole chart."
+            "relevant to the referral question, not the whole chart."
         ),
         "body": (
             "{today}\n\n"
@@ -575,13 +575,13 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "guidance": (
             "Supports a request for reasonable accommodations under the ADA or "
             "Section 504. Describe the functional_limitation and the "
-            "recommended_accommodations; do not demand specific outcomes — the "
+            "recommended_accommodations; do not demand specific outcomes, the "
             "employer/school determines feasibility through the interactive process. "
             "setting is 'workplace' or 'school'."
         ),
         "body": (
             "{today}\n\n"
-            "Re: Reasonable Accommodation Support — {patient_name}\n"
+            "Re: Reasonable Accommodation Support for {patient_name}\n"
             "DOB: {patient_dob}\n\n"
             "{patient_name} is under my care and has a medical condition that "
             "produces the following functional limitation in the {setting} setting:\n"
@@ -637,7 +637,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         ),
         "body": (
             "{today}\n\n"
-            "Re: Fitness to Travel — {patient_name}\n"
+            "Re: Fitness to Travel for {patient_name}\n"
             "DOB: {patient_dob}\n\n"
             "Travel dates: {travel_dates}   Destination: {destination}\n\n"
             "Current clinical status: {clinical_status}\n\n"

@@ -136,19 +136,19 @@ function CopilotDemo() {
 }
 
 const features = [
-  { Icon: Search, title: "Reads the whole chart", desc: "Problems, meds, allergies, labs, and history — grounded answers with the source shown, never a guess." },
-  { Icon: FilePen, title: "Drafts coded orders", desc: "Plain English in, LOINC/RxNorm-coded FHIR drafts out — ServiceRequests, MedicationRequests, Conditions, and more." },
+  { Icon: Search, title: "Reads the whole chart", desc: "Problems, meds, allergies, labs, and history: grounded answers with the source shown, never a guess." },
+  { Icon: FilePen, title: "Drafts coded orders", desc: "Plain English in, LOINC/RxNorm-coded FHIR drafts out: ServiceRequests, MedicationRequests, Conditions, and more." },
   { Icon: ClipboardCheck, title: "Confirm-gated writes", desc: "Every write is proposed, narrated, and held until you confirm. Zero autonomous chart mutations, by architecture." },
-  { Icon: EyeOff, title: "PHI-isolated reasoning", desc: "The model plans over coded metadata and slot tokens — raw names, MRNs, and notes never enter the prompt. CI-enforced." },
-  { Icon: TerminalSquare, title: "Shows its work", desc: "A live console streams every chart read, reasoning round, and proposed write with real latencies — trust through transparency." },
-  { Icon: Workflow, title: "Catches what's missed", desc: "Care-gap scans, interaction checks, and follow-up suggestions — proactively, across the patients you're carrying." },
+  { Icon: EyeOff, title: "PHI-isolated reasoning", desc: "The model plans over coded metadata and slot tokens: raw names, MRNs, and notes never enter the prompt. CI-enforced." },
+  { Icon: TerminalSquare, title: "Shows its work", desc: "A live console streams every chart read, reasoning round, and proposed write with real latencies: trust through transparency." },
+  { Icon: Workflow, title: "Catches what's missed", desc: "Care-gap scans, interaction checks, and follow-up suggestions: proactively, across the patients you're carrying." },
 ];
 
 const faqs = [
   { q: "Can the copilot change the chart on its own?", a: "No. It can only propose. Writes execute exclusively after explicit clinician confirmation, and every action is individually audited." },
-  { q: "What does the model actually see?", a: "Coded, de-identified data — diagnoses, codes, values, age bands. Names, MRNs, free-text notes, and contact details are stripped before any prompt, enforced by an automated test gate." },
+  { q: "What does the model actually see?", a: "Coded, de-identified data: diagnoses, codes, values, age bands. Names, MRNs, free-text notes, and contact details are stripped before any prompt, enforced by an automated test gate." },
   { q: "Which EHRs does it work with?", a: "Any SMART on FHIR R4 EHR. Solace ships adapters for Epic, Oracle Health, and athenahealth, plus the SMART sandbox for evaluation." },
-  { q: "How is this different from an ambient scribe?", a: "Scribes document what happened. The copilot acts — it reads, reasons, and drafts orders and chart updates you can commit in one click." },
+  { q: "How is this different from an ambient scribe?", a: "Scribes document what happened. The copilot acts: it reads, reasons, and drafts orders and chart updates you can commit in one click." },
 ];
 
 export default function CopilotPage() {
@@ -156,7 +156,7 @@ export default function CopilotPage() {
     <MarketingLayout>
       <MarketingHero
         eyebrow="EHR Copilot"
-        title="Say the order. Solace drafts it — you confirm."
+        title="Say the order. Solace drafts it: you confirm."
         sub="An agentic copilot that reads the chart, reasons over coded data only, and never touches the record without your explicit confirmation."
         primaryCta={{ to: "/get-started", label: "Get started" }}
         secondaryCta={{ to: "/contact", label: "Book a demo" }}

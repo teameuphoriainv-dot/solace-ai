@@ -120,14 +120,14 @@ def _confidence(
     with known staffing is the high-confidence case.
     """
     if providers_on_shift is None:
-        return "moderate", "Staffing level not reported — estimate uses a baseline."
+        return "moderate", "Staffing level not reported: estimate uses a baseline."
     if ahead_count >= 12:
         return "low", "A large queue makes the wait harder to predict."
     if staffing_factor >= 1.5:
         return "low", "Reduced staffing widens the uncertainty band."
     if ahead_count <= 4:
-        return "high", "Short queue with known staffing — estimate is reliable."
-    return "moderate", "Typical queue depth — estimate within a normal band."
+        return "high", "Short queue with known staffing: estimate is reliable."
+    return "moderate", "Typical queue depth: estimate within a normal band."
 
 
 def format_range(minutes: int) -> str:

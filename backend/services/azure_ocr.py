@@ -53,7 +53,7 @@ def read_text(document_bytes: bytes, mime_type: str) -> str:
     """OCR a document/image and return its full extracted text."""
     if not configured():
         raise AzureOcrNotConfigured(
-            "Azure Document Intelligence is not configured — set "
+            "Azure Document Intelligence is not configured: set "
             "AZURE_DI_ENDPOINT and AZURE_DI_KEY."
         )
     submit_url = (

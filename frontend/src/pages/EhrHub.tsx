@@ -192,7 +192,7 @@ export default function EhrHub() {
       <main className="max-w-5xl mx-auto p-4 flex flex-col gap-5">
         <p className="text-sm text-text-muted -mb-1">
           Sign in through your EHR with SMART on FHIR, and bind each workspace to its own
-          vendor connection — sandbox or production, public or confidential client.
+          vendor connection: sandbox or production, public or confidential client.
         </p>
 
         {/* Sandbox callout ------------------------------------------------- */}
@@ -298,7 +298,7 @@ export default function EhrHub() {
                       {c.confidential_client && (
                         <span
                           className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-surface-low ring-1 ring-line text-text-muted"
-                          title="Confidential client — secret held in AWS Secrets Manager"
+                          title="Confidential client: secret held in AWS Secrets Manager"
                         >
                           <KeyRound className="w-3 h-3" aria-hidden />
                           Confidential

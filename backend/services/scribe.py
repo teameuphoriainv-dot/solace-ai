@@ -50,10 +50,10 @@ Rules:
 # Specialty-aware emphasis appended to the system prompt. Keeps the same plain-text
 # SOAP shape but steers which fields the scribe foregrounds.
 _SPECIALTY_GUIDANCE: dict[str, str] = {
-    "emergency": "Specialty lens: Emergency Medicine — foreground acuity and the must-not-miss differential in the assessment.",
-    "primary_care": "Specialty lens: Primary Care — foreground chronic-disease context and medication reconciliation.",
-    "cardiology": "Specialty lens: Cardiology — capture cardiac risk factors and exertional symptoms; assessment notes cardiac differential.",
-    "pediatrics": "Specialty lens: Pediatrics — note caregiver-reported history and weight/age context.",
+    "emergency": "Specialty lens: Emergency Medicine: foreground acuity and the must-not-miss differential in the assessment.",
+    "primary_care": "Specialty lens: Primary Care: foreground chronic-disease context and medication reconciliation.",
+    "cardiology": "Specialty lens: Cardiology: capture cardiac risk factors and exertional symptoms; assessment notes cardiac differential.",
+    "pediatrics": "Specialty lens: Pediatrics: note caregiver-reported history and weight/age context.",
 }
 
 _SPECIALTY_ALIASES = {

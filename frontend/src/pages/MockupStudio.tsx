@@ -50,12 +50,12 @@ type Anno = {
 // exact live element.
 const DEFAULT_ANNOS: Anno[] = [
   // Patient iPhone — the three-beat patient story.
-  { id: "p1", device: "phone", label: "Adaptive intake form — asks only what's relevant", lx: 0.5, ly: 22, tx: 36, ty: 25, on: true },
+  { id: "p1", device: "phone", label: "Adaptive intake form: asks only what's relevant", lx: 0.5, ly: 22, tx: 36, ty: 25, on: true },
   { id: "p2", device: "phone", label: "Scan ID + insurance → EHR auto-populates these fields", lx: 73, ly: 42, tx: 64, ty: 44, on: true },
   { id: "p3", device: "phone", label: "Feeds the ESI triage engine in seconds", lx: 0.5, ly: 80, tx: 42, ty: 82, on: true },
   // Clinician desktop.
   { id: "d1", device: "desktop", label: "Live triage queue, ESI-sorted", lx: 0.5, ly: 30, tx: 22, ty: 38, on: true },
-  { id: "d2", device: "desktop", label: "ESI acuity badge (1–5)", lx: 0.5, ly: 58, tx: 22, ty: 50, on: true },
+  { id: "d2", device: "desktop", label: "ESI acuity badge (1 to 5)", lx: 0.5, ly: 58, tx: 22, ty: 50, on: true },
   { id: "d3", device: "desktop", label: "AI pre-brief & scribe note", lx: 80, ly: 26, tx: 64, ty: 40, on: true },
   { id: "d4", device: "desktop", label: "SHAP-backed vitals refinement", lx: 80, ly: 52, tx: 66, ty: 54, on: true },
   { id: "d5", device: "desktop", label: "One-click disposition & Rx", lx: 80, ly: 78, tx: 70, ty: 70, on: true },

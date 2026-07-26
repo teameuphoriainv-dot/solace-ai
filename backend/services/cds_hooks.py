@@ -76,7 +76,7 @@ def discovery() -> dict[str, Any]:
             {
                 "hook": "patient-view",
                 "id": _SERVICE_IDS["patient-view"],
-                "title": "Solace patient view — care gaps & red flags",
+                "title": "Solace patient view: care gaps & red flags",
                 "description": (
                     "Surfaces open HEDIS care gaps and must-not-miss red flags "
                     "when a clinician opens a patient's chart."
@@ -89,7 +89,7 @@ def discovery() -> dict[str, Any]:
             {
                 "hook": "order-select",
                 "id": _SERVICE_IDS["order-select"],
-                "title": "Solace order select — interaction check",
+                "title": "Solace order select: interaction check",
                 "description": (
                     "Checks drug-drug, drug-allergy, and renal dosing for the "
                     "order being selected."
@@ -103,7 +103,7 @@ def discovery() -> dict[str, Any]:
             {
                 "hook": "order-sign",
                 "id": _SERVICE_IDS["order-sign"],
-                "title": "Solace order sign — hard-stop safety check",
+                "title": "Solace order sign: hard-stop safety check",
                 "description": (
                     "Final safety check at order signing. Hard-stops a sign-off "
                     "on a high-severity drug-drug or drug-allergy interaction."
@@ -117,7 +117,7 @@ def discovery() -> dict[str, Any]:
             {
                 "hook": "encounter-discharge",
                 "id": _SERVICE_IDS["encounter-discharge"],
-                "title": "Solace encounter discharge — safe-discharge review",
+                "title": "Solace encounter discharge: safe-discharge review",
                 "description": (
                     "Reviews open care gaps and unresolved red flags before an "
                     "encounter is discharged."

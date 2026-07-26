@@ -83,7 +83,7 @@ function WorkspaceHeader({
   ]
     .filter(Boolean)
     .join(" ");
-  const mrn = patient?.patient_id || "—";
+  const mrn = patient?.patient_id || "-";
 
   const onTabKeyDown = (e: React.KeyboardEvent, index: number) => {
     let next = index;
@@ -120,7 +120,7 @@ function WorkspaceHeader({
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-lg font-bold tracking-tight truncate">
-              {patient?.name || (loading ? "Loading…" : error ? "Patient" : "—")}
+              {patient?.name || (loading ? "Loading…" : error ? "Patient" : "-")}
             </h1>
             {ageSex && <span className="text-sm text-text-muted">{ageSex}</span>}
           </div>

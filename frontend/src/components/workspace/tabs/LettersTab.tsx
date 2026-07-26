@@ -332,7 +332,7 @@ export default function LettersTab() {
               <h2 className="text-sm font-semibold">Chart context (auto-built)</h2>
             </div>
             <p className="text-xs text-text-muted mb-2">
-              Pulled straight from {patient.name}&apos;s record — demographics,
+              Pulled straight from {patient.name}&apos;s record: demographics,
               diagnoses, and last-visit summary. No typing required.
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-0.5 text-xs text-text-muted">
@@ -477,7 +477,7 @@ export default function LettersTab() {
             </div>
             <p className="text-xs text-text-muted mb-3">
               A plain-language handout the patient can take home. Pre-filled from
-              this patient&apos;s complaint and diagnosis — adjust if needed.
+              this patient&apos;s complaint and diagnosis: adjust if needed.
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="flex-1">

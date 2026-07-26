@@ -238,7 +238,7 @@ def advance_closure(
     if to_state not in CLOSURE_STATES:
         raise ClosureTransitionError(f"unknown closure state: {to_state!r}")
     if current in _TERMINAL_STATES:
-        raise ClosureTransitionError(f"closure already terminal ({current}) — cannot advance")
+        raise ClosureTransitionError(f"closure already terminal ({current}): cannot advance")
     if to_state not in _TRANSITIONS.get(current, frozenset()):
         raise ClosureTransitionError(f"illegal transition {current} -> {to_state}")
 

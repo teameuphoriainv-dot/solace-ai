@@ -54,7 +54,7 @@ export function ContactForm() {
           "You've reached the submission limit for now. Please try again in a little while, or email us directly."
         );
       } else if (isAxiosError(err) && err.response?.status === 422) {
-        setError("Please check your details — the email address looks invalid or a field is too long.");
+        setError("Please check your details, the email address looks invalid or a field is too long.");
       } else {
         setError("Something went wrong sending your message. Please try again.");
       }
@@ -67,7 +67,7 @@ export function ContactForm() {
     return (
       <div className="card-clean p-8 text-center" role="status">
         <CheckCircle2 size={32} className="mx-auto mb-3 text-primary" aria-hidden />
-        <h3 className="text-lg font-semibold">Thanks — we'll get back to you within one business day.</h3>
+        <h3 className="text-lg font-semibold">Thanks: we'll get back to you within one business day.</h3>
         <p className="mt-2 text-sm text-text-muted">
           Your message is in our queue. For anything urgent, mention it in a follow-up.
         </p>

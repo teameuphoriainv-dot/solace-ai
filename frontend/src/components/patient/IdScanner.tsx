@@ -77,9 +77,9 @@ export function IdScanner({ hospitalId, onMatched, onSkip, language }: Props) {
       const detail: string | undefined = e?.response?.data?.detail;
       setError(
         status === 415
-          ? "Try a JPEG or PNG — your phone's HEIC format isn't supported."
+          ? "Try a JPEG or PNG: your phone's HEIC format isn't supported."
           : status === 413
-          ? "Photo is too large — try a closer crop."
+          ? "Photo is too large: try a closer crop."
           : detail || e?.message || "Couldn't send the photo. Check your connection and retake."
       );
       setStage("capture");
@@ -132,7 +132,7 @@ export function IdScanner({ hospitalId, onMatched, onSkip, language }: Props) {
             onClick={onSkip}
             className="text-sm text-text-muted underline self-center h-10 px-2"
           >
-            Skip — I don't have my ID on me
+            Skip: I don't have my ID on me
           </button>
         </>
       )}

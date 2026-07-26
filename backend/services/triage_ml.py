@@ -338,7 +338,7 @@ def _calibrate(art: dict, alpha: float = conformal.DEFAULT_ALPHA) -> None:
     art["conformal_note"] = (
         "Prediction set uses Mondrian (per-ESI-class) split-conformal calibration "
         f"at {int(round((1 - alpha) * 100))}% coverage. q̂ is calibrated per class on "
-        "a synthetic labeled set — a single global q̂ collapses to a misleading "
+        "a synthetic labeled set, a single global q̂ collapses to a misleading "
         "singleton on this clean synthetic distribution. Recalibrate on real "
         "clinician-confirmed outcomes before relying on the coverage guarantee."
     )

@@ -84,7 +84,7 @@ def _unique_slug(base: str) -> str:
             candidate = f"{trimmed}-{suffix}"
             if candidate not in _RESERVED_SLUGS and not storage.slug_exists(candidate):
                 return candidate
-        raise HTTPException(status_code=409, detail="Could not allocate a unique workspace URL — try a different name.")
+        raise HTTPException(status_code=409, detail="Could not allocate a unique workspace URL: try a different name.")
     return candidate
 
 

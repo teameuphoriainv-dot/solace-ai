@@ -212,7 +212,7 @@ def _validate_no_phi(steps: list[dict], filters: dict | None) -> None:
     if not safe:
         raise HTTPException(
             status_code=422,
-            detail=f"workflow rejected — PHI-leaking step template(s): {findings}",
+            detail=f"workflow rejected: PHI-leaking step template(s): {findings}",
         )
 
 

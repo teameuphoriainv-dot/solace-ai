@@ -211,7 +211,7 @@ export default function ResultClosureTab() {
       const res = await resultsDetectAbnormal(hospitalId, payload);
       setAbnormal(res.abnormal_results);
       if (res.count === 0) {
-        setNotice("No abnormal results detected — nothing to close out.");
+        setNotice("No abnormal results detected: nothing to close out.");
       }
     } catch (e) {
       setBanner(errMessage(e));
@@ -568,7 +568,7 @@ export default function ResultClosureTab() {
                           </span>
                           {h.actor ? ` · ${h.actor}` : ""}
                           {h.at ? ` · ${h.at}` : ""}
-                          {h.note ? ` — ${h.note}` : ""}
+                          {h.note ? ` (${h.note})` : ""}
                         </li>
                       ))}
                     </ol>

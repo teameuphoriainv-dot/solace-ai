@@ -241,7 +241,7 @@ def _load_model() -> Any | None:
         import lightgbm as lgb
         import numpy as np
     except ImportError:
-        log.warning("no_show: lightgbm/numpy not installed — using rule-based fallback")
+        log.warning("no_show: lightgbm/numpy not installed: using rule-based fallback")
         return None
 
     try:
@@ -351,7 +351,7 @@ def predict(
             prob = float(booster.predict(row)[0])
             model_name = "lgbm_synthetic_v1"
         except Exception as e:  # pragma: no cover - defensive
-            log.warning("no_show: model.predict failed (%s) — using rules", e)
+            log.warning("no_show: model.predict failed (%s): using rules", e)
             prob = _rule_based_probability(feats)
             model_name = "rule_based_v1"
     else:
@@ -370,7 +370,7 @@ def predict(
         "synthetic": True,
         "caveat": (
             "Risk score from a model trained on SYNTHETIC scheduling data. "
-            "Real-world calibration will differ — recalibrate on the hospital's "
+            "Real-world calibration will differ: recalibrate on the hospital's "
             "own historical appointments before operational use."
         ),
         "features": feats,

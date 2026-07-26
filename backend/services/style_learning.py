@@ -375,14 +375,14 @@ def style_fragment(clinician_id: str) -> str:
         return ""
 
     profile = style_profile(clinician_id)
-    lines: list[str] = ["[Clinician note-style preferences — apply when drafting]"]
+    lines: list[str] = ["[Clinician note-style preferences: apply when drafting]"]
 
     if profile["verbosity"] == "expands":
         lines.append("- Write thorough, detailed notes; do not over-condense findings.")
     elif profile["verbosity"] == "trims":
         lines.append("- Keep the note concise; omit boilerplate and redundant phrasing.")
     else:
-        lines.append("- Use a balanced level of detail — neither terse nor verbose.")
+        lines.append("- Use a balanced level of detail: neither terse nor verbose.")
 
     if profile["abbreviation_bias"] == "prefers_abbreviations":
         lines.append("- Use standard clinical abbreviations (e.g. SOB, HPI, PE, BP).")
@@ -396,7 +396,7 @@ def style_fragment(clinician_id: str) -> str:
     if profile["most_edited_section"] and profile["most_edited_section"] != "full_note":
         lines.append(
             f"- Take extra care with the '{profile['most_edited_section']}' "
-            "section — it is most often rewritten."
+            "section: it is most often rewritten."
         )
 
     # Surface the clinician's most consistently added phrasing as voice cues.
@@ -410,7 +410,7 @@ def style_fragment(clinician_id: str) -> str:
 
     if not profile["stable"]:
         lines.append(
-            f"- (Preliminary — based on {profile['pair_count']} edits; "
+            f"- (Preliminary: based on {profile['pair_count']} edits; "
             "preferences will sharpen with more notes.)"
         )
 

@@ -74,7 +74,7 @@ def vision_ocr(
     if mime not in ALLOWED_MIME_TYPES:
         raise HTTPException(
             status_code=400,
-            detail=f"unsupported mime_type '{mime}' — allowed: {sorted(ALLOWED_MIME_TYPES)}",
+            detail=f"unsupported mime_type '{mime}': allowed: {sorted(ALLOWED_MIME_TYPES)}",
         )
     data = _decode_image(body.image_base64)
 
@@ -90,7 +90,7 @@ def vision_ocr(
     if not azure_ocr.configured():
         raise HTTPException(
             status_code=503,
-            detail=("Vision OCR is not configured on this deployment — set "
+            detail=("Vision OCR is not configured on this deployment: set "
                     "AZURE_DI_ENDPOINT and AZURE_DI_KEY to enable it."),
         )
     try:

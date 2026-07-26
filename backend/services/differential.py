@@ -282,7 +282,7 @@ def counterfactual_prompts(differential: list[dict[str, Any]]) -> list[dict[str,
             {
                 "question": f"What finding would let me safely rule OUT {must_miss[0]}?",
                 "discriminates": [must_miss[0]],
-                "why": "Don't-miss diagnosis — needs an explicit rule-out, not just a low rank.",
+                "why": "Don't-miss diagnosis: needs an explicit rule-out, not just a low rank.",
             }
         )
     return prompts
@@ -457,7 +457,7 @@ def _merge_red_flags(
                 "diagnosis": rf["diagnosis"],
                 "icd10": rf["icd10"],
                 "weight": 0.05,
-                "supporting": ["red-flag canon match — verify by exam/test"],
+                "supporting": ["red-flag canon match: verify by exam/test"],
                 "refuting": [],
                 "discriminator": "rule out per institutional pathway",
                 "reasoning": (

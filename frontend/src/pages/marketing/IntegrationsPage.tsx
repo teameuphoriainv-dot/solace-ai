@@ -15,17 +15,17 @@ const vendors = [
 ];
 
 const capabilities = [
-  { Icon: KeyRound, title: "SMART on FHIR, v2 scopes", desc: "Standards-based clinician sign-in with PKCE, OIDC nonce validation, and granular v2 resource scopes — minimum-necessary by default." },
-  { Icon: RefreshCcw, title: "Read and write-back", desc: "Patient match, chart reads, and coded write-back — notes as DocumentReference, diagnoses as Condition, acuity as Observation — with provenance attached." },
+  { Icon: KeyRound, title: "SMART on FHIR, v2 scopes", desc: "Standards-based clinician sign-in with PKCE, OIDC nonce validation, and granular v2 resource scopes: minimum-necessary by default." },
+  { Icon: RefreshCcw, title: "Read and write-back", desc: "Patient match, chart reads, and coded write-back (notes as DocumentReference, diagnoses as Condition, acuity as Observation) with provenance attached." },
   { Icon: FileOutput, title: "Bulk export ready", desc: "FHIR Bulk Data ($export) with Backend Services auth, plus Subscriptions for event-driven workflows." },
-  { Icon: Boxes, title: "Per-workspace configuration", desc: "Each department or clinic binds its own EHR config — vendor, endpoints, scopes — with secrets held in AWS Secrets Manager, never in the app." },
+  { Icon: Boxes, title: "Per-workspace configuration", desc: "Each department or clinic binds its own EHR config (vendor, endpoints, scopes) with secrets held in AWS Secrets Manager, never in the app." },
   { Icon: FlaskConical, title: "Conformance-tested", desc: "US Core profiles and SMART v2 flows exercised by an automated conformance suite on every release." },
-  { Icon: PlugZap, title: "One gateway, any vendor", desc: "A vendor-agnostic FHIR gateway routes each call through vendor-specific adapters — your workflows don't change when the EHR does." },
+  { Icon: PlugZap, title: "One gateway, any vendor", desc: "A vendor-agnostic FHIR gateway routes each call through vendor-specific adapters: your workflows don't change when the EHR does." },
 ];
 
 const faqs = [
   { q: "We're on Epic. What does setup look like?", a: "Connect Solace's registered SMART app from your Epic environment, bind it to a workspace in the EHR hub, and sign in with your Epic credentials. Sandbox-first evaluation is supported." },
-  { q: "Can we try it without involving our EHR team?", a: "Yes — the SMART Health IT sandbox connection works out of the box with zero credentials, using synthetic patients." },
+  { q: "Can we try it without involving our EHR team?", a: "Yes, the SMART Health IT sandbox connection works out of the box with zero credentials, using synthetic patients." },
   { q: "What gets written back to our EHR?", a: "Only what a clinician confirms: notes, diagnoses, observations, and orders, each coded (LOINC/SNOMED/ICD-10/RxNorm) and tagged with decision-support provenance." },
   { q: "Do you store our EHR credentials?", a: "Client secrets and signing keys live in AWS Secrets Manager under customer-managed encryption. The app stores references, never raw secrets." },
 ];
@@ -36,7 +36,7 @@ export default function IntegrationsPage() {
       <MarketingHero
         eyebrow="Integrations"
         title="Works with the EHR you already run."
-        sub="SMART on FHIR R4 with v2 scopes, write-back, and bulk export — Epic, Oracle Health, athenahealth, and any SMART-conformant system."
+        sub="SMART on FHIR R4 with v2 scopes, write-back, and bulk export: Epic, Oracle Health, athenahealth, and any SMART-conformant system."
         primaryCta={{ to: "/get-started", label: "Get started" }}
         secondaryCta={{ to: "/contact", label: "Talk to integrations" }}
       />
@@ -46,7 +46,7 @@ export default function IntegrationsPage() {
         <SectionHeading
           eyebrow="Vendors"
           title="Standards over one-off integrations."
-          sub="Built on FHIR R4 — so 'supported' means certified pathways, not brittle point connections."
+          sub="Built on FHIR R4, so 'supported' means certified pathways, not brittle point connections."
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {vendors.map((v, i) => (
@@ -86,7 +86,7 @@ export default function IntegrationsPage() {
         <Reveal>
           <div className="card-clean rounded-xl p-10">
             <h3 className="font-display text-2xl tracking-editorial text-ink sm:text-3xl">
-              Evaluate the full integration today — no credentials needed.
+              Evaluate the full integration today, no credentials needed.
             </h3>
             <p className="mx-auto mt-3 max-w-xl text-sm text-text-muted">
               Every workspace can connect the SMART Health IT sandbox in one click: synthetic patients, real

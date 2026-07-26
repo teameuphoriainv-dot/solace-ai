@@ -292,7 +292,7 @@ export default function OnboardingWizard({ hospitalId, onDone }: Props) {
               </div>
               <p className="text-[12px] text-text-muted leading-relaxed text-center">
                 Print this QR for your waiting room, or share the link. Patients scan it to begin
-                voice or text intake — no app download.
+                voice or text intake, no app download.
               </p>
             </div>
           )}

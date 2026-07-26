@@ -100,11 +100,11 @@ export default function GetStarted() {
       const resp = (e as { response?: { status?: number } })?.response;
       setError(
         resp?.status === 409
-          ? "That workspace URL is taken — try a different short name."
+          ? "That workspace URL is taken: try a different short name."
           : resp?.status === 429
             ? "Too many requests right now. Please wait a minute and try again."
             : !resp
-              ? "We couldn't reach Solace — check your connection and try again."
+              ? "We couldn't reach Solace: check your connection and try again."
               : "Something went wrong creating your workspace. Please try again.",
       );
     } finally {
@@ -129,7 +129,7 @@ export default function GetStarted() {
           : resp?.status === 429
             ? "Too many requests right now. Please wait a minute and try again."
             : !resp
-              ? "We couldn't reach Solace — check your connection and try again."
+              ? "We couldn't reach Solace: check your connection and try again."
               : "Something went wrong sending your request. Please try again.",
       );
     } finally {
@@ -196,7 +196,7 @@ export default function GetStarted() {
                         p: "join" as Path,
                         Icon: Users,
                         title: "Join your team on Solace",
-                        desc: "Your organization already uses Solace — request access from your admin.",
+                        desc: "Your organization already uses Solace: request access from your admin.",
                       },
                     ] as const
                   ).map(({ p, Icon, title, desc }) => (
@@ -356,7 +356,7 @@ export default function GetStarted() {
                 <form className="card-clean space-y-5 rounded-xl p-7" onSubmit={submitJoin}>
                   <h2 className="font-medium text-ink">Request access</h2>
                   <p className="-mt-3 text-sm text-text-muted">
-                    Your workspace admin approves requests — you'll get a sign-in link by email.
+                    Your workspace admin approves requests: you'll get a sign-in link by email.
                   </p>
                   <Field id="gs-join-slug" label="Workspace name or URL">
                     <input id="gs-join-slug" className={inputCls} value={joinSlug} onChange={(e) => setJoinSlug(e.target.value)} placeholder="st-davids or solace.health/h/st-davids" required />
@@ -385,7 +385,7 @@ export default function GetStarted() {
                   {path === "start" && result ? (
                     <>
                       <h2 className="mt-4 font-display text-2xl tracking-editorial text-ink">
-                        Application approved — workspace created.
+                        Application approved: workspace created.
                       </h2>
                       <p className="mx-auto mt-2 max-w-md text-sm text-text-muted">
                         We sent a secure sign-in link to <span className="font-medium text-ink">{adminEmail}</span>.
@@ -395,7 +395,7 @@ export default function GetStarted() {
                       <div className="mx-auto mt-6 max-w-md space-y-2.5 text-left">
                         {[
                           { Icon: Mail, text: "Check your email and open the sign-in link" },
-                          { Icon: LogIn, text: "Sign in — you land in the setup wizard" },
+                          { Icon: LogIn, text: "Sign in: you land in the setup wizard" },
                           { Icon: Users, text: "Invite your care team from the wizard" },
                           { Icon: ShieldCheck, text: "Connect your EHR under Tools, then EHR connections" },
                         ].map(({ Icon, text }) => (

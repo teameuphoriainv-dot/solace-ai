@@ -179,7 +179,7 @@ def poll_bulk_job(
     scan_for_ai: bool = Query(
         False,
         description="Run content_guard over ingested free-text (SEC-005) and "
-                    "return only counts/findings — never raw PHI.",
+                    "return only counts/findings: never raw PHI.",
     ),
     caller: dict = Depends(require_clinician),
     http_client: httpx.Client = Depends(_http_client),

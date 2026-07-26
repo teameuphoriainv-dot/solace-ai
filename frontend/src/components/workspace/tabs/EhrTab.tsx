@@ -62,7 +62,7 @@ function buildResource(kind: WriteKind, patient: PatientDetail, fhirId: string):
       status: "current",
       type: { text: "Triage note" },
       subject,
-      description: `Solace triage note — ESI ${patient.esi_level} (${patient.esi_label})`,
+      description: `Solace triage note: ESI ${patient.esi_level} (${patient.esi_label})`,
       content: [
         {
           attachment: {
@@ -97,7 +97,7 @@ function buildResource(kind: WriteKind, patient: PatientDetail, fhirId: string):
 }
 
 const WRITE_ACTIONS: { kind: WriteKind; label: string; desc: string; Icon: typeof FileText }[] = [
-  { kind: "note", label: "Triage note", desc: "DocumentReference — triage prebrief", Icon: FileText },
+  { kind: "note", label: "Triage note", desc: "DocumentReference: triage prebrief", Icon: FileText },
   { kind: "condition", label: "Condition", desc: "Working diagnosis from differential", Icon: ClipboardList },
   { kind: "observation", label: "ESI observation", desc: "Acuity level as an Observation", Icon: Activity },
 ];
@@ -215,7 +215,7 @@ export default function EhrTab() {
               <>
                 <p className="text-sm text-text-muted mt-0.5">
                   {patient.name} is resolved to a live EHR chart. Every write-back below targets
-                  this chart automatically — no id entry.
+                  this chart automatically, no id entry.
                 </p>
                 <p className="text-xs font-mono text-text-muted mt-2">
                   FHIR Patient/{effectiveFhirId}
@@ -224,7 +224,7 @@ export default function EhrTab() {
             ) : (
               <p className="text-sm text-text-muted mt-0.5">
                 No EHR identity on record for {patient.name}. Resolve this patient against the EHR
-                once below — after that, all write-backs target the matched chart.
+                once below: after that, all write-backs target the matched chart.
               </p>
             )}
           </div>
@@ -239,26 +239,26 @@ export default function EhrTab() {
             Resolve patient in the EHR
           </h3>
           <p className="text-xs text-text-muted mt-1">
-            Matches on the demographics already on this chart. Resolve once — write everywhere.
+            Matches on the demographics already on this chart. Resolve once: write everywhere.
           </p>
 
           {matchQueryPreview && (
             <dl className="grid grid-cols-2 gap-x-4 gap-y-1 mt-3 text-xs">
               <div className="flex justify-between border-b border-line py-1">
                 <dt className="text-text-muted">Given</dt>
-                <dd className="text-ink font-medium">{matchQueryPreview.given || "—"}</dd>
+                <dd className="text-ink font-medium">{matchQueryPreview.given || "-"}</dd>
               </div>
               <div className="flex justify-between border-b border-line py-1">
                 <dt className="text-text-muted">Family</dt>
-                <dd className="text-ink font-medium">{matchQueryPreview.family || "—"}</dd>
+                <dd className="text-ink font-medium">{matchQueryPreview.family || "-"}</dd>
               </div>
               <div className="flex justify-between border-b border-line py-1">
                 <dt className="text-text-muted">Gender</dt>
-                <dd className="text-ink font-medium">{matchQueryPreview.gender || "—"}</dd>
+                <dd className="text-ink font-medium">{matchQueryPreview.gender || "-"}</dd>
               </div>
               <div className="flex justify-between border-b border-line py-1">
                 <dt className="text-text-muted">Age</dt>
-                <dd className="text-ink font-medium">{patient.medical_info?.age ?? "—"}</dd>
+                <dd className="text-ink font-medium">{patient.medical_info?.age ?? "-"}</dd>
               </div>
             </dl>
           )}
@@ -398,7 +398,7 @@ export default function EhrTab() {
             <p className="text-xs text-text-muted mt-1">
               {dryRun
                 ? "Preview the FHIR resource and routing without committing to the EHR."
-                : "Live write — the resource will be committed to the matched EHR chart."}
+                : "Live write, the resource will be committed to the matched EHR chart."}
             </p>
 
             <div className="flex flex-col gap-2 mt-3">

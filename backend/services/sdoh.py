@@ -61,17 +61,17 @@ Z_CODE_MAP: dict[str, dict[str, str]] = {
 # Community-resource category per domain — these are the canonical FindHelp /
 # Unite Us service-category taxonomy terms a referral routes against.
 RESOURCE_CATEGORY: dict[str, str] = {
-    "homelessness":         "Housing — emergency shelter",
-    "housing_instability":  "Housing — rent assistance & stability",
-    "food_insecurity":      "Food — food banks & SNAP enrollment",
-    "transportation":       "Transit — medical & daily transportation",
-    "utilities":            "Utilities — LIHEAP & utility assistance",
-    "interpersonal_safety": "Safety — domestic violence support & shelter",
-    "financial_strain":     "Financial — emergency assistance & benefits",
-    "social_isolation":     "Community — peer & senior support programs",
-    "childcare":            "Childcare — subsidized care & vouchers",
-    "education":            "Education — adult literacy & GED programs",
-    "incarceration":        "Reentry — justice-involved support services",
+    "homelessness":         "Housing: emergency shelter",
+    "housing_instability":  "Housing: rent assistance & stability",
+    "food_insecurity":      "Food: food banks & SNAP enrollment",
+    "transportation":       "Transit: medical & daily transportation",
+    "utilities":            "Utilities: LIHEAP & utility assistance",
+    "interpersonal_safety": "Safety: domestic violence support & shelter",
+    "financial_strain":     "Financial: emergency assistance & benefits",
+    "social_isolation":     "Community: peer & senior support programs",
+    "childcare":            "Childcare: subsidized care & vouchers",
+    "education":            "Education: adult literacy & GED programs",
+    "incarceration":        "Reentry: justice-involved support services",
 }
 
 # Domains where a positive screen is clinically high-acuity and should be acted

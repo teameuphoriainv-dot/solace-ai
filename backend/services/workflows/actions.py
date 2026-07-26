@@ -128,7 +128,7 @@ def _run_claude_prompt(config: dict, context: dict) -> dict:
         resp = claude.messages_create(
             model=settings.model_utility,
             max_tokens=600,
-            system="You are a workflow helper. Reply with the requested content only — no preamble.",
+            system="You are a workflow helper. Reply with the requested content only, no preamble.",
             messages=[{"role": "user", "content": prompt}],
             purpose="workflow_action",
         )
@@ -179,7 +179,7 @@ def _slack_message(config: dict, context: dict) -> dict:
     if not url:
         # No webhook bound yet — record intent without leaving the boundary so
         # a half-configured template fails safe instead of erroring.
-        log.info("slack_message has no webhook_url (channel=%s) — skipped", channel)
+        log.info("slack_message has no webhook_url (channel=%s): skipped", channel)
         return {"success": False, "reason": "missing_webhook_url", "channel": channel}
     payload: dict = {"text": text}
     if channel:
@@ -213,7 +213,7 @@ def _draft_message(config: dict, context: dict) -> dict:
             model=settings.model_utility,
             max_tokens=400,
             system="You draft patient communications for clinician review. "
-                   "Reply with the message body only — no preamble, no PHI.",
+                   "Reply with the message body only, no preamble, no PHI.",
             messages=[{"role": "user", "content": prompt}],
             purpose="workflow_draft_message",
         )
@@ -244,7 +244,7 @@ def _generate_letter(config: dict, context: dict) -> dict:
             model=settings.model_utility,
             max_tokens=700,
             system="You draft clinical letters for clinician review. "
-                   "Reply with the letter body only. Never include PHI — "
+                   "Reply with the letter body only. Never include PHI: "
                    "use bracketed placeholders for any identifier.",
             messages=[{"role": "user", "content": prompt}],
             purpose="workflow_generate_letter",
@@ -285,7 +285,7 @@ def _create_task(config: dict, context: dict) -> dict:
         "note_id": str(uuid.uuid4()),
         "patient_id": patient_id,
         "hospital_id": (context.get("hospital") or {}).get("id", "demo"),
-        "text": f"[TASK] ({priority}) {title} — assigned to {assignee}.{due_note}",
+        "text": f"[TASK] ({priority}) {title}: assigned to {assignee}.{due_note}",
         "author": "Workflow Bot",
         "kind": "task",
         "created_at": now.isoformat(timespec="seconds").replace("+00:00", "Z"),
@@ -396,7 +396,7 @@ ACTIONS: list[ActionDef] = [
     ActionDef(
         type="http_webhook",
         label="Outbound HTTP webhook",
-        description="POST JSON to any URL — integrate with Zapier, Make, custom EHR, etc.",
+        description="POST JSON to any URL: integrate with Zapier, Make, custom EHR, etc.",
         fields=[
             {"name": "url", "label": "URL", "type": "text", "required": True},
             {"name": "body_template", "label": "JSON body template", "type": "textarea",
@@ -455,7 +455,7 @@ ACTIONS: list[ActionDef] = [
             {"name": "webhook_url", "label": "Slack webhook URL", "type": "text", "required": True,
              "help": "Incoming webhook from your Slack workspace."},
             {"name": "channel", "label": "Channel", "type": "text", "required": False,
-             "help": "e.g. #appointments — advisory label for the Slack app."},
+             "help": "e.g. #appointments: advisory label for the Slack app."},
             {"name": "message", "label": "Message", "type": "textarea", "required": True,
              "help": "Body text. {{vars}} are interpolated from the trigger context."},
         ],
@@ -518,7 +518,7 @@ ACTIONS: list[ActionDef] = [
     ActionDef(
         type="notify",
         label="Notify staff",
-        description="Send an internal staff notification — stays inside the trust boundary, no PHI leaves.",
+        description="Send an internal staff notification: stays inside the trust boundary, no PHI leaves.",
         fields=[
             {"name": "message", "label": "Message", "type": "textarea", "required": True},
             {"name": "channel", "label": "Channel", "type": "text", "required": False,

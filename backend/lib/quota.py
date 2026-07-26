@@ -147,7 +147,7 @@ def check_and_consume(
         raise HTTPException(
             status_code=429,
             detail=(
-                f"rate limit: {action} capped at {limit.per_hour}/hour — "
+                f"rate limit: {action} capped at {limit.per_hour}/hour: "
                 f"retry in {wait_seconds}s"
             ),
             headers={"Retry-After": str(wait_seconds)},
@@ -174,7 +174,7 @@ def check_audio_duration(
         )
         raise HTTPException(
             status_code=413,
-            detail=f"audio is {round(seconds)}s — cap is {MAX_AUDIO_SECONDS}s",
+            detail=f"audio is {round(seconds)}s: cap is {MAX_AUDIO_SECONDS}s",
         )
     # Charge the identity's audio-seconds quota atomically
     check_and_consume(identity, "audio.seconds", units=int(seconds) or 1, source_ip=source_ip)

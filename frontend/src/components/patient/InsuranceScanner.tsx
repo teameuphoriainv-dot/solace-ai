@@ -70,9 +70,9 @@ export function InsuranceScanner({ hospitalId, value, onChange, onSkip }: Props)
       const detail: string | undefined = e?.response?.data?.detail;
       const msg =
         status === 415
-          ? "Try a JPEG or PNG — your phone's HEIC format isn't supported."
+          ? "Try a JPEG or PNG: your phone's HEIC format isn't supported."
           : status === 413
-          ? "Photo is too large — try a closer crop."
+          ? "Photo is too large: try a closer crop."
           : detail || e?.message || "Couldn't send the photo. Check your connection and retake.";
       setError(msg);
       onChange({ ...EMPTY });
@@ -193,7 +193,7 @@ export function InsuranceScanner({ hospitalId, value, onChange, onSkip }: Props)
           onClick={onSkip}
           className="text-sm text-text-muted underline self-center h-10 px-2"
         >
-          Skip — I don't have it on me
+          Skip: I don't have it on me
         </button>
       )}
 
@@ -237,7 +237,7 @@ function Row({
         type="text"
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="—"
+        placeholder="-"
         className="w-full h-11 px-3 rounded-md bg-surface-lowest shadow-soft ring-1 ring-line focus:ring-primary focus:ring-2 text-base outline-none transition-all"
       />
     </div>

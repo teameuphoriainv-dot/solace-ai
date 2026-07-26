@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 # into a patient-facing action.
 
 DESTINATION_LABELS: dict[str, str] = {
-    "ed_now":     "Stay here — go to the front desk now",
+    "ed_now":     "Stay here: go to the front desk now",
     "ed":         "Stay here for emergency care",
     "urgent":     "Urgent care or ED today",
     "telehealth": "Virtual visit today",
@@ -50,14 +50,14 @@ _NEXT_STEPS: dict[str, tuple[str, ...]] = {
         "Do not eat or drink until a clinician sees you.",
     ),
     "ed": (
-        "Stay seated in the waiting area — your spot is held.",
+        "Stay seated in the waiting area: your spot is held.",
         "Tell staff right away if your symptoms get worse.",
         "Keep your phone nearby; we may text your queue updates.",
     ),
     "urgent": (
         "Check in here, or ask the front desk about a same-day virtual visit.",
         "Bring a list of your current medications.",
-        "Watch for the warning signs on this page — return sooner if they appear.",
+        "Watch for the warning signs on this page: return sooner if they appear.",
     ),
     "telehealth": (
         "Tap the button to book a virtual visit for today.",
@@ -110,7 +110,7 @@ def recommend(
     if esi_level == 1:
         return _build(
             "ed_now",
-            rationale="High acuity — a clinician needs to see you immediately.",
+            rationale="High acuity, a clinician needs to see you immediately.",
             action_cta="Go to front desk",
             severity="critical",
         )
@@ -118,7 +118,7 @@ def recommend(
         return _build(
             "ed",
             rationale=(
-                "You're in the right place. Stay seated — your spot is held and a "
+                "You're in the right place. Stay seated: your spot is held and a "
                 "clinician will see you soon."
             ),
             action_cta="Got it, I'll wait",
@@ -138,7 +138,7 @@ def recommend(
             "urgent",
             rationale=(
                 "This is something we should look at today. You're already here, so "
-                "stay — but a virtual visit would also work if you'd rather come back."
+                "stay, but a virtual visit would also work if you'd rather come back."
             ),
             action_cta="Stay here",
             severity="moderate",

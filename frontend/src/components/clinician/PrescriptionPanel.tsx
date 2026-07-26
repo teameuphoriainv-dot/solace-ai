@@ -165,7 +165,7 @@ export function PrescriptionPanel({ hospitalId, patientId, medicalInfo }: Props)
       {suggestions.length > 0 && (
         <div className="mt-3 flex flex-col gap-2">
           <div className="text-[11px] uppercase tracking-[0.14em] text-primary font-semibold">
-            AI suggestions — verify before prescribing
+            AI suggestions: verify before prescribing
           </div>
           {suggestions.map((s, i) => {
             const hits = checkInteractions(s.drug, medicalInfo);

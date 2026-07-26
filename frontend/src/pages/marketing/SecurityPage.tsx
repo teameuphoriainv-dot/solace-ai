@@ -19,12 +19,12 @@ const pillars = [
   {
     Icon: EyeOff,
     title: "PHI isolation, enforced in code",
-    desc: "Our AI plans over coded metadata and slot tokens — names, MRNs, birthdates, and free text are stripped before any model prompt. An automated leak-gate test fails the build if raw PHI ever reaches a prompt.",
+    desc: "Our AI plans over coded metadata and slot tokens: names, MRNs, birthdates, and free text are stripped before any model prompt. An automated leak-gate test fails the build if raw PHI ever reaches a prompt.",
   },
   {
     Icon: UserCheck,
     title: "Consent before computation",
-    desc: "AI features run behind a recorded-consent chokepoint. No consent on file, no model call — the request is refused at the boundary, and the refusal is logged.",
+    desc: "AI features run behind a recorded-consent chokepoint. No consent on file, no model call, the request is refused at the boundary, and the refusal is logged.",
   },
   {
     Icon: ScrollText,
@@ -34,7 +34,7 @@ const pillars = [
   {
     Icon: KeyRound,
     title: "Customer-managed encryption",
-    desc: "Data is encrypted in transit and at rest under customer-managed KMS keys — databases, object storage, secrets, and container images alike.",
+    desc: "Data is encrypted in transit and at rest under customer-managed KMS keys: databases, object storage, secrets, and container images alike.",
   },
   {
     Icon: Server,
@@ -72,7 +72,7 @@ export default function SecurityPage() {
         <SectionHeading
           eyebrow="Architecture"
           title="Six guarantees we build against."
-          sub="Not policies on paper — controls in code, exercised by the test suite on every release."
+          sub="Not policies on paper: controls in code, exercised by the test suite on every release."
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map(({ Icon, title, desc }, i) => (

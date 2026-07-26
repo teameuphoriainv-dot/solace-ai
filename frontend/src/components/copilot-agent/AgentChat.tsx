@@ -263,7 +263,7 @@ export default function AgentChat() {
     <div className="flex h-[480px] flex-col rounded-xl border border-line bg-surface-lowest p-4">
       {backendMissing && (
         <div className="mb-3 rounded-lg bg-secondary-container px-4 py-3 text-sm text-ink">
-          Agent backend not available yet — the agent endpoints have not been
+          Agent backend not available yet, the agent endpoints have not been
           deployed. Try again once the backend is up.
         </div>
       )}
@@ -273,7 +273,7 @@ export default function AgentChat() {
           <div className="flex flex-col gap-3 py-2">
             <p className="text-sm text-text-muted">
               Ask anything about {patient?.name || "this patient"}, or tell the
-              agent what to add to the chart. It proposes — you confirm.
+              agent what to add to the chart. It proposes: you confirm.
             </p>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {QUICK_CHIPS.map(({ icon: Icon, label, prompt }) => (

@@ -179,7 +179,7 @@ export default function ClinicianScribe() {
             const base = preRecordingRef.current;
             setTranscript(base ? base + "\n" + live : live);
           };
-          sr.onerror = () => { /* swallow — server fallback handles it */ };
+          sr.onerror = () => { /* swallow: server fallback handles it */ };
           sr.onend = () => { /* no-op */ };
           speechRecRef.current = sr;
           sr.start();
@@ -238,7 +238,7 @@ export default function ClinicianScribe() {
           if (seg.isFinal) pendingChunkRef.current += (seg[0]?.transcript || "") + " ";
         }
       };
-      sr.onerror = () => { /* swallow — flush timer retries */ };
+      sr.onerror = () => { /* swallow: flush timer retries */ };
       // Keep listening across browser auto-stops while the session is active.
       sr.onend = () => {
         if (sessionStatusRef.current === "recording") {
@@ -520,19 +520,19 @@ export default function ClinicianScribe() {
         {recording && (
           <div className="bg-rose-50 border-b border-rose-200 px-4 py-2 flex items-center gap-2 text-sm text-rose-900">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse" aria-hidden="true" />
-            Recording the encounter — speak normally. Hit Stop when finished.
+            Recording the encounter: speak normally. Hit Stop when finished.
           </div>
         )}
         {sessionStatus === "recording" && (
           <div className="bg-rose-50 border-b border-rose-200 px-4 py-2 flex items-center gap-2 text-sm text-rose-900">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse" aria-hidden="true" />
-            Ambient session recording — {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured. Pause anytime; finalize when the visit ends.
+            Ambient session recording: {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured. Pause anytime; finalize when the visit ends.
           </div>
         )}
         {sessionStatus === "paused" && (
           <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 flex items-center gap-2 text-sm text-amber-900">
             <Pause className="w-3.5 h-3.5" aria-hidden="true" />
-            Ambient session paused — {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured so far. Resume to keep listening.
+            Ambient session paused: {chunkCount} chunk{chunkCount === 1 ? "" : "s"} captured so far. Resume to keep listening.
           </div>
         )}
         {busy && (
@@ -593,7 +593,7 @@ export default function ClinicianScribe() {
                 <AlertTriangle className="w-3 h-3" /> Drug alerts
               </div>
               {drugAlerts.drug_drug.map((a, i) => (
-                <div key={i} className="text-sm text-amber-900 mb-1">{a.a} + {a.b} — <span className="font-medium">{a.severity}</span>: {a.reason}</div>
+                <div key={i} className="text-sm text-amber-900 mb-1">{a.a} + {a.b} - <span className="font-medium">{a.severity}</span>: {a.reason}</div>
               ))}
               {drugAlerts.drug_allergy.map((a, i) => (
                 <div key={`al-${i}`} className="text-sm text-rose-900 mb-1">Allergy match: {a.med}</div>
@@ -702,7 +702,7 @@ export default function ClinicianScribe() {
                   <div className="bg-white rounded-lg border border-slate-200 p-4">
                     <div className="flex items-center gap-2 mb-3">
                       <ClipboardCheck className="w-4 h-4 text-emerald-600" aria-hidden="true" />
-                      <div className="text-xs uppercase tracking-wide text-slate-500">Finalized SOAP note — every line traceable to the conversation</div>
+                      <div className="text-xs uppercase tracking-wide text-slate-500">Finalized SOAP note, every line traceable to the conversation</div>
                     </div>
                     {finalNote.sections.map((sec) => (
                       <SessionNoteSection
@@ -733,7 +733,7 @@ export default function ClinicianScribe() {
                         </button>
                       </div>
                       <div className="mt-1.5 text-xs text-blue-900/80">
-                        {speakerLabelOf(activeEvidence.speaker)} · {fmtMs(activeEvidence.begin_ms)}–{fmtMs(activeEvidence.end_ms)}
+                        {speakerLabelOf(activeEvidence.speaker)} · {fmtMs(activeEvidence.begin_ms)} to {fmtMs(activeEvidence.end_ms)}
                       </div>
                       <div className="mt-1 text-sm text-slate-900">"{activeEvidence.snippet}"</div>
                     </div>
@@ -871,8 +871,8 @@ export default function ClinicianScribe() {
             <div id="scribe-panel-ddx" role="tabpanel" aria-labelledby="scribe-tab-ddx" className="bg-white rounded-lg border border-slate-200 p-4">
               <div className="text-xs uppercase tracking-wide text-slate-500 mb-2">Ranked differential (conformal sets)</div>
               <div className="text-xs text-slate-600 mb-3">
-                90% set: {ddx.conformal.set_90.join(" | ") || "—"}<br />
-                95% set: {ddx.conformal.set_95.join(" | ") || "—"}
+                90% set: {ddx.conformal.set_90.join(" | ") || "-"}<br />
+                95% set: {ddx.conformal.set_95.join(" | ") || "-"}
               </div>
               {ddx.differential.map((d, i) => {
                 const pct = Math.round((d.weight || 0) * 100);
@@ -945,7 +945,7 @@ export default function ClinicianScribe() {
               <div className="text-xs uppercase tracking-wide text-slate-500 mt-3 mb-1">ICD-10 candidates</div>
               {(coding.icd10 || []).map((d, i) => (
                 <div key={i} className="text-sm flex justify-between border-b border-slate-100 py-1">
-                  <span>{d.code} — {d.name}</span>
+                  <span>{d.code}: {d.name}</span>
                   <span className="text-xs text-slate-500">{d.support}</span>
                 </div>
               ))}
@@ -954,7 +954,7 @@ export default function ClinicianScribe() {
                   <div className="text-xs uppercase tracking-wide text-slate-500 mt-3 mb-1">CPT procedures</div>
                   {coding.cpt_procedures.map((d, i) => (
                     <div key={i} className="text-sm flex justify-between border-b border-slate-100 py-1">
-                      <span>{d.code} — {d.name}</span>
+                      <span>{d.code}: {d.name}</span>
                       <span className="text-xs text-slate-500">{d.support}</span>
                     </div>
                   ))}
@@ -1168,7 +1168,7 @@ function SessionNoteSection({
               </div>
             ) : (
               <div className="mt-1 inline-flex items-center gap-1 text-[11px] text-amber-700">
-                <AlertTriangle className="w-2.5 h-2.5" aria-hidden="true" /> Not linked to the conversation — verify before signing.
+                <AlertTriangle className="w-2.5 h-2.5" aria-hidden="true" /> Not linked to the conversation: verify before signing.
               </div>
             )}
           </div>
@@ -1180,7 +1180,7 @@ function SessionNoteSection({
 }
 
 function renderCalcValue(v: unknown): string {
-  if (Array.isArray(v)) return v.join(", ") || "—";
+  if (Array.isArray(v)) return v.join(", ") || "-";
   if (typeof v === "boolean") return v ? "Yes" : "No";
   if (typeof v === "object" && v !== null) {
     return Object.entries(v).map(([k, val]) => `${k}: ${val}`).join(", ");

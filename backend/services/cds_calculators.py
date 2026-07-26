@@ -331,13 +331,13 @@ def curb65(
         for x in [confusion, bun_over_19, rr_at_least_30, sbp_under_90_or_dbp_at_most_60, age_at_least_65]
     )
     if pts <= 1:
-        action = "Low severity — outpatient management"
+        action = "Low severity: outpatient management"
         mortality_30d = "0.6-2.7%"
     elif pts == 2:
-        action = "Moderate severity — short inpatient or close outpatient observation"
+        action = "Moderate severity: short inpatient or close outpatient observation"
         mortality_30d = "6.8-9.2%"
     else:
-        action = "Severe — inpatient; consider ICU if score >=3"
+        action = "Severe: inpatient; consider ICU if score >=3"
         mortality_30d = "14-57%"
     return {
         "score": pts,
@@ -445,11 +445,11 @@ def mews(rr: float, hr: float, sbp: float, temp_c: float, avpu: str) -> dict[str
 
     score = sum(components.values())
     if score >= 5:
-        risk = "high — urgent medical review, consider critical care outreach"
+        risk = "high: urgent medical review, consider critical care outreach"
     elif score >= 3:
-        risk = "medium — increase observation frequency, nurse-in-charge review"
+        risk = "medium: increase observation frequency, nurse-in-charge review"
     else:
-        risk = "low — routine monitoring"
+        risk = "low: routine monitoring"
     return {
         "score": score,
         "risk": risk,
@@ -563,16 +563,16 @@ def news2(rr: float, spo2: float, on_oxygen: bool, sbp: float, hr: float, temp_c
     # Any single parameter scoring 3 triggers the "low-medium" escalation band.
     any_param_3 = any(v == 3 for v in components.values())
     if score >= 7:
-        risk = "high — emergency assessment by critical care, continuous monitoring"
+        risk = "high: emergency assessment by critical care, continuous monitoring"
         clinical_response = "emergency"
     elif score >= 5 or any_param_3:
-        risk = "medium — urgent review by clinician able to escalate to critical care"
+        risk = "medium: urgent review by clinician able to escalate to critical care"
         clinical_response = "urgent"
     elif score >= 1:
-        risk = "low — assessment by registered nurse, monitoring at least 4-6 hourly"
+        risk = "low: assessment by registered nurse, monitoring at least 4-6 hourly"
         clinical_response = "routine"
     else:
-        risk = "low — routine monitoring at least 12 hourly"
+        risk = "low: routine monitoring at least 12 hourly"
         clinical_response = "routine"
     return {
         "score": score,
@@ -611,13 +611,13 @@ def centor(
     elif age_n >= 45:
         pts -= 1
     if pts <= 0:
-        action = "GAS risk 1-2.5% — no testing or antibiotics"
+        action = "GAS risk 1-2.5%, no testing or antibiotics"
     elif pts == 1:
-        action = "GAS risk ~5-10% — no testing; symptomatic care"
+        action = "GAS risk ~5-10%, no testing; symptomatic care"
     elif pts in (2, 3):
-        action = "GAS risk ~11-35% — rapid antigen test; treat if positive"
+        action = "GAS risk ~11-35%: rapid antigen test; treat if positive"
     else:
-        action = "GAS risk ~51% — test; consider empiric antibiotics"
+        action = "GAS risk ~51%: test; consider empiric antibiotics"
     return {
         "score": pts,
         "action": action,

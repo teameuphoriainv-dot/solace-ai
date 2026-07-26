@@ -20,7 +20,7 @@ const values = [
   {
     Icon: Compass,
     title: "Calm over clever",
-    desc: "Healthcare software shouts. Ours doesn't. We design for the 3 a.m. shift — fewer clicks, quieter screens, honest uncertainty.",
+    desc: "Healthcare software shouts. Ours doesn't. We design for the 3 a.m. shift: fewer clicks, quieter screens, honest uncertainty.",
   },
 ];
 
@@ -30,7 +30,7 @@ export default function AboutPage() {
       <MarketingHero
         eyebrow="About Solace"
         title="Built so care teams can look up from the screen."
-        sub="We build calm, trustworthy AI for the people who hold the front lines of medicine — and we believe the chart should never come before the patient."
+        sub="We build calm, trustworthy AI for the people who hold the front lines of medicine, and we believe the chart should never come before the patient."
         primaryCta={{ to: "/get-started", label: "Work with us" }}
         secondaryCta={{ to: "/contact", label: "Contact" }}
       />
@@ -39,13 +39,13 @@ export default function AboutPage() {
         <Reveal>
           <div className="space-y-5 text-[17px] leading-relaxed text-text-muted">
             <p>
-              Solace started in an emergency department waiting room — watching people wait in pain to
+              Solace started in an emergency department waiting room: watching people wait in pain to
               repeat their story three times, and watching clinicians spend their evenings typing instead
               of going home.
             </p>
             <p>
               The diagnosis was obvious and uncomfortable: the burden wasn't medicine, it was paperwork
-              and blind spots. So we built the platform we wished existed — triage that understands
+              and blind spots. So we built the platform we wished existed: triage that understands
               patients from the first hello, documentation that writes itself while the clinician stays
               present, and a copilot that handles the chart's busywork without ever taking the pen out of
               a clinician's hand.

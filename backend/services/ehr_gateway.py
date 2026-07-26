@@ -291,7 +291,7 @@ def _with_retry(
 
         delay = min(_DEFAULT_BACKOFF_S * (2 ** (attempt - 1)), _DEFAULT_BACKOFF_CAP_S)
         log.warning(
-            "EHR %s write attempt %d/%d failed transiently (%s) — retrying in %.1fs",
+            "EHR %s write attempt %d/%d failed transiently (%s): retrying in %.1fs",
             vendor,
             attempt,
             max_retries + 1,
@@ -318,7 +318,7 @@ def _write_via_fhir_adapter(
         # Adapter not built / not importable yet — degrade to fhir_writer so
         # the write still lands somewhere instead of hard-failing.
         log.warning(
-            "Vendor adapter services.%s unavailable — falling back to fhir_writer",
+            "Vendor adapter services.%s unavailable: falling back to fhir_writer",
             module_name,
         )
         return _write_via_fhir_writer(vendor, resource, ehr_config)
@@ -350,7 +350,7 @@ def _write_via_fhir_writer(
     mod = _try_import("services.fhir_writer")
     if mod is None:
         raise EhrGatewayError(
-            "fhir_writer unavailable — cannot complete EHR write",
+            "fhir_writer unavailable: cannot complete EHR write",
             vendor=vendor or "mock",
             resource_type=resource.get("resourceType"),
         )
@@ -377,7 +377,7 @@ def _write_via_hl7v2(
     mod = _try_import("services.hl7_v2")
     if mod is None:
         raise EhrGatewayError(
-            "hl7_v2 unavailable — cannot complete HL7 v2 write",
+            "hl7_v2 unavailable: cannot complete HL7 v2 write",
             vendor="hl7v2",
             resource_type=resource.get("resourceType"),
         )

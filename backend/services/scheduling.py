@@ -164,7 +164,7 @@ def reminder_plan(
     """
     norm = (tier or "").strip().lower()
     if norm not in _REMINDER_TIERS:
-        log.warning("reminder_plan: unknown tier %r — defaulting to 'medium'", tier)
+        log.warning("reminder_plan: unknown tier %r: defaulting to 'medium'", tier)
         norm = "medium"
 
     template = _REMINDER_TIERS[norm]

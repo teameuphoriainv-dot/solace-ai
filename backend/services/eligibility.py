@@ -294,7 +294,7 @@ def _select_adapter() -> Any:
         if os.getenv("STEDI_API_KEY") and os.getenv("USE_REAL_ELIGIBILITY") == "1":
             return StediAdapter()
     except Exception as e:  # pragma: no cover
-        log.warning("Clearinghouse adapter init failed (%s) — using mock: %s", choice, e)
+        log.warning("Clearinghouse adapter init failed (%s): using mock: %s", choice, e)
     return MockAdapter()
 
 

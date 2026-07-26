@@ -171,7 +171,7 @@ export default function PriorAuthTab() {
           <div>
             <dt className="text-xs text-text-muted">Age / Sex</dt>
             <dd className="text-ink">
-              {med?.age ?? "—"} / {med?.sex ?? "—"}
+              {med?.age ?? "-"} / {med?.sex ?? "-"}
             </dd>
           </div>
           <div>
@@ -186,7 +186,7 @@ export default function PriorAuthTab() {
         {!ins?.member_id && (
           <p className="mt-2 flex items-center gap-1.5 text-xs text-warning">
             <AlertTriangle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-            No insurance on file — the readiness check will likely flag this as a blocker.
+            No insurance on file, the readiness check will likely flag this as a blocker.
           </p>
         )}
       </div>
@@ -472,7 +472,7 @@ function PAFollowUp({ hospitalId, packet }: { hospitalId: string; packet: PaPack
                     aria-hidden="true"
                   />
                   <div className="text-ink">
-                    <b>{b.field}</b> — {b.message}
+                    <b>{b.field}</b>: {b.message}
                     <div className="text-error mt-0.5">Fix: {b.fix}</div>
                   </div>
                 </div>
@@ -494,7 +494,7 @@ function PAFollowUp({ hospitalId, packet }: { hospitalId: string; packet: PaPack
                     aria-hidden="true"
                   />
                   <div className="text-ink">
-                    {w.field ? <b>{w.field} — </b> : null}
+                    {w.field ? <b>{w.field} - </b> : null}
                     {w.message}
                   </div>
                 </div>
@@ -504,7 +504,7 @@ function PAFollowUp({ hospitalId, packet }: { hospitalId: string; packet: PaPack
           {completeness.blockers?.length === 0 && completeness.warnings?.length === 0 && (
             <div className="flex items-center gap-2 text-xs text-success">
               <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-              No blockers or warnings — packet is clean.
+              No blockers or warnings: packet is clean.
             </div>
           )}
         </div>

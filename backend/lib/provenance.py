@@ -55,7 +55,7 @@ def make_provenance(
                     "code": "author",
                 }]},
                 "who": {
-                    "display": f"Solace AI {purpose} — {model_name}@{model_version}",
+                    "display": f"Solace AI {purpose}: {model_name}@{model_version}",
                     "identifier": {"system": "urn:solace:ai-model", "value": f"{model_name}:{model_version}:{purpose}"},
                 },
             },

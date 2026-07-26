@@ -175,7 +175,7 @@ def evaluate(patient: dict[str, Any]) -> list[dict[str, Any]]:
             if val is not None and val > 9.0:
                 gaps.append(_gap(
                     measure="CDC-A1c", name="Poor diabetes control (A1c > 9)",
-                    description=f"Last A1c {a1c_value} — above the HEDIS poor-control threshold.",
+                    description=f"Last A1c {a1c_value}: above the HEDIS poor-control threshold.",
                     action="Intensify therapy; endocrinology referral if not already in place",
                     icd10="E11.65", domain="chronic",
                     priority="high", impact_score=88,
@@ -202,7 +202,7 @@ def evaluate(patient: dict[str, Any]) -> list[dict[str, Any]]:
                 if sbp >= 140 or dbp >= 90:
                     gaps.append(_gap(
                         measure="CBP", name="Uncontrolled blood pressure",
-                        description=f"Last BP {last_bp} — above the <140/90 control target.",
+                        description=f"Last BP {last_bp}: above the <140/90 control target.",
                         action="Add or up-titrate antihypertensive; recheck in 2-4 weeks",
                         icd10="I10", domain="chronic",
                         priority="high", impact_score=78,
@@ -256,7 +256,7 @@ def evaluate(patient: dict[str, Any]) -> list[dict[str, Any]]:
                 measure="MAC", name="Medication adherence gap",
                 description=(
                     f"Last chronic-medication refill {round(refill_m, 1)} months ago "
-                    f"({days_supply}-day supply) — proportion of days covered likely <80%."
+                    f"({days_supply}-day supply): proportion of days covered likely <80%."
                 ),
                 action="Reconcile meds; address barriers; sync refills / 90-day fill",
                 icd10="Z91.14", domain="chronic",
@@ -373,13 +373,13 @@ def encounter_sidebar(patient: dict[str, Any], limit: int = 2) -> dict[str, Any]
     total = len(all_gaps)
 
     if total == 0:
-        headline = "No open HEDIS gaps — all measures current."
+        headline = "No open HEDIS gaps, all measures current."
     elif len(shown) == 1 or limit == 1:
         headline = f"{shown[0]['measure']}: {shown[0]['name']}"
     else:
         lead = ", ".join(g["measure"] for g in shown)
         extra = total - len(shown)
-        headline = f"{total} open care gap{'s' if total != 1 else ''} — address {lead}"
+        headline = f"{total} open care gap{'s' if total != 1 else ''}: address {lead}"
         if extra > 0:
             headline += f" ({extra} more)"
 

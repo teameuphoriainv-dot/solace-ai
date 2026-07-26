@@ -110,7 +110,7 @@ export function ProductShowcase() {
         <SectionHeading
           eyebrow="The platform"
           title={<>One platform. Three co-pilots.</>}
-          sub="Each one earns its place in the workflow — together they give the day back."
+          sub="Each one earns its place in the workflow: together they give the day back."
         />
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {products.map((p, i) => (

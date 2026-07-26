@@ -54,7 +54,7 @@ export function EHRPanel({ hospitalId, patientId }: Props) {
 
       {!loading && !result?.record && result?.reason && (
         <div className="text-sm text-text-muted">
-          <span className="font-semibold text-primary">No EHR match.</span> {result.reason}. Likely a new patient or a name / insurance mismatch — search manually with the EHR's MRN.
+          <span className="font-semibold text-primary">No EHR match.</span> {result.reason}. Likely a new patient or a name / insurance mismatch: search manually with the EHR's MRN.
         </div>
       )}
 
@@ -129,7 +129,7 @@ function RecordView({ r }: { r: EHRRecord }) {
       <Row label="Family hx">
         {(r.family_history || []).length ? r.family_history.join(" · ") : "none documented"}
       </Row>
-      <Row label="Social hx">{r.social_history || "—"}</Row>
+      <Row label="Social hx">{r.social_history || "-"}</Row>
       <Row label="Baseline">
         <span className="font-mono text-[13px]">
           {r.height_cm} cm · {r.weight_kg} kg · BMI {r.bmi}

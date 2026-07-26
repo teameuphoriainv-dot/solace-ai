@@ -196,7 +196,7 @@ class AthenaConfig:
         ]
         if missing:
             raise AthenaAuthError(
-                "athenahealth not configured — missing env: " + ", ".join(missing)
+                "athenahealth not configured: missing env: " + ", ".join(missing)
             )
         return cls(base_url=base, client_id=cid, client_secret=secret, practice_id=practice)
 

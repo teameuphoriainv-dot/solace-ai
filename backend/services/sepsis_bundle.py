@@ -33,7 +33,7 @@ _PROVENANCE = {
     "data_source": "synthetic",
     "logic": "deterministic SSC-2021 1-hour bundle timestamp checks",
     "validated_on_real_cohort": False,
-    "intended_use": "quality-improvement decision support — not a billing or "
+    "intended_use": "quality-improvement decision support, not a billing or "
                     "regulatory attestation of compliance",
     "note": "Re-run the cohort audit on real, labeled encounter data before "
             "drawing conclusions about subgroup compliance disparities.",
@@ -293,7 +293,7 @@ def bias_audit(
         "interpretation": (
             "No subgroup exceeds the bundle-compliance disparity threshold."
             if not flags else
-            f"{len(flags)} subgroup(s) flagged — investigate triage, staffing, "
+            f"{len(flags)} subgroup(s) flagged: investigate triage, staffing, "
             "and access pathways for these populations."
         ),
         "provenance": _PROVENANCE,
