@@ -121,9 +121,10 @@ export default function VendorCard({
         ))}
       </div>
 
-      <div className="text-[11px] text-text-muted">
-        {vendor.fhir_host}
-      </div>
+      {/* Absent when talking to an API that predates the catalog endpoint. */}
+      {vendor.fhir_host && (
+        <div className="text-[11px] text-text-muted">{vendor.fhir_host}</div>
+      )}
 
       {needsCredentials && (
         <div className="rounded-md bg-surface-low p-2.5 text-[11px] leading-relaxed text-text-muted">

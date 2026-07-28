@@ -345,10 +345,31 @@ export type EHRVendorCatalogEntry = EHRVendorOption & {
 };
 
 export async function listEHRVendorCatalog(): Promise<EHRVendorCatalogEntry[]> {
-  const { data } = await api.get<{ vendors: EHRVendorCatalogEntry[] }>(
-    "/api/auth/ehr/vendors/catalog",
-  );
-  return data.vendors || [];
+  try {
+    const { data } = await api.get<{ vendors: EHRVendorCatalogEntry[] }>(
+      "/api/auth/ehr/vendors/catalog",
+    );
+    return data.vendors || [];
+  } catch (e) {
+    // The frontend and the API deploy independently, so this build can reach an
+    // API that predates the catalog endpoint. Degrade to the legacy list rather
+    // than failing the whole vendor grid: /vendors only ever returns vendors
+    // that already have a client id, so mapping them to configured/ready is
+    // accurate. The unconfigured vendors simply do not appear until the API
+    // catches up, which is exactly the old behaviour.
+    if (!axios.isAxiosError(e) || e.response?.status !== 404) throw e;
+    const legacy = await listEHRVendors();
+    return legacy.map((v) => ({
+      ...v,
+      configured: true,
+      status: "ready" as const,
+      client_id_env: `SOLACE_${v.id.toUpperCase()}_CLIENT_ID`,
+      fhir_host: "",
+      smart_version: "v2" as const,
+      register_url: "",
+      pkce_required: true,
+    }));
+  }
 }
 
 // Builds the OAuth launch URL — frontend redirects the browser here, which 302s to
