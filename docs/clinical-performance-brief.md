@@ -22,16 +22,16 @@ Source: `backend/services/triage_ml.py`, `backend/models/artifacts.pkl`.
 | Item | Value |
 |---|---|
 | Dataset | Kaggle Triagegeist — **80,000 synthetic ED encounters** |
-| OOF accuracy | 99.87% |
-| OOF Quadratic Weighted Kappa | 0.9993 |
+| OOF accuracy | 99.98% (from the shipped `artifacts.pkl`) |
+| OOF Quadratic Weighted Kappa | 0.9999 (from the shipped `artifacts.pkl`) |
 | Conformal q̂ (clean validation) | 6.9 × 10⁻⁵ |
 | Conformal q̂ (noise-injected, bedside vitals) | 1.15 × 10⁻⁴ |
 
-**Honest caveat (preserved verbatim from `artifacts.pkl::training_data_note`):**
+**Honest caveat** (the shipped `artifacts.pkl` carries no `training_data_note` field; this is the project's stated position, now also mirrored in the public model card):
 
 > QWK ≈ 1.0 reflects the clean synthetic data ceiling. On real patient data, published ESI models (MIMIC-IV, NEWS2) typically achieve QWK 0.65–0.85. The noise-perturbed q̂ gives a more realistic uncertainty budget.
 
-Translation: the 99.87% accuracy is the synthetic-data ceiling. Real-patient performance is expected to be in the **QWK 0.65–0.85** range, which matches published benchmarks (Levin et al. 2018 NEWS2; MIMIC-IV ED triage models). A retrospective study against real ED registry data is the next step before any production deployment.
+Translation: the 99.98% accuracy is the synthetic-data ceiling. Real-patient performance is expected to be in the **QWK 0.65–0.85** range, which matches published benchmarks (Levin et al. 2018 NEWS2; MIMIC-IV ED triage models). A retrospective study against real ED registry data is the next step before any production deployment.
 
 ## 3. Live production behaviour (n = 10 synthetic encounters, 2026-05-14)
 
