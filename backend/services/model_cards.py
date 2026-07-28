@@ -224,9 +224,19 @@ CARDS: dict[str, dict[str, Any]] = {
             "known_gaps": "Rare diagnoses may be under-ranked without explicit cues; inpatient deterioration not covered.",
         },
         "risk_tier": "tier_1_high",
+        # No evaluation harness, benchmark set or holdout exists in this repo for
+        # these numbers, so they are reported as targets rather than results.
+        # early_warning_sepsis shows the pattern: attribute to published work on
+        # similar systems, or say plainly that it has not been measured.
         "performance": {
-            "ndcg_at_5_NEJM_CPC_subset": 0.71,
-            "red_flag_recall": 0.95,
+            "status": "not_yet_measured",
+            "planned_metrics": ["nDCG@5 on an NEJM CPC subset", "red-flag recall"],
+            "caveat": (
+                "No Solace-run evaluation has been performed. The red-flag canon is a "
+                "deterministic overlay, so it fires exactly on the conditions it encodes; "
+                "that is coverage by construction, not measured recall against real "
+                "presentations."
+            ),
         },
         "monitoring_plan": {
             "cadence": "Monthly during early adoption (Tier 1).",
@@ -268,11 +278,24 @@ CARDS: dict[str, dict[str, Any]] = {
             "known_gaps": "English-only v1; diarization degrades with >3 simultaneous speakers.",
         },
         "risk_tier": "tier_2_moderate",
+        # No evaluation harness, benchmark set or holdout exists in this repo for
+        # these numbers, so they are reported as targets rather than results.
+        # early_warning_sepsis shows the pattern: attribute to published work on
+        # similar systems, or say plainly that it has not been measured.
         "performance": {
-            "median_wer_medical_vocab": 0.07,
-            "der_two_speaker": 0.10,
-            "evidence_linkage_recall": 0.93,
-            "physician_satisfaction_pilot": "to be published",
+            "status": "not_yet_measured",
+            "planned_metrics": [
+                "median WER on medical vocabulary",
+                "diarization error rate, two speaker",
+                "Linked Evidence span recall",
+            ],
+            "caveat": (
+                "Solace has not measured WER or DER. Any transcription accuracy is a "
+                "property of AWS HealthScribe and is disclosed in the AWS service card, "
+                "not established here. Linked Evidence rendering is deterministic, so its "
+                "correctness is a code property rather than a model score."
+            ),
+            "physician_satisfaction_pilot": "not started",
         },
         "monitoring_plan": {
             "cadence": "Quarterly subgroup audit (Tier 2) across accent, speaker pace, and ambient-noise strata.",
@@ -312,9 +335,21 @@ CARDS: dict[str, dict[str, Any]] = {
             "known_gaps": "MA HCC long-window capture not automated; modifier-25/59 logic intentionally conservative.",
         },
         "risk_tier": "tier_2_moderate",
+        # No evaluation harness, benchmark set or holdout exists in this repo for
+        # these numbers, so they are reported as targets rather than results.
+        # early_warning_sepsis shows the pattern: attribute to published work on
+        # similar systems, or say plainly that it has not been measured.
         "performance": {
-            "em_level_agreement_with_coder_holdout": 0.87,
-            "icd10_top3_recall": 0.89,
+            "status": "not_yet_measured",
+            "planned_metrics": [
+                "E/M level agreement against a certified-coder holdout",
+                "ICD-10 top-3 recall",
+            ],
+            "caveat": (
+                "No certified-coder holdout set exists yet, so agreement is unmeasured. "
+                "The NCCI edit and MDM-rubric validators are deterministic and do behave "
+                "exactly as encoded, which is separate from coding accuracy."
+            ),
         },
         "monitoring_plan": {
             "cadence": "Quarterly accuracy and subgroup-equity audit (Tier 2).",
