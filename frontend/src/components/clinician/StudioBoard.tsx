@@ -16,6 +16,7 @@ import {
   ScrollText,
   Search,
   Sparkles,
+  TrendingUp,
   Users2,
   X,
 } from "lucide-react";
@@ -43,6 +44,7 @@ const LettersTab = lazy(() => import("../workspace/tabs/LettersTab"));
 const PriorAuthTab = lazy(() => import("../workspace/tabs/PriorAuthTab"));
 const EhrTab = lazy(() => import("../workspace/tabs/EhrTab"));
 const CareGapsTab = lazy(() => import("../workspace/tabs/CareGapsTab"));
+const EarlyWarningTab = lazy(() => import("../workspace/tabs/EarlyWarningTab"));
 const ResultClosureTab = lazy(() => import("../workspace/tabs/ResultClosureTab"));
 
 type Feature = {
@@ -56,6 +58,7 @@ type Feature = {
 const FEATURES: Feature[] = [
   { id: "queue", label: "Live queue", icon: Users2, kind: "queue" },
   { id: "overview", label: "Patient snapshot", icon: Activity, kind: "tab", Component: OverviewTab },
+  { id: "early-warning", label: "Early warning", icon: TrendingUp, kind: "tab", Component: EarlyWarningTab },
   { id: "scribe", label: "Ambient scribe", icon: Mic, kind: "tab", Component: ScribeTab },
   { id: "copilot", label: "Copilot", icon: Sparkles, kind: "tab", Component: CopilotTab },
   { id: "reasoning", label: "Reasoning", icon: BookOpen, kind: "tab", Component: ReasoningTab },
